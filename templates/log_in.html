@@ -1,0 +1,18 @@
+{% extends "base/base-template.html" %}
+
+{% block content %}
+    <h1>POLISYSTENT</h1>
+{% endblock %}
+
+{% block header %}
+    <form>
+        <input type="text" name="login1" placeholder="login">
+        <input type="password" name="pass1" placeholder="hasło">
+        <input type="submit" name="signInButton" value="ZALOGUJ SIĘ">
+
+        <input type="text" name="mail" placeholder="e-mail">
+        <input type="text" name="login2" placeholder="login">
+        <input type="password" name="pass2" placeholder="hasło">
+        <input type="submit" name="signUpButton" value="ZAŁÓŻ KONTO">
+    </form>
+{% endblock %}
