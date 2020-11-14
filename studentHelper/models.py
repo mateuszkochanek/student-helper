@@ -7,6 +7,7 @@ from studentHelper.managers import TeacherManager
 from studentHelper.managers import CourseManager
 from studentHelper.managers import RulesManager
 from studentHelper.managers import EventsManager
+from studentHelper.managers import DescriptionManager
 
 class Post(models.Model):
     title = models.CharField(max_length=120)
@@ -165,3 +166,4 @@ class Description(models.Model):
     )
     course = models.BooleanField()
     description = models.CharField(max_length=128)
+    objects = DescriptionManager()
