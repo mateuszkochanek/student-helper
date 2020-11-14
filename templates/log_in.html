@@ -1,18 +1,24 @@
 {% extends "base/base-template.html" %}
 
-{% block content %}
-    <h1>POLISYSTENT</h1>
-{% endblock %}
+{% block foreground %}
+    {% block content %}
+        <div style="text-align: center;">
+        <h1>POLISYSTENT</h1>
+        </div>
+    {% endblock %}
 
-{% block header %}
-    <form>
-        <input type="text" name="login1" placeholder="login">
-        <input type="password" name="pass1" placeholder="hasło">
-        <input type="submit" name="signInButton" value="ZALOGUJ SIĘ">
+    {% block header %}
+        <form>
+            <input type="text" name="login1" placeholder="login"><br>
+            <input type="password" name="pass1" placeholder="hasło"><br>
+            <input type="submit" name="signInButton" value="ZALOGUJ SIĘ"><br><br>
+        </form>
 
-        <input type="text" name="mail" placeholder="e-mail">
-        <input type="text" name="login2" placeholder="login">
-        <input type="password" name="pass2" placeholder="hasło">
-        <input type="submit" name="signUpButton" value="ZAŁÓŻ KONTO">
-    </form>
+        <form>
+            <input type="text" name="mail" placeholder="e-mail"><br>
+            <input type="text" name="login2" placeholder="login"><br>
+            <input type="password" name="pass2" placeholder="hasło"><br>
+            <input type="submit" name="signUpButton" value="ZAŁÓŻ KONTO"><br>
+        </form>
+    {% endblock %}
 {% endblock %}
