@@ -29,6 +29,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'erthax.pythonanywhere.com',
     '127.0.0.1',
+    'localhost',
+
 ]
 
 
@@ -81,8 +83,12 @@ WSGI_APPLICATION = 'Team_Programming.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'studentHelperDB',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'studentHelperDB',
+        'USER': 'djangodev',
+        'PASSWORD': 'root',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3325',
     }
 }
 
