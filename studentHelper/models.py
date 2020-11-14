@@ -3,7 +3,10 @@ from django.contrib.auth.models import User
 
 from django.utils import timezone
 # Create your models here.
-
+from studentHelper.managers import TeacherManager
+from studentHelper.managers import CourseManager
+from studentHelper.managers import RulesManager
+from studentHelper.managers import EventsManager
 
 class Post(models.Model):
     title = models.CharField(max_length=120)
@@ -20,6 +23,12 @@ class Teacher(models.Model):
     surname = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
     webpage = models.CharField(max_length=60)
+
+    objects = TeacherManager()
+
+    class Meta:
+        #TODO Indexes ect.
+        verbose_name_plural = "Teacher"
 
 class Course(models.Model):
 
@@ -45,6 +54,7 @@ class Course(models.Model):
     ECTS = models.IntegerField()
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=TYPES)
+    objects = CourseManager()
 
 
 
@@ -65,6 +75,8 @@ class Rules(models.Model):
     exer_weight = models.IntegerField(blank=True)
     lect_weight = models.IntegerField(blank=True)
     formula = models.CharField(max_length=30)
+
+    objects = RulesManager()
 
 
 
@@ -140,6 +152,7 @@ class Events(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     period_type = models.CharField(choices=TYPES, max_length=7)
+    objects = EventsManager()
 
 
 class Description(models.Model):
