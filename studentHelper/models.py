@@ -3,7 +3,14 @@ from django.contrib.auth.models import User
 
 from django.utils import timezone
 # Create your models here.
-
+from studentHelper.managers import TeacherManager
+from studentHelper.managers import CourseManager
+from studentHelper.managers import RulesManager
+from studentHelper.managers import EventsManager
+from studentHelper.managers import DescriptionManager
+from studentHelper.managers import GoalsManager
+from studentHelper.managers import FilesManager
+from studentHelper.managers import PredictionManager
 
 class Post(models.Model):
     title = models.CharField(max_length=120)
@@ -20,6 +27,11 @@ class Teacher(models.Model):
     surname = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
     webpage = models.CharField(max_length=60)
+    objects = TeacherManager()
+
+    class Meta:
+        #TODO Indexes ect.
+        verbose_name_plural = "Teacher"
 
 class Course(models.Model):
 
@@ -45,6 +57,7 @@ class Course(models.Model):
     ECTS = models.IntegerField()
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=TYPES)
+    objects = CourseManager()
 
 
 
@@ -65,6 +78,7 @@ class Rules(models.Model):
     exer_weight = models.IntegerField(blank=True)
     lect_weight = models.IntegerField(blank=True)
     formula = models.CharField(max_length=30)
+    objects = RulesManager()
 
 
 
@@ -90,6 +104,7 @@ class Goals(models.Model):
     end_date = models.DateField()
     type = models.CharField(max_length=1, choices=TYPES)
     description = models.CharField(max_length=128)
+    objects = GoalsManager()
 
 class Files(models.Model):
 
@@ -103,6 +118,7 @@ class Files(models.Model):
     # TODO: sposob zapisywania?
     file_path = models.CharField(max_length=30)
     description = models.CharField(max_length=64, blank=True)
+    objects = FilesManager()
 
 class Prediction(models.Model):
 
@@ -117,6 +133,7 @@ class Prediction(models.Model):
     start_date = models.DateField(default=timezone.now)
     pred_time = models.TimeField()
     actual_time = models.TimeField()
+    objects = PredictionManager()
 
 
 class Events(models.Model):
@@ -140,6 +157,7 @@ class Events(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     period_type = models.CharField(choices=TYPES, max_length=7)
+    objects = EventsManager()
 
 
 class Description(models.Model):
@@ -152,3 +170,4 @@ class Description(models.Model):
     )
     course = models.BooleanField()
     description = models.CharField(max_length=128)
+    objects = DescriptionManager()
