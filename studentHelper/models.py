@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 from django.utils import timezone
 # Create your models here.
@@ -10,13 +11,6 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-
-class Client(models.Model):
-    # pk generated automaticly
-    login = models.CharField(max_length=30)
-    email = models.CharField(max_length=30)
-    password = models.CharField(max_length=30)
-
 
 class Teacher(models.Model):
 
@@ -39,7 +33,7 @@ class Course(models.Model):
 
     # foreign keys
     client_id = models.ForeignKey(
-        Client,
+        User,
         on_delete=models.CASCADE,
     )
     teacher_id = models.ForeignKey(
@@ -110,7 +104,7 @@ class Files(models.Model):
     file_path = models.CharField(max_length=30)
     description = models.CharField(max_length=64, blank=True)
 
-class Files(models.Model):
+class Prediction(models.Model):
 
     # pk generated automaticly
 
@@ -140,7 +134,7 @@ class Events(models.Model):
 
     # foreign keys
     client_id = models.ForeignKey(
-        Client,
+        User,
         on_delete=models.CASCADE,
     )
     start_date = models.DateField()
