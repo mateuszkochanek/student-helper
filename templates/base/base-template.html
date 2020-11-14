@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base-template.css' %}">
+
     {% block title %}
         <title>Student Helper</title>
     {% endblock %}
 </head>
-<body>
-    {% block header %}Header{% endblock %}
-    {% block sidebar %}Sidebar{% endblock %}
-    {% block content %}Content{% endblock %}
+<body class="bg">
+    {% block header %} {% include 'base/header.html' %} {% endblock %}
+    {% block top-bar %} {% include 'base/top-bar.html' %} {% endblock %}
+    {% block sidebar %} {% include 'base/sidebar.html' %} {% endblock %}
+    <div class="content">
+        {% block content %}Content{% endblock %}
+    </div>
 </body>
 </html>
