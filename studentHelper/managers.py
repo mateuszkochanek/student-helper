@@ -83,5 +83,44 @@ class DescriptionManager(models.Manager):
         return self.get(pk=id)
 
     def get_descriptions(self, event):
-        q = self.filter(event_id=event).values('course','description')
-        return q
+        return self.filter(event_id=event).values('course','description')
+
+
+class GoalsManager(models.Manager):
+    """
+        Model: Goals
+        Usage: Import model and then use Goals.objects.[below_options]
+    """
+    def add_record(self, course_id, end_date, type, description):
+        goal = self.create(course_id=course_id, end_date=end_date,
+                type=type, description=description)
+        goal.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+class FilesManager(models.Manager):
+    """
+        Model: Files
+        Usage: Import model and then use Files.objects.[below_options]
+    """
+    def add_record(self, course_id, file_path, description):
+        file = self.create(course_id=course_id, file_path=file_path,
+                description=description)
+        file.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+class PredictionManager(models.Manager):
+    """
+        Model: Prediction
+        Usage: Import model and then use Prediction.objects.[below_options]
+    """
+    def add_record(self, course_id, start_date, pred_time, actual_time):
+        prediction = self.create(course_id=course_id, start_date=start_date,
+                pred_time=pred_time, actual_time=actual_time)
+        prediction.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
