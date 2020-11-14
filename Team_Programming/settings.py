@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     'erthax.pythonanywhere.com',
     '127.0.0.1',
     'localhost',
+
 ]
 
 
