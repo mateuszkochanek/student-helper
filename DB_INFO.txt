@@ -5,6 +5,10 @@ sudo apt-get install libmysqlclient-dev
 sudo apt-get install mysql-server
 
 Django user oraz podstawowe modele znajdują się w db.mysql
+Reczne dodanie usera:
+CREATE USER djangodev'@'localhost' IDENTIFIED BY 'Root.tooR';
+GRANT ALL PRIVILEGES ON *.* TO 'djangodev'@'localhost';
+FLUSH PRIVILEGES;
 Srodowisko z potrzebnymi rzeczami:
 
 conda env create -f studentHelper.yml
