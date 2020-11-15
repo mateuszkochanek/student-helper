@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
 from studentHelper.views import post_list_view, main_view, log_in_view
 from register.views import register
+from studentHelper.views import post_list_view, main_view, log_in_view, calendar_view, avg_grade_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +28,8 @@ urlpatterns = [
     path('', main_view),
     path('', include('django.contrib.auth.urls'))
     # path('login/', log_in_view)
+    path('login/', log_in_view),
+    path('calendar/', calendar_view),
+    path('avgGrade/', avg_grade_view)
+
 ]

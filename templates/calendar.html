@@ -1,0 +1,95 @@
+{% extends "base/base-template.html" %}
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid-container">
+    <div class=titlebar>
+        <div class=title>
+            Kalendarz
+        </div>
+    </div>
+    <div class=buttonbar>
+        <div class=button>
+            Dodaj plan
+        </div>
+            <div class=button onclick="myCreateFunction()">
+                Dodaj wydarzenie
+        </div>
+    </div>
+
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+
+
+
+    <div class=calendar>
+        <div class=calendar_title>
+            <table id="myTable">
+                <tr>
+                    <td>
+                        Poniedziałek
+                    </td>
+                    <td>
+                        Wtorek
+                    </td>
+                    <td>
+                        Środa
+                    </td>
+                    <td>
+                        Czwartek
+                    </td>
+                    <td>
+                        Piątek
+                    </td>
+                    <td>
+                        Sobota
+                    </td>
+                    <td>
+                        Niedziela
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        11:15 - 14:00 Kombinatoryka analityczna, wykład
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        18:00 Wyjść z psem
+                    </td>
+                    <td>
+                        7:30 Oddać wszystkie oszczędności w kościele
+                    </td>
+                </tr>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function myCreateFunction() {
+  var table = document.getElementById("myTable");
+  var row = table.insertRow(table.length);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  cell1.innerHTML = "14:00 Zajęcia";
+  cell2.innerHTML = "16:00 Odpoczynek";
+
+}
+
+function myDeleteFunction() {
+  document.getElementById("myTable").deleteRow(0);
+}
+</script>
+
+
+{% endblock %}
