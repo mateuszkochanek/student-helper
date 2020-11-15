@@ -1,0 +1,43 @@
+.avg_grade {
+    height: 100%;
+    width: 100%;
+    color: #5b80b2;
+}
+
+h1:after {
+    content:' ';
+    display:block;
+    border: 1px solid #5b80b2;
+}
+
+button {
+    float: right;
+    margin: 1%;
+    height: 40px;
+    width: 140px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #5b80b2;
+    background: #9bdcfa;
+}
+
+.grades_list {
+    height: calc(100% - 100px);
+    width: 50%;
+    max-width: 550px;
+    border-radius: 25px;
+    background: #9bdcfa;
+    margin-left: 2%;
+}
+
+.grades_list table {
+    font-size: 20px;
+    width: 100%;
+    text-align:center;
+    border-collapse: collapse;
+}
+
+.grades_list table, .grades_list tr, .grades_list td {
+    border: 1px solid white;
+}
