@@ -15,7 +15,7 @@ class TeacherManager(models.Manager):
             webpage: String
 
         """
-        
+
         teacher = self.create(name=name, surname=surname, title=title, webpage=webpage)
         teacher.save()
 
@@ -154,3 +154,21 @@ class PredictionManager(models.Manager):
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
+class MarksManager(models.Manager):
+    """
+        Model: Marks
+        Usage: Import model and then use Marks.objects.[below_options]
+    """
+    def add_record(self, course, mark, mark_type, weight):
+        """ course: object of Course """
+
+        prediction = self.create(course_id=course, mark=mark,
+                mark_type=mark_type, weight=weight)
+        prediction.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+    def getMarks(self, course):
+        return self.filter(event_id=course).values('mark','mark_type', 'weight')

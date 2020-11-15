@@ -10,6 +10,7 @@ from studentHelper.managers import DescriptionManager
 from studentHelper.managers import GoalsManager
 from studentHelper.managers import FilesManager
 from studentHelper.managers import PredictionManager
+from studentHelper.managers import MarksManager
 
 class Post(models.Model):
     title = models.CharField(max_length=120)
@@ -138,13 +139,13 @@ class Prediction(models.Model):
 class Events(models.Model):
 
     TYPES = [
-    ("once", "Once"),
-    ("daily", "Daily"),
-    ("weekly", "Weekly"),
-    ("monthly", "Monthly"),
-    ("yearly", "Yearly"),
-    ("even", "Even"),
-    ("odd", "Odd")
+    ("ONCE", "Once"),
+    ("DAILY", "Daily"),
+    ("WEEKLY", "Weekly"),
+    ("MONTHLY", "Monthly"),
+    ("YEARLY", "Yearly"),
+    ("EVEN", "Even"),
+    ("ODD", "Odd")
     ]
     # pk generated automaticly
 
@@ -170,3 +171,21 @@ class Description(models.Model):
     course = models.BooleanField()
     description = models.CharField(max_length=128)
     objects = DescriptionManager()
+
+
+class Marks(models.Model):
+    # pk generated automaticly
+    TYPES = [
+    ("PLUS", "+"),
+    ("MINUS", "-"),
+    ("PKT", "pkt"),
+    ("MARK", "mark"),
+    ]
+    course_id = models.OneToOneField(
+    Course,
+    on_delete = models.CASCADE,
+    )
+    mark = models.IntegerField()
+    weight = models.IntegerField()
+    mark_type = models.CharField(choices=TYPES, max_length=7)
+    objects = MarksManager()
