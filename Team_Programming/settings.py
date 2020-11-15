@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'studentHelper.apps.StudenthelperConfig',
+    'register.apps.RegisterConfig',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'studentHelperDB',
         'USER': 'djangodev',
-        'PASSWORD': 'root',
+        'PASSWORD': 'Root.tooR',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3325',
     }
@@ -136,3 +138,8 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
