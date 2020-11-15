@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 
-from studentHelper.views import post_list_view, main_view, log_in_view, calendar_view
+from studentHelper.views import post_list_view, main_view, log_in_view, calendar_view, avg_grade_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,6 @@ urlpatterns = [
     path('', main_view),
     path('login/', log_in_view),
     path('calendar/', calendar_view),
+    path('avgGrade/', avg_grade_view)
+
 ]
