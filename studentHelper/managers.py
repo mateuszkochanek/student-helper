@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class TeacherManager(models.Manager):
     """
         Model: Teacher
@@ -49,6 +50,7 @@ class CourseManager(models.Manager):
     def get_record_by_client_id(self, client_id):
         return self.get(client_id=client_id)
 
+
 class RulesManager(models.Manager):
     """
         Model: Rules
@@ -67,6 +69,7 @@ class RulesManager(models.Manager):
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
 
 class EventsManager(models.Manager):
     """
@@ -90,6 +93,7 @@ class EventsManager(models.Manager):
     def delete_event_by_id(self, id):
         #TODO triggers?
         self.filter(id=id).delete()
+
 
 class DescriptionManager(models.Manager):
     """
