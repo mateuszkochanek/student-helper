@@ -19,7 +19,6 @@ def main_view(request):
 
 def log_in_view(request):
     return render(request, "login.html")
-    return render(request, "log_in.html")
 
 
 def calendar_view(request):
