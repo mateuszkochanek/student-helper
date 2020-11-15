@@ -1,0 +1,32 @@
+{% extends "base/base-template.html" %}
+
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/avg_grade_page.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="avg_grade">
+        <h1>Średnia</h1>
+
+        <button type="button">Policz średnią</button>
+
+        <div class="grades_list">
+            <table>
+                <tr>
+                    <td>
+                        Przedmiot
+                    </td>
+                    <td>
+                        ECTS
+                    </td>
+                    <td>
+                        Ocena
+                    </td>
+                </tr>
+                <!-- grades list -->
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
