@@ -11,6 +11,7 @@ from studentHelper.managers import GoalsManager
 from studentHelper.managers import FilesManager
 from studentHelper.managers import PredictionManager
 
+
 class Post(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField()

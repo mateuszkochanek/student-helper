@@ -26,9 +26,7 @@ urlpatterns = [
     path('posts/', post_list_view),
     path('register/', register, name="register"),
     path('', main_view),
-    path('', include('django.contrib.auth.urls'))
-    # path('login/', log_in_view)
-    path('login/', log_in_view),
+    path('', include('django.contrib.auth.urls')),
     path('calendar/', calendar_view),
     path('avgGrade/', avg_grade_view)
 
