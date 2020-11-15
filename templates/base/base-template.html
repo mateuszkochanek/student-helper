@@ -11,13 +11,15 @@
     {% endblock %}
 </head>
 <body class="bg">
-    {% block foreground %}
-        {% block header %} {% include 'base/header.html' %} {% endblock %}
-        {% block top-bar %} {% include 'base/top-bar.html' %} {% endblock %}
-        {% block sidebar %} {% include 'base/sidebar.html' %} {% endblock %}
-        <div class="content">
-            {% block content %}Content{% endblock %}
-        </div>
-    {% endblock %}
+    <div class="container">
+        {% block foreground %}
+            {% block header %} {% include 'base/header.html' %} {% endblock %}
+            {% block top-bar %} {% include 'base/top-bar.html' %} {% endblock %}
+            {% block sidebar %} {% include 'base/sidebar.html' %} {% endblock %}
+            <div class="content">
+                {% block content %}Content{% endblock %}
+            </div>
+        {% endblock %}
+    </div>
 </body>
 </html>
