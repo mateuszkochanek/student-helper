@@ -91,22 +91,6 @@ html, body
     background: white;
 }
 
-.main_page {
-    height: 100%;
-    width: 100%;
-}
-
-.info_pane{
-    border-radius: 25px;
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-    width: 30%;
-    height: 30%;
-    background: #9bdcfa;
-    margin: 1%;
-}
-
 .titlebar {
     border-radius: 25px;
     display: inline-block;
