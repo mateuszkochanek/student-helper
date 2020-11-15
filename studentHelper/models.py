@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 from django.utils import timezone
-# Create your models here.
+
 from studentHelper.managers import TeacherManager
 from studentHelper.managers import CourseManager
 from studentHelper.managers import RulesManager
