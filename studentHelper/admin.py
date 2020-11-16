@@ -14,5 +14,3 @@ admin.site.register(Prediction)
 admin.site.register(Events)
 admin.site.register(Description)
 admin.site.register(Marks)
-
-
