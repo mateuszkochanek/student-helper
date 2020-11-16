@@ -4,9 +4,8 @@ from .events.MainPageEvent import MainPageEvent
 from .models import Events, Description, Course
 from .events.UploadCalendarEvent import UploadCalendarEvent
 from django.views.generic import ListView, CreateView
-
 from .calendarImport import CalendarImport
-
+import threading
 
 # Create your views here.
 
@@ -41,7 +40,7 @@ def avg_grade_view_edit_grade(request, pk, grade):
 
 
 def calendar_import(request):
-    CalendarImport(request.user)
+    CalendarImport(request.user).start()
     return calendar_view(request)
 
 
