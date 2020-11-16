@@ -56,8 +56,8 @@ class CourseManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
-    def get_record_by_client_id(self, client_id):
-        return self.get(client_id=client_id)
+    def get_records_by_client_id(self, client_id):
+        return self.filter(client_id=client_id)
 
 
 class RulesManager(models.Manager):
@@ -107,6 +107,12 @@ class EventsManager(models.Manager):
 
         return self.filter( client_id=client_id,
                             start_date__range=[start_date, end_date],
+                            end_date__range=[start_date, end_date]
+                            )
+
+    def get_events_by_datetime(self, client_id, start_date, end_date):
+
+        return self.filter( client_id=client_id,
                             end_date__range=[start_date, end_date]
                             )
 

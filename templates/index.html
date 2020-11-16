@@ -6,30 +6,40 @@
 
 {% block content %}
     <div class="main_page">
-        <div class="info_pane">
-
-            Henlno
+        <div class="info_pane col-1 row-1">
+            <table>
+                <tr>
+                    <td>
+                        <h1>Plan na dziś</h1>
+                    </td>
+                </tr>
+                {% for event in events %}
+                    <tr>
+                        <td>
+                            {{ event.description.description }} <br>
+                            {{ event.start_date }}
+                            {{ event.end_date }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
-        <div class="info_pane">
+        <div class="info_pane col-2 row-1">
 
-            Henlno
         </div>
-        <div class="info_pane">
+        <div class="info_pane col-3 row-1">
 
-            Henlno
         </div>
-        <div class="info_pane">
+        <div class="info_pane col-1 row-2">
 
-            Henlno
         </div>
-        <div class="info_pane">
+        <div class="info_pane col-2 row-2">
 
-            Henlno
         </div>
-            <div class="info_pane">
+        <div class="info_pane col-3 row-2">
 
-            Henlno
         </div>
     </div>
+
 
 {% endblock %}

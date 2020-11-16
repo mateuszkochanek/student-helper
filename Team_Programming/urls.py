@@ -14,13 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, register_converter
 
 
-from studentHelper.views import main_view, log_in_view
+from studentHelper.views import *
+from studentHelper.models import Course
+from studentHelper.converts import FloatUrlParameterConverter
 from register.views import register
-from studentHelper.views import ( main_view, log_in_view, calendar_view, avg_grade_view,
-    calendar_import, new_event_view ) 
+
+register_converter(FloatUrlParameterConverter, 'float')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +33,7 @@ urlpatterns = [
     path('calendar/', calendar_view),
     path('avgGrade/', avg_grade_view),
     path('calendar/new', new_event_view, name='new'),
+    path('avgGrade', avg_grade_calc, name='avg_grade_calc'),
+    path('avgGrade/<int:pk>/<float:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
     path('calendar_import', calendar_import, name='calendar_import')
-
-
 ]

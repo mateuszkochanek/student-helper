@@ -9,7 +9,9 @@
     <div class="avg_grade">
         <h1>Średnia</h1>
 
-        <button type="button">Policz średnią</button>
+        <form class="buttonCalcGradeForm" action="{% url 'avg_grade_calc' %}">
+            <button type="submit" class="calcAvgGradeButton">Policz średnią</button>
+        </form>
 
         <div class="grades_list">
             <table>
@@ -23,10 +25,66 @@
                     <td>
                         Ocena
                     </td>
+                    <td>
+                        Opcje
+                    </td>
                 </tr>
-                <!-- grades list -->
+                {% for course in courses %}
+                    <tr>
+                        <td>
+                            {{ course.name }}
+                        </td>
+                        <td>
+                            {{ course.ECTS }}
+                        </td>
+                        <td>
+                            {{ course.final }}
+                        </td>
+                        <td>
+                            <button type="button" onclick="showEditGradeView({{ course.pk }})">Edytuj</button>
+                        </td>
+                    </tr>
+                {% endfor %}
             </table>
         </div>
+
+        <div class="editGradeDiv" id="editGradeDiv">
+            <input type="number" id="newGrade">
+            <button type="button" onclick="saveNewGrade()">Zapisz</button>
+        </div>
+
+        <div class="avgGradeResult">
+            {% if avg == -1 %}
+                Brak wszystkich ocen
+            {% elif avg is not None %}
+                Średnia
+                {{ avg }}
+            {% endif %}
+        </div>
+
     </div>
+
+    <script>
+        var courseId = 0;
+        function showEditGradeView(pk) {
+            courseId = pk;
+            var div = document.getElementById('editGradeDiv')
+            const visibility = div.style.visibility;
+            div.style.visibility = (visibility === "visible" ? 'hidden' : "visible");
+        }
+
+        function saveNewGrade() {
+            const newGrade = document.getElementById('newGrade');
+
+            if (parseFloat(newGrade.value)) {
+                if (document.location.href.substring(document.location.href.length - 9) === 'avgGrade/') {
+                    document.location.href += courseId + "/" + newGrade.value;
+                } else {
+                    document.location.href = document.location.href.split("avgGrade")[0] + "avgGrade/" + courseId + "/" + newGrade.value;
+                }
+            }
+        }
+
+    </script>
 
 {% endblock %}
