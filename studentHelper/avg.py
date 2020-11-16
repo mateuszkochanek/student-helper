@@ -11,4 +11,6 @@ def get_avg(user):
             return -1
         else:
             marks_sum += c.final * c.ECTS
+    if ects_sum == 0:
+        return -1
     return marks_sum/ects_sum
