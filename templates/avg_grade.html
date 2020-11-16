@@ -9,7 +9,9 @@
     <div class="avg_grade">
         <h1>Średnia</h1>
 
-        <button type="button" class="calcAvgGradeButton">Policz średnią</button>
+        <form class="buttonCalcGradeForm" action="{% url 'avg_grade_calc' %}">
+            <button type="submit" class="calcAvgGradeButton">Policz średnią</button>
+        </form>
 
         <div class="grades_list">
             <table>
@@ -37,10 +39,9 @@
                         </td>
                         <td>
                             {{ course.final }}
-
                         </td>
                         <td>
-                            <button type="button" class="editGradeButton" onclick="showEditGradeView({{ course.pk }})">Edytuj</button>
+                            <button type="button" onclick="showEditGradeView({{ course.pk }})">Edytuj</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -48,8 +49,17 @@
         </div>
 
         <div class="editGradeDiv" id="editGradeDiv">
-            <input type="text" id="newGrade">
+            <input type="number" id="newGrade">
             <button type="button" onclick="saveNewGrade()">Zapisz</button>
+        </div>
+
+        <div class="avgGradeResult">
+            {% if avg == -1 %}
+                Brak wszystkich ocen
+            {% elif avg is not None %}
+                Średnia
+                {{ avg }}
+            {% endif %}
         </div>
 
     </div>
@@ -66,12 +76,15 @@
         function saveNewGrade() {
             const newGrade = document.getElementById('newGrade');
 
-            if (document.location.href.substring(document.location.href.length - 9) === 'avgGrade/') {
-                document.location.href += courseId + "/" + newGrade.value;
-            } else {
-                document.location.href = document.location.href.split("avgGrade")[0] + "avgGrade/" + courseId + "/" + newGrade.value;
+            if (parseFloat(newGrade.value)) {
+                if (document.location.href.substring(document.location.href.length - 9) === 'avgGrade/') {
+                    document.location.href += courseId + "/" + newGrade.value;
+                } else {
+                    document.location.href = document.location.href.split("avgGrade")[0] + "avgGrade/" + courseId + "/" + newGrade.value;
+                }
             }
         }
+
     </script>
 
 {% endblock %}
