@@ -110,11 +110,6 @@ class EventsManager(models.Manager):
                             end_date__range=[start_date, end_date]
                             )
 
-    def get_events_by_datetime(self, client_id, start_date, end_date):
-
-        return self.filter( client_id=client_id,
-                            end_date__range=[start_date, end_date]
-                            )
 
     def delete_event_by_id(self, id):
         #TODO triggers?
