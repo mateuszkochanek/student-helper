@@ -29,9 +29,7 @@ def avg_grade_view(request):
 
 def calendar_import(request):
     CalendarImport(request.user)
-    context = MainPageEvent(request.user).execute()
-    print(context)
-    return render(request, "calendar.html", {'d': context}, content_type="text/html")
+    return render(request, "calendar.html")
 
 
 class EventListView(CreateView):

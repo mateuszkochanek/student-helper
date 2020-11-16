@@ -81,7 +81,9 @@ class CalendarImport:
             for course in course2:
                 name, surname, title = self.get_teacher_data(course['description'])
                 teacher = Teacher.objects.get_record_by_name_surname_title(name, surname, title)
-                Course.objects.add_record(self.user, teacher, 0, course['summary'][2:], course['summary'][0])
+                if self.user.is_authenticated:
+                    Course.objects.add_record(self.user, teacher, 0, course['summary'][2:], course['summary'][0])
 
         for events in self.AllEvents:
-            Events.objects.add_record(self.user, events['dtstart'], events['dtend'], 'ONCE')
+            if self.user.is_authenticated:
+                Events.objects.add_record(self.user, events['dtstart'], events['dtend'], 'ONCE')
