@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from .models import Events, Description
+from .events.MainPageEvent import MainPageEvent
+from .models import Events, Description, Course
 from .events.UploadCalendarEvent import UploadCalendarEvent
 from django.views.generic import ListView, CreateView
 
 from .calendarImport import CalendarImport
+
 
 # Create your views here.
 
@@ -25,7 +27,18 @@ def calendar_view(request):
 
 
 def avg_grade_view(request):
-    return render(request, "avg_grade.html")
+    context = {
+        'courses': Course.objects.get_records_by_client_id(request.user.id)
+    }
+    return render(request, "avg_grade.html", context)
+
+
+def avg_grade_view_edit_grade(request, pk, grade):
+    c = Course.objects.get_record_by_id(pk)
+    c.final = grade
+    c.save()
+    return avg_grade_view(request)
+
 
 def calendar_import(request):
     CalendarImport(request.user)
