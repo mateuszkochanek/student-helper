@@ -13,7 +13,7 @@
                         <h1>Plan na dziś</h1>
                     </td>
                 </tr>
-                {% for event in events %}
+                {% for event in events_today %}
                     <tr>
                         <td>
                             {{ event.description.description }} <br>
@@ -25,7 +25,21 @@
             </table>
         </div>
         <div class="info_pane col-2 row-1">
-
+            <table>
+                <tr>
+                    <td>
+                        <h1>Najbliższe wydarzenia</h1>
+                    </td>
+                </tr>
+                {% for event in next_events %}
+                    <tr>
+                        <td>
+                            {{ event.description.description }} <br>
+                            {{ event.start_date.date }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
         <div class="info_pane col-3 row-1">
 
