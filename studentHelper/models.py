@@ -51,7 +51,7 @@ class Course(models.Model):
     ECTS = models.IntegerField()
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=TYPES)
-    final = models.IntegerField(blank=True)
+    final = models.IntegerField(blank=True, default=None)
     objects = CourseManager()
 
 
