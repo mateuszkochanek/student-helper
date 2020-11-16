@@ -12,9 +12,9 @@
         </div>
     </div>
     <div class=buttonbar>
-        <div class=button>
+        <a href="{% url 'calendar_import' %}" class=button>
             Dodaj plan
-        </div>
+        </a>
             <div class=button onclick="myCreateFunction()">
                 Dodaj wydarzenie
         </div>
@@ -28,6 +28,7 @@
 
     <div class=calendar>
         <div class=calendar_title>
+            
             <table id="myTable">
                 <tr>
                     <td>
@@ -53,13 +54,29 @@
                     </td>
                 </tr>
                     {% if d %}
-                        {% for k in d %}
-                            {% for item_1, item_2 in k.items %}
-                            <tr>
-                                <td>{{ item_2 }}</td>
-                            </tr>
-                            {% endfor %}
-                        {% endfor %}
+                        <tr>
+                            <td>
+                                <pre>{{d.0.0}}</pre>
+                            </td>
+                            <td>
+                                <pre>{{d.1.1}}</pre>
+                            </td>
+                            <td>
+                                <pre>{{d.2.2}}</pre>
+                            </td>
+                            <td>
+                                <pre>{{d.3.3}}</pre>
+                            </td>
+                            <td>
+                                <pre>{{d.4.4}}</pre>
+                            </td>
+                            <td>
+                                <pre>{{d.5.5}}</pre>
+                            </td>
+                            <td>
+                                <pre>{{d.6.6}}</pre>
+                            </td>
+                        </tr>
                     {% endif %}
 
                 <!-- <tr>

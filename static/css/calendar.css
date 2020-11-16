@@ -60,6 +60,7 @@
     grid-column: 1/ 13;
     grid-row: 2;
     max-height: 2px;
+    width: 100%
 }
 
 .calendar {
@@ -77,13 +78,14 @@
     background: #5b80b2;
     color: white;
     max-height: 50px;
+    width: 120%;
 }
 
 .calendar_title table {
     width: 100%;
     height: 100%;
     text-align:center;
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .calendar_title table td {

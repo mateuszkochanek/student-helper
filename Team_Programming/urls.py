@@ -29,5 +29,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('calendar/', calendar_view),
     path('avgGrade/', avg_grade_view),
-    path('avgGrade/<int:pk>/<int:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade")
+    path('avgGrade/<int:pk>/<int:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
+    path('calendar/new', EventListView.as_view(success_url="calendar/"), name="add-event"),
+    path('calendar_import', calendar_import, name='calendar_import')
 ]

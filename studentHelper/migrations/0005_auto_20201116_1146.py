@@ -10,9 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='Post',
-        ),
         migrations.AddField(
             model_name='course',
             name='final',
