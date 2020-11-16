@@ -89,14 +89,13 @@ class EventsManager(models.Manager):
         return self.get(pk=id)
 
     def get_record_by_client_id(self, client_id):
+        return self.filter(client_id=client_id)
 
-        today = date.today()
-        day = today.weekday()
 
-        start_date = today - timedelta(days=day)
-        end_date = today + timedelta(days=(6-day))
+    def get_events(self, client_id, start_date, end_date):
 
         return self.filter( client_id=client_id,
+                            start_date__range=[start_date, end_date],
                             end_date__range=[start_date, end_date]
                             )
 

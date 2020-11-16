@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from .models import Post, Events
-from .events.MainPageEvent import MainPageEvent
+from .events.UploadCalendarEvent import UploadCalendarEvent
 
 # Create your views here.
 
@@ -23,8 +23,9 @@ def log_in_view(request):
 
 
 def calendar_view(request):
-    context = MainPageEvent(request.user).execute()
+    context = UploadCalendarEvent(request.user).execute(0)
     print(context)
+
     return render(request, "calendar.html", {'d': context}, content_type="text/html")
 
 
