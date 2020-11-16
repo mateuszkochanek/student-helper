@@ -2,6 +2,14 @@
     height: 100%;
     width: 100%;
     color: #5b80b2;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+
+h1 {
+    grid-column: 1 / 13;
 }
 
 h1:after {
@@ -10,9 +18,10 @@ h1:after {
     border: 1px solid #5b80b2;
 }
 
-button {
+.calcAvgGradeButton {
+    grid-column: 11;
+    grid-row: 2;
     float: right;
-    margin: 1%;
     height: 40px;
     width: 140px;
     border: none;
@@ -23,12 +32,12 @@ button {
 }
 
 .grades_list {
-    height: calc(100% - 100px);
-    width: 50%;
-    max-width: 550px;
+    grid-column: 1 / 6;
+    grid-row: 2 / 7;
     border-radius: 25px;
     background: #9bdcfa;
-    margin-left: 2%;
+    margin-left: 3%;
+    margin-bottom: 3%;
 }
 
 .grades_list table {
@@ -40,4 +49,15 @@ button {
 
 .grades_list table, .grades_list tr, .grades_list td {
     border: 1px solid white;
+}
+
+.editGradeButton {
+
+}
+
+.editGradeDiv {
+    grid-column: 8;
+    grid-row: 2;
+    visibility: hidden;
+    background: #9bdcfa;
 }
