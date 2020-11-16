@@ -17,13 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 
-from studentHelper.views import post_list_view, main_view, log_in_view
+from studentHelper.views import main_view, log_in_view
 from register.views import register
-from studentHelper.views import post_list_view, main_view, log_in_view, calendar_view, avg_grade_view
+from studentHelper.views import main_view, log_in_view, calendar_view, avg_grade_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('posts/', post_list_view),
     path('register/', register, name="register"),
     path('', main_view),
     path('', include('django.contrib.auth.urls')),

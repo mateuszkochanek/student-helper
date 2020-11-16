@@ -13,13 +13,6 @@ from studentHelper.managers import PredictionManager
 from studentHelper.managers import MarksManager
 
 
-class Post(models.Model):
-    title = models.CharField(max_length=120)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.title
-
 class Teacher(models.Model):
 
     # pk generated automaticly
@@ -58,7 +51,7 @@ class Course(models.Model):
     ECTS = models.IntegerField()
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=TYPES)
-    final = models.IntegerField(blank=True)
+    final = models.IntegerField(blank=True, default=None)
     objects = CourseManager()
 
 
