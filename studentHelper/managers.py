@@ -24,6 +24,9 @@ class TeacherManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
+    def get_record_by_name_surname_title(self, name, surname, title):
+        return self.get(name=name, surname=surname, title=title)
+
 
 class CourseManager(models.Manager):
     """
@@ -42,7 +45,7 @@ class CourseManager(models.Manager):
         """
 
         course = self.create(client_id=client, teacher_id=teacher, ECTS=ECTS,
-                        name=name, type=type)
+                        name=name, type=type, final=0)
         course.save()
 
     def get_record_by_id(self, id):
