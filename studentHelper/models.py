@@ -58,6 +58,7 @@ class Course(models.Model):
     ECTS = models.IntegerField()
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=TYPES)
+    final = models.IntegerField(blank=True)
     objects = CourseManager()
 
 
@@ -155,8 +156,8 @@ class Events(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     period_type = models.CharField(choices=TYPES, max_length=7)
     objects = EventsManager()
 
