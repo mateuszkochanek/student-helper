@@ -15,9 +15,9 @@
         <a href="{% url 'calendar_import' %}" class=button>
             Dodaj plan
         </a>
-            <div class=button onclick="myCreateFunction()">
-                Dodaj wydarzenie
-        </div>
+        <a href="{% url 'new' %}" class=button>
+            Dodaj wydarzenie
+        </a>
     </div>
 
     <div class=line>
@@ -28,7 +28,7 @@
 
     <div class=calendar>
         <div class=calendar_title>
-            
+
             <table id="myTable">
                 <tr>
                     <td>

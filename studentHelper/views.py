@@ -1,17 +1,22 @@
+
+from django.shortcuts import render, redirect
 from datetime import timedelta
 
-from django.shortcuts import render
 from django.views.generic.list import ListView
 from .events.MainPageEvent import MainPageEvent
 from .models import Events, Description, Course
 from .events.UploadCalendarEvent import UploadCalendarEvent
 from django.views.generic import ListView, CreateView
 from .calendarImport import CalendarImport
+
+from .forms import EventForm, DescriptionForm
+
 from .avg import get_avg
 from .events.AddFinalGradeEvent import AddFinalGradeEvent
 import threading
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 
@@ -23,7 +28,7 @@ def main_view(request):
     }
     return render(request, "index.html", context)
 
-
+@login_required(login_url='/login/')
 def log_in_view(request):
     return render(request, "login.html")
 
@@ -34,6 +39,29 @@ def calendar_view(request):
 
     return render(request, "calendar.html", {'d': context}, content_type="text/html")
 
+@login_required(login_url='/login/')
+def new_event_view(request):
+
+    if request.method == 'POST':
+        event = EventForm(request.POST)
+        description = DescriptionForm(request.POST)
+  
+        if event.is_valid() and description.is_valid():
+
+            e = event.save(commit=False)
+            e.client_id = request.user
+            e.save()
+            d = description.save(commit=False)
+            d.event_id = e
+            d.save()
+            return redirect('/calendar')
+    else:
+        event = EventForm()
+        description = DescriptionForm()
+
+    return render(request, "new_event.html", {"event_form":event, "description_form":description})
+
+  
 @login_required(login_url='/login/')
 def avg_grade_view(request):
     context = {
@@ -62,22 +90,4 @@ def calendar_import(request):
     return calendar_view(request)
 
 
-class EventListView(CreateView):
-    """ View for adding event """
-    model = Events
-    fields = ['start_date', 'end_date', 'period_type']
 
-    @login_required(login_url='/login/')
-    def form_valid(self, form):
-        form.instance.client_id = self.request.user
-        return super().form_valid(form)
-
-class DescriptionListView(CreateView):
-    """ View for adding event """
-    model = Description
-    fields = ['start_date', 'end_date', 'period_type']
-
-    @login_required(login_url='/login/')
-    def form_valid(self, form):
-        form.instance.client_id = self.request.user
-        return super().form_valid(form)
