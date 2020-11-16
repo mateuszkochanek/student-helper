@@ -89,6 +89,7 @@ DATABASES = {
         'NAME': 'studentHelperDB',
         'USER': 'djangodev',
         'PASSWORD': 'root',
+        'TIME_ZONE': 'Europe/Warsaw',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3325',
     }
@@ -119,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
