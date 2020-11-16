@@ -18,22 +18,29 @@ class UploadCalendarEvent(Event):
 
          start_date = today - timedelta(days=day)
          end_date = today + timedelta(days=(6-day))
-         data = []
+         data = [{} for _ in range(7)]
          try:
              events = Events.objects.get_record_by_client_id(self.get_user().id)
-             serialized_queryset = serializers.serialize('json', events)
+             #TODO repair this stupid
              for event in events:
+                 checked = False
                  extra = Description.objects.get_descriptions(event).first()
                  key = str(event.start_date.weekday())
                  print(key)
+                 for dict in data:
+                     if key in dict:
+                         dict[key] += '\n' + (str(event.start_date) + ' ' + str(extra.description))
+                         checked = True
+                         break
+                 if checked == False:
+                     data[event.start_date.weekday()] = {
+                            key : str(event.start_date.time) + ' ' + str(extra.description)
+                             # 'end date': event.end_date,
+                             # 'period type': event.period_type,
+                             # 'course': extra.course,
+                             # 'description': extra.description
+                             }
 
-                data.append({
-                key : str(event.start_date) + ' ' + str(extra.description)
-                 # 'end date': event.end_date,
-                 # 'period type': event.period_type,
-                 # 'course': extra.course,
-                 # 'description': extra.description
-                 })
 
          except(EmptyResultSet, MultipleObjectsReturned, ObjectDoesNotExist) as e:
              print("e")

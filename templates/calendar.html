@@ -53,17 +53,29 @@
                     </td>
                 </tr>
                     {% if d %}
-                        {% for k in d %}
-                            {% for item_1, item_2 in k.items %}
-                            <tr>
-                                <td>{{ item_2 }}</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>{{ item_2}}</td>
-                            </tr>
-                            {% endfor %}
-                        {% endfor %}
+                        <tr>
+                            <td>
+                                {{d.0.0}}
+                            </td>
+                            <td>
+                                {{d.1.1}}
+                            </td>
+                            <td>
+                                {{d.2.2}}
+                            </td>
+                            <td>
+                                {{d.3.3}}
+                            </td>
+                            <td>
+                                {{d.4.4}}
+                            </td>
+                            <td>
+                                {{d.5.5}}
+                            </td>
+                            <td>
+                                {{d.6.6}}
+                            </td>
+                        </tr>
                     {% endif %}
 
                 <!-- <tr>
