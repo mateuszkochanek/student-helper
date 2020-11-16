@@ -3,6 +3,7 @@
 {% block extension-styles %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/avg_grade_page.css' %}">
+    <script type="text/javascript" src="{% static 'scripts/avg_grade.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -58,33 +59,10 @@
                 Brak wszystkich ocen
             {% elif avg is not None %}
                 Średnia
-                {{ avg }}
+                {{ avg|floatformat:"-2" }}
             {% endif %}
         </div>
 
     </div>
-
-    <script>
-        var courseId = 0;
-        function showEditGradeView(pk) {
-            courseId = pk;
-            var div = document.getElementById('editGradeDiv')
-            const visibility = div.style.visibility;
-            div.style.visibility = (visibility === "visible" ? 'hidden' : "visible");
-        }
-
-        function saveNewGrade() {
-            const newGrade = document.getElementById('newGrade');
-
-            if (parseFloat(newGrade.value)) {
-                if (document.location.href.substring(document.location.href.length - 9) === 'avgGrade/') {
-                    document.location.href += courseId + "/" + newGrade.value;
-                } else {
-                    document.location.href = document.location.href.split("avgGrade")[0] + "avgGrade/" + courseId + "/" + newGrade.value;
-                }
-            }
-        }
-
-    </script>
 
 {% endblock %}
