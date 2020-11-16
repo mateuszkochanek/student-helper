@@ -1,13 +1,15 @@
 from icalendar import Calendar, Event
 import itertools
 import easygui
-
+import threading
 from .models import Teacher, Course, Events, Description
 from django.contrib.auth.models import User
 
-class CalendarImport:
+class CalendarImport(threading.Thread):
 
     def __init__(self, user):
+
+        threading.Thread.__init__(self)
 
         self.AllTeachers = []
         self.AllCourses = []
@@ -15,11 +17,12 @@ class CalendarImport:
         self.user = user
 
         file = easygui.fileopenbox()
-        f = open(file, 'rb')
-        gcal = Calendar.from_ical(f.read())
+        if file is not None:
+            f = open(file, 'rb')
+            gcal = Calendar.from_ical(f.read())
 
-        self.read_calendar(gcal)
-        self.add_to_dbase()
+            self.read_calendar(gcal)
+            self.add_to_dbase()
 
 
     def get_teacher_data(self, teacher):
