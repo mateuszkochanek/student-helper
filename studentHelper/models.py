@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.shortcuts import reverse
+
 
 from studentHelper.managers import TeacherManager
 from studentHelper.managers import CourseManager
@@ -153,6 +155,7 @@ class Events(models.Model):
     end_date = models.DateTimeField()
     period_type = models.CharField(choices=TYPES, max_length=7)
     objects = EventsManager()
+
 
 
 class Description(models.Model):

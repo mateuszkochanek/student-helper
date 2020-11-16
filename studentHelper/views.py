@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from .models import Events
+from .models import Events, Description
 from .events.UploadCalendarEvent import UploadCalendarEvent
+from django.views.generic import ListView, CreateView
 
 # Create your views here.
 
@@ -23,3 +24,24 @@ def calendar_view(request):
 
 def avg_grade_view(request):
     return render(request, "avg_grade.html")
+
+
+
+
+class EventListView(CreateView):
+    """ View for adding event """
+    model = Events
+    fields = ['start_date', 'end_date', 'period_type']
+
+    def form_valid(self, form):
+        form.instance.client_id = self.request.user
+        return super().form_valid(form)
+
+class DescriptionListView(CreateView):
+    """ View for adding event """
+    model = Description
+    fields = ['start_date', 'end_date', 'period_type']
+
+    def form_valid(self, form):
+        form.instance.client_id = self.request.user
+        return super().form_valid(form)
