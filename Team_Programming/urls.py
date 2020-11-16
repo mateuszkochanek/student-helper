@@ -19,7 +19,8 @@ from django.urls import path, include
 
 from studentHelper.views import main_view, log_in_view
 from register.views import register
-from studentHelper.views import main_view, log_in_view, calendar_view, avg_grade_view, EventListView, calendar_import
+from studentHelper.views import ( main_view, log_in_view, calendar_view, avg_grade_view,
+    calendar_import, new_event_view ) 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +29,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('calendar/', calendar_view),
     path('avgGrade/', avg_grade_view),
-    path('calendar/new', EventListView.as_view(success_url="calendar/"), name="add-event"),
+    path('calendar/new', new_event_view, name='new'),
     path('calendar_import', calendar_import, name='calendar_import')
 
 
