@@ -8,3 +8,6 @@ class Event(ABC):
     @abstractmethod
     def execute(self):  # returns data
         pass
+
+    def get_user(self):
+        return self.__user
