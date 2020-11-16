@@ -52,8 +52,17 @@
                         Niedziela
                     </td>
                 </tr>
+                    {% if d %}
+                        {% for k in d %}
+                            {% for item_1, item_2 in k.items %}
+                            <tr>
+                                <td>{{ item_2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
 
-                <tr>
+                <!-- <tr>
                     <td>
                         11:15 - 14:00 Kombinatoryka analityczna, wykład
                     </td>
@@ -67,7 +76,7 @@
                     <td>
                         7:30 Oddać wszystkie oszczędności w kościele
                     </td>
-                </tr>
+                </tr> -->
 
 
             </table>
