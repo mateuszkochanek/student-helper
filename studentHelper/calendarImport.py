@@ -2,7 +2,7 @@ from icalendar import Calendar, Event
 import itertools
 import easygui
 
-from .models import Teacher, Course, Events
+from .models import Teacher, Course, Events, Description
 from django.contrib.auth.models import User
 
 class CalendarImport:
@@ -86,4 +86,6 @@ class CalendarImport:
 
         for events in self.AllEvents:
             if self.user.is_authenticated:
-                Events.objects.add_record(self.user, events['dtstart'], events['dtend'], 'ONCE')
+                e = Events.objects.add_record(self.user, events['dtstart'], events['dtend'], 'ONCE')
+                #Todo gdzie nazwa kursu?!
+                Description.objects.add_record(e, True, events['summary'][2:])

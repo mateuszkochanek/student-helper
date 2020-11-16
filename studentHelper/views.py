@@ -29,7 +29,7 @@ def avg_grade_view(request):
 
 def calendar_import(request):
     CalendarImport(request.user)
-    return render(request, "calendar.html")
+    return calendar_view(request)
 
 
 class EventListView(CreateView):

@@ -20,10 +20,11 @@ class UploadCalendarEvent(Event):
          end_date = today + timedelta(days=(6-day))
          data = [{} for _ in range(7)]
          try:
-             events = Events.objects.get_record_by_client_id(self.get_user().id)
+             events = Events.objects.get_events(self.get_user().id, start_date, end_date)
              #TODO repair this stupid
              # perfectly writed
              # mega code 9
+             print(events.all)
              for event in events:
                  checked = False
                  extra = Description.objects.get_descriptions(event).first()
@@ -32,14 +33,14 @@ class UploadCalendarEvent(Event):
                      for dict in data:
                          if key in dict:
                              dict[key] += '\n' + '\n' + (str(event.start_date.time()) + '-' + str(event.end_date.time())
-                                                    + ' ' + str(extra.description))
+                                                    + '\n ' + str(extra.description))
                              checked = True
                              break
 
                      if checked == False:
                          data[event.start_date.weekday()] = {
                                 key : str(event.start_date.time()) + '-' + str(event.end_date.time())
-                                         + ' ' + str(extra.description)
+                                         + '\n ' + str(extra.description)
                                  # 'end date': event.end_date,
                                  # 'period type': event.period_type,
                                  # 'course': extra.course,

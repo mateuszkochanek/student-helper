@@ -17,14 +17,17 @@ class TeacherManager(models.Manager):
             webpage: String
 
         """
-
-        teacher = self.create(name=name, surname=surname, title=title, webpage=webpage)
-        teacher.save()
+        try:
+            self.get(name=name, surname=surname, title=title)
+        except:
+            teacher = self.create(name=name, surname=surname, title=title, webpage=webpage)
+            teacher.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
     def get_record_by_name_surname_title(self, name, surname, title):
+
         return self.get(name=name, surname=surname, title=title)
 
 
@@ -43,10 +46,12 @@ class CourseManager(models.Manager):
             type: 'W', 'C', 'L'
 
         """
-
-        course = self.create(client_id=client, teacher_id=teacher, ECTS=ECTS,
+        try:
+            self.get(client_id=client, teacher=teacher, name=name, type=type)
+        except:
+            course = self.create(client_id=client, teacher_id=teacher, ECTS=ECTS,
                         name=name, type=type, final=0)
-        course.save()
+            course.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
@@ -86,7 +91,10 @@ class EventsManager(models.Manager):
 
         event = self.create(client_id=client, start_date=start_date,
                             end_date=end_date, period_type=period_type)
+
+        #TODO triggers
         event.save()
+        return event
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
