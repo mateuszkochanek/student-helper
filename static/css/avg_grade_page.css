@@ -19,8 +19,6 @@ h1:after {
 }
 
 .calcAvgGradeButton {
-    grid-column: 11;
-    grid-row: 2;
     float: right;
     height: 40px;
     width: 140px;
@@ -51,13 +49,20 @@ h1:after {
     border: 1px solid white;
 }
 
-.editGradeButton {
-
-}
-
 .editGradeDiv {
-    grid-column: 8;
+    grid-column: 6;
     grid-row: 2;
     visibility: hidden;
-    background: #9bdcfa;
+}
+
+.buttonCalcGradeForm {
+    grid-column: 11;
+    grid-row: 2;
+}
+
+.avgGradeResult {
+    grid-column: 8 / 11;
+    grid-row: 4 / 5;
+    color: #9bdcfa;
+    font-size: 50px;
 }

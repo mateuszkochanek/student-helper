@@ -5,6 +5,8 @@ from .models import Events, Description, Course
 from .events.UploadCalendarEvent import UploadCalendarEvent
 from django.views.generic import ListView, CreateView
 from .calendarImport import CalendarImport
+from .avg import get_avg
+from .events.AddFinalGradeEvent import AddFinalGradeEvent
 import threading
 
 # Create your views here.
@@ -33,10 +35,16 @@ def avg_grade_view(request):
 
 
 def avg_grade_view_edit_grade(request, pk, grade):
-    c = Course.objects.get_record_by_id(pk)
-    c.final = grade
-    c.save()
+    AddFinalGradeEvent(request.user).execute(pk, grade)
     return avg_grade_view(request)
+
+
+def avg_grade_calc(request):
+    context = {
+        'courses': Course.objects.get_records_by_client_id(request.user.id),
+        'avg': get_avg(request.user)
+    }
+    return render(request, "avg_grade.html", context)
 
 
 def calendar_import(request):
