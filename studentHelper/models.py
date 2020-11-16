@@ -13,13 +13,6 @@ from studentHelper.managers import PredictionManager
 from studentHelper.managers import MarksManager
 
 
-class Post(models.Model):
-    title = models.CharField(max_length=120)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.title
-
 class Teacher(models.Model):
 
     # pk generated automaticly
