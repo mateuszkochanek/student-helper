@@ -1,19 +1,23 @@
-{% extends "base/base-template.html" %}
 {% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
 
-{% block foreground %}
-    {% block content %}
-        <div style="text-align: center;">
-        <h1>POLISYSTENT</h1>
-        </div>
-    {% endblock %}
 
-    {% block header %}
+<div class="grid">
+    <div class="titlebar">
+        POLISYSTENT
+    </div>
+    <div class="subtitlebar">
+        Zaloguj się
+    </div>
+    <div class="formbar">
         <form method="post">
             {% csrf_token %}
             {{ form|crispy }}
             <p>Nie masz konta? Załóż je <a href="/register">tutaj</a></p>
             <button type="submit">Zaloguj się</button>
         </form>
-    {% endblock %}
-{% endblock %}
+    </div>
+</div>
