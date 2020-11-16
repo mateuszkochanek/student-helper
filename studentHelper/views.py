@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from .models import Post, Events
+from .models import Events
 from .events.UploadCalendarEvent import UploadCalendarEvent
 
 # Create your views here.
