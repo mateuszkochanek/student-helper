@@ -48,8 +48,8 @@ class CourseManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
-    def get_record_by_client_id(self, client_id):
-        return self.get(client_id=client_id)
+    def get_records_by_client_id(self, client_id):
+        return self.filter(client_id=client_id)
 
 
 class RulesManager(models.Manager):
