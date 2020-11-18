@@ -1,31 +1,47 @@
-from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Events, Description
-from django.contrib.admin import widgets
+from bootstrap_datepicker_plus import DateTimePickerInput
+from django.forms import ModelForm
+from django.core.exceptions import ValidationError
 
 
-class EventForm(forms.ModelForm):
+
+# pip install django-bootstrap-datepicker-plus
+# pip install django-bootstrap4
+
+
+class EventForm(ModelForm):
+
     class Meta:
         model = Events
         fields = ['start_date', 'end_date', 'period_type']
+        widgets = {
+            'start_date': DateTimePickerInput(),
+            'end_date': DateTimePickerInput(),
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["start_date"].label = "Początek wydarzenia"
-        # self.fields["start_date"].widget = widgets.AdminSplitDateTime()
-            # self.fields["start_date"].widget = self.SelectDateWidget()
         self.fields["end_date"].label = "Koniec wydarzenia"
-        # self.fields["end_date"].widget = widgets.AdminSplitDateTime()
         self.fields["period_type"].label = "Okres trwania"
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
-    def form_valid(self, form):
-        print("WIIIIIIITAM", form.instance.client_id)
-        form.instance.client_id = self.request.user
-        return super().form_valid(form)
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get("start_date")
+        end_date = cleaned_data.get("end_date")
 
-class DescriptionForm(forms.ModelForm):
+        if start_date and end_date:
+            if start_date > end_date:
+                raise ValidationError(
+                    "Podróż w czasie jest niemożliwa :)"
+                )
+
+
+class DescriptionForm(ModelForm):
 
     class Meta:
         model = Description
