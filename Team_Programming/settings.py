@@ -46,7 +46,13 @@ INSTALLED_APPS = [
     'studentHelper.apps.StudenthelperConfig',
     'register.apps.RegisterConfig',
     'crispy_forms',
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'studentHelperDB',
         'USER': 'djangodev',
-        'PASSWORD': 'Root.tooR',
+        'PASSWORD': 'root',
         'TIME_ZONE': 'Europe/Warsaw',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3325',

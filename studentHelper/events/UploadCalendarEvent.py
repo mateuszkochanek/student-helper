@@ -20,13 +20,14 @@ class UploadCalendarEvent(Event):
          end_date = today + timedelta(days=(6-day))
          data = [{} for _ in range(7)]
          try:
-             events = Events.objects.get_events(self.get_user().id, start_date, end_date)
+             events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)
              #TODO repair this stupid
              # perfectly writed
              # mega code 9
-             print(events.all)
+
              for event in events:
                  checked = False
+                 print(event.period_type)
                  extra = Description.objects.get_descriptions(event).first()
                  key = str(event.start_date.weekday())
                  if event.period_type == "ONCE":
@@ -41,17 +42,14 @@ class UploadCalendarEvent(Event):
                          data[event.start_date.weekday()] = {
                                 key : str(event.start_date.time()) + '-' + str(event.end_date.time())
                                          + '\n ' + str(extra.description)
-                                 # 'end date': event.end_date,
-                                 # 'period type': event.period_type,
-                                 # 'course': extra.course,
-                                 # 'description': extra.description
                                  }
+                                 
                  elif event.period_type == "DAILY" :
-                     for i in range(7):
+                     for i in range(event.start_date.weekday(), 7):
                         if str(i) in data[i]:
-                            data[i][str(i)] += '\n' + '\n' + (str(event.start_date.time()) + ' ' + str(extra.description))
+                            data[i][str(i)] += '\n' + '\n' + "Codziennie: " + ' ' + str(extra.description)
                         else:
-                            data[i] = { str(i): '\n' + '\n' + (str(event.start_date.time()) + ' ' + str(extra.description)) }
+                            data[i] = { str(i): '\n' + '\n' + "Codziennie: " + ' ' + str(extra.description) }
 
 
 
