@@ -110,6 +110,15 @@ class EventsManager(models.Manager):
                             end_date__range=[start_date, end_date]
                             )
 
+    def get_all_events(self, client_id, start_date, end_date):
+
+
+        q1 = self.filter( client_id=client_id,
+                            start_date__range=[start_date, end_date],
+                            end_date__range=[start_date, end_date] )
+        q2 = self.filter( client_id=client_id, start_date__lte=end_date,
+                            period_type="DAILY" )
+        return q1.union(q2)
 
     def delete_event_by_id(self, id):
         #TODO triggers?

@@ -138,11 +138,11 @@ class Events(models.Model):
     TYPES = [
     ("ONCE", "Once"),
     ("DAILY", "Daily"),
-    ("WEEKLY", "Weekly"),
-    ("MONTHLY", "Monthly"),
-    ("YEARLY", "Yearly"),
-    ("EVEN", "Even"),
-    ("ODD", "Odd")
+    # ("WEEKLY", "Weekly"),
+    # ("MONTHLY", "Monthly"),
+    # ("YEARLY", "Yearly"),
+    # ("EVEN", "Even"),
+    # ("ODD", "Odd")
     ]
     # pk generated automaticly
 
