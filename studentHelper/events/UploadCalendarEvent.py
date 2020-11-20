@@ -10,7 +10,7 @@ class UploadCalendarEvent(Event):
     def __init__(self, user):
         super(UploadCalendarEvent, self).__init__(user)
 
-    def execute(self, choose):
+    def execute(self, choose=False):
          # get events from db
 
          today = date.today()
@@ -26,11 +26,13 @@ class UploadCalendarEvent(Event):
              # mega code 9
 
              for event in events:
+                 print(event)
                  checked = False
                  print(event.period_type)
-                 extra = Description.objects.get_descriptions(event).first()
+                 extra = Description.objects.get_descriptions(event, choose).first()
+                 print(extra)
                  key = str(event.start_date.weekday())
-                 if event.period_type == "ONCE":
+                 if event.period_type == "ONCE" and extra != None:
                      for dict in data:
                          if key in dict:
                              dict[key] += '\n' + '\n' + (str(event.start_date.time()) + '-' + str(event.end_date.time())
@@ -43,8 +45,8 @@ class UploadCalendarEvent(Event):
                                 key : str(event.start_date.time()) + '-' + str(event.end_date.time())
                                          + '\n ' + str(extra.description)
                                  }
-                                 
-                 elif event.period_type == "DAILY" :
+
+                 elif event.period_type == "DAILY" and extra != None:
                      for i in range(event.start_date.weekday(), 7):
                         if str(i) in data[i]:
                             data[i][str(i)] += '\n' + '\n' + "Codziennie: " + ' ' + str(extra.description)

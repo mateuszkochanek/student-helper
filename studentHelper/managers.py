@@ -140,8 +140,11 @@ class DescriptionManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
-    def get_descriptions(self, event):
-        return self.filter(event_id=event).all()
+    def get_descriptions(self, event, course):
+        if course:
+            return self.filter(event_id=event, course=course).all()
+        else:
+            return self.filter(event_id=event).all()
 
 
 class GoalsManager(models.Manager):
