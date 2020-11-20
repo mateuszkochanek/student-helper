@@ -31,6 +31,7 @@ urlpatterns = [
     path('', main_view),
     path('', include('django.contrib.auth.urls')),
     path('calendar/', calendar_view, name='calendar'),
+    path('scheduler/', scheduler, name='scheduler'),
     path('avgGrade/', avg_grade_view),
     path('calendar/new', new_event_view, name='new'),
     path('avgGrade', avg_grade_calc, name='avg_grade_calc'),

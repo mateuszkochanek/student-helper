@@ -52,7 +52,7 @@ def new_event_view(request):
     if request.method == 'POST':
         event = EventForm(request.POST)
         description = DescriptionForm(request.POST)
-  
+
         if event.is_valid() and description.is_valid():
 
             e = event.save(commit=False)
@@ -68,7 +68,7 @@ def new_event_view(request):
 
     return render(request, "new_event.html", {"event_form":event, "description_form":description})
 
-  
+
 @login_required(login_url='/login/')
 def avg_grade_view(request):
     context = {
@@ -81,7 +81,7 @@ def avg_grade_view_edit_grade(request, pk, grade):
     AddFinalGradeEvent(request.user).execute(pk, grade)
     return avg_grade_view(request)
 
-  
+
 @login_required(login_url='/login/')
 def avg_grade_calc(request):
     context = {
@@ -94,7 +94,11 @@ def avg_grade_calc(request):
 @login_required(login_url='/login/')
 def calendar_import(request):
     CalendarImport(request.user)
-    return calendar_view(request)
+    return scheduler(request)
 
+@login_required(login_url='/login/')
+def scheduler(request):
+    context = UploadCalendarEvent(request.user).execute(True)
+    print(context)
 
-
+    return render(request, "scheduler.html", {'d': context}, content_type="text/html")
