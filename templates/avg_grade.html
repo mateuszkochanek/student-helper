@@ -33,7 +33,7 @@
                 {% for course in courses %}
                     <tr>
                         <td>
-                            {{ course.name }}
+                            {{ course.name }} {{ course.type }}
                         </td>
                         <td>
                             {{ course.ECTS }}
@@ -42,21 +42,23 @@
                             {{ course.final }}
                         </td>
                         <td>
-                            <button type="button" onclick="showEditGradeView({{ course.pk }})">Edytuj</button>
+                            <button type="button" onclick="showEditECTSView({{ course.pk }})">Edytuj ECTS</button>
+                            <button type="button" onclick="showEditGradeView({{ course.pk }})">Edytuj Ocenę</button>
                         </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
 
-        <div class="editGradeDiv" id="editGradeDiv">
-            <input type="number" id="newGrade">
-            <button type="button" onclick="saveNewGrade()">Zapisz</button>
+        <div class="editDiv" id="editDiv">
+            <input type="number" id="newValue">
+            <button type="button" onclick="save()">Zapisz</button>
+            <button type="button" onclick="cancel()">Anuluj</button>
         </div>
 
         <div class="avgGradeResult">
             {% if avg == -1 %}
-                Brak wszystkich ocen
+                Brak danych
             {% elif avg is not None %}
                 Średnia
                 {{ avg|floatformat:"-2" }}

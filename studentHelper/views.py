@@ -13,6 +13,7 @@ from .forms import EventForm, DescriptionForm
 
 from .avg import get_avg
 from .events.AddFinalGradeEvent import AddFinalGradeEvent
+from .events.AddEctsEvent import AddEctsEvent
 import threading
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -79,6 +80,12 @@ def avg_grade_view(request):
 @login_required(login_url='/login/')
 def avg_grade_view_edit_grade(request, pk, grade):
     AddFinalGradeEvent(request.user).execute(pk, grade)
+    return avg_grade_view(request)
+
+
+@login_required(login_url='/login/')
+def avg_grade_view_edit_ects(request, pk, ects):
+    AddEctsEvent(request.user).execute(pk, ects)
     return avg_grade_view(request)
 
 

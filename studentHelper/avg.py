@@ -6,11 +6,10 @@ def get_avg(user):
     marks_sum = 0
     ects_sum = 0
     for c in courses:
-        ects_sum += c.ECTS
-        if c.final is None or c.final == 0:
-            return -1
-        else:
+        if c.final is not None and c.final > 0:
             marks_sum += c.final * c.ECTS
+            ects_sum += c.ECTS
+
     if ects_sum == 0:
         return -1
     return marks_sum/ects_sum
