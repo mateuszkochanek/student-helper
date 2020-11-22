@@ -34,6 +34,7 @@ urlpatterns = [
     path('scheduler/', scheduler, name='scheduler'),
     path('avgGrade/', avg_grade_view),
     path('calendar/new', new_event_view, name='new'),
+    path('calendar/course', new_course_view, name='new_course'),
     path('avgGrade', avg_grade_calc, name='avg_grade_calc'),
     path('avgGrade/grade/<int:pk>/<float:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
     path('avgGrade/ects/<int:pk>/<int:ects>/', avg_grade_view_edit_ects, name="AvgGradeEditEcts"),
