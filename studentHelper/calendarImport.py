@@ -2,7 +2,7 @@ from icalendar import Calendar, Event
 import itertools
 import easygui
 import threading
-from .models import Teacher, Course, Events, Description
+from .models import Teacher, Course, Events, Description, Marks, Rules, Goals, Files, Prediction
 from django.contrib.auth.models import User
 
 
@@ -11,6 +11,11 @@ def clear_tables():
     Events.objects.all().delete()
     Course.objects.all().delete()
     Teacher.objects.all().delete()
+    Marks.objects.all().delete()
+    Rules.objects.all().delete()
+    Goals.objects.all().delete()
+    Files.objects.all().delete()
+    Prediction.objects.all().delete()
 
 
 def get_teacher_data(teacher):
@@ -36,14 +41,17 @@ class CalendarImport(threading.Thread):
         self.AllEvents = []
         self.user = user
 
-        clear_tables()
         file = easygui.fileopenbox()
-        if file is not None:
-            f = open(file, 'rb')
-            gcal = Calendar.from_ical(f.read())
+        try:
+            if file is not None:
+                f = open(file, 'rb')
+                gcal = Calendar.from_ical(f.read())
 
-            self.read_calendar(gcal)
-            self.add_to_dbase()
+                self.read_calendar(gcal)
+                clear_tables()
+                self.add_to_dbase()
+        except ValueError:
+            print("Cos nie tak z plikiem")
 
     def read_calendar(self, calendar):
         course = {'dtstart': '', 'dtend': '', 'description': '', 'location': '', 'summary': ''}
