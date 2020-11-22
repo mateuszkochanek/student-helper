@@ -30,7 +30,7 @@ h1:after {
 }
 
 .grades_list {
-    grid-column: 1 / 6;
+    grid-column: 1 / 7;
     grid-row: 2 / 7;
     border-radius: 25px;
     background: #9bdcfa;
@@ -49,8 +49,8 @@ h1:after {
     border: 1px solid white;
 }
 
-.editGradeDiv {
-    grid-column: 6;
+.editDiv {
+    grid-column: 7 / 9;
     grid-row: 2;
     visibility: hidden;
 }
