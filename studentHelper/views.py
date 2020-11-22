@@ -23,13 +23,20 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
 def main_view(request):
-    events_today = Events.objects.get_events(
-        request.user.id,
-        timezone.now(),
-        timezone.now().replace(hour=23, minute=59, second=59)
-    ).filter(description__course=1).order_by('start_date')[:5]
+    events_today = Events.objects.filter(
+        client_id=request.user.id,
+        description__course=1,
+        start_date__gte=timezone.now().replace(hour=00, minute=00, second=1),
+        end_date__gte=timezone.now(),
+        end_date__lte=timezone.now().replace(hour=23, minute=59, second=59)
+    ).order_by('start_date')[:5]
 
-    next_events = Events.objects.filter(client_id=request.user.id, description__course=0, start_date__gte=timezone.now()).order_by('start_date')[:5]
+    next_events = Events.objects.filter(
+        client_id=request.user.id,
+        description__course=0,
+        start_date__gte=timezone.now()
+    ).order_by('start_date')[:5]
+
     context = {
         'events_today': events_today,
         'next_events': next_events
