@@ -94,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'studentHelperDB',
         'USER': 'djangodev',
-        'PASSWORD': 'root',
+        'PASSWORD': 'Root.tooR',
         'TIME_ZONE': 'Europe/Warsaw',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3325',

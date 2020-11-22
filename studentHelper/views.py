@@ -27,18 +27,20 @@ def main_view(request):
         request.user.id,
         timezone.now(),
         timezone.now().replace(hour=00, minute=00, second=1) + timedelta(days=1)
-    ).order_by('start_date')[:4]
+    ).filter(description__course=1).order_by('start_date')[:5]
 
-    next_events = Events.objects.filter(client_id=request.user.id, description__course=0).order_by('start_date')[:4]
+    next_events = Events.objects.filter(client_id=request.user.id, description__course=0, start_date__gte=timezone.now()).order_by('start_date')[:5]
     context = {
         'events_today': events_today,
         'next_events': next_events
     }
     return render(request, "index.html", context)
 
+
 @login_required(login_url='/login/')
 def log_in_view(request):
     return render(request, "login.html")
+
 
 @login_required(login_url='/login/')
 def calendar_view(request):
@@ -46,6 +48,7 @@ def calendar_view(request):
     print(context)
 
     return render(request, "calendar.html", {'d': context}, content_type="text/html")
+
 
 @login_required(login_url='/login/')
 def new_event_view(request):
@@ -77,6 +80,7 @@ def avg_grade_view(request):
     }
     return render(request, "avg_grade.html", context)
 
+
 @login_required(login_url='/login/')
 def avg_grade_view_edit_grade(request, pk, grade):
     AddFinalGradeEvent(request.user).execute(pk, grade)
@@ -102,6 +106,7 @@ def avg_grade_calc(request):
 def calendar_import(request):
     CalendarImport(request.user)
     return scheduler(request)
+
 
 @login_required(login_url='/login/')
 def scheduler(request):
