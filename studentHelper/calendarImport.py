@@ -5,19 +5,6 @@ import threading
 from .models import Teacher, Course, Events, Description, Marks, Rules, Goals, Files, Prediction
 from django.contrib.auth.models import User
 
-
-def clear_tables():
-    Description.objects.all().delete()
-    Events.objects.all().delete()
-    Course.objects.all().delete()
-    Teacher.objects.all().delete()
-    Marks.objects.all().delete()
-    Rules.objects.all().delete()
-    Goals.objects.all().delete()
-    Files.objects.all().delete()
-    Prediction.objects.all().delete()
-
-
 def get_teacher_data(teacher):
     t = teacher.split()
     name = t[len(t) - 2]
@@ -48,10 +35,14 @@ class CalendarImport(threading.Thread):
                 gcal = Calendar.from_ical(f.read())
 
                 self.read_calendar(gcal)
-                clear_tables()
+                self.clear_tables()
                 self.add_to_dbase()
         except ValueError:
             print("Cos nie tak z plikiem")
+
+    def clear_tables(self):
+        Events.objects.filter(client_id=self.user.id, description__course=True).delete()
+        Course.objects.get_records_by_client_id(self.user.id).delete()
 
     def read_calendar(self, calendar):
         course = {'dtstart': '', 'dtend': '', 'description': '', 'location': '', 'summary': ''}
