@@ -103,6 +103,16 @@ class CourseForm(ModelForm):
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
+    def clean(self):
+        cleaned_data = super().clean()
+        ects = cleaned_data.get("ECTS")
+
+        if ects:
+            if ects < 0:
+                raise ValidationError(
+                    "Nie możesz być aż tak słabym uczniem ;)"
+                )
+
 
 class TeacherForm(ModelForm):
 

@@ -28,7 +28,7 @@ function isValueCorrect(newValue) {
         return false;
     if (editType === "grade" && !isNaN(newValue) && newValue >= 0)
         return true;
-    if (editType === "ects" && Number.isInteger(Number(newValue)) && newValue >= 0)
+    if (editType === "ects" && Number.isInteger(Number(newValue)) && !newValue.includes('.') && newValue >= 0)
         return true;
     return false;
 }
