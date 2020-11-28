@@ -98,6 +98,9 @@ DATABASES = {
         'TIME_ZONE': 'Europe/Warsaw',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3325',
+        'OPTIONS': {
+            'init_command': 'ALTER DATABASE studentHelperDB CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci',
+        }
     }
 }
 
