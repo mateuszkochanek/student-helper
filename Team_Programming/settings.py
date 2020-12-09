@@ -94,10 +94,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'studentHelperDB',
         'USER': 'djangodev',
-        'PASSWORD': 'root',
+        'PASSWORD': 'Root.tooR',
         'TIME_ZONE': 'Europe/Warsaw',
     #     'HOST': '127.0.0.1',
     #     'PORT': '3325',
+        'OPTIONS': {
+            'init_command': 'ALTER DATABASE studentHelperDB CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci',
+        }
     }
 }
 
@@ -150,3 +153,5 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

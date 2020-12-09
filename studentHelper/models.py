@@ -32,9 +32,9 @@ class Teacher(models.Model):
 class Course(models.Model):
 
     TYPES = [
-    ("W", "lecture"),
-    ("C", "exercises"),
-    ("L", "laboratory"),
+    ("W", "wykład"),
+    ("C", "ćwiczenia"),
+    ("L", "laboratoria"),
     ]
 
     # pk generated automaticly
@@ -53,7 +53,7 @@ class Course(models.Model):
     ECTS = models.IntegerField()
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=TYPES)
-    final = models.FloatField(blank=True, default=None)
+    final = models.FloatField(blank=True, default=0)
     objects = CourseManager()
 
 
@@ -83,9 +83,9 @@ class Rules(models.Model):
 class Goals(models.Model):
 
     TYPES = [
-    ("A", "activity"),
-    ("M", "marks"),
-    ("O", "others"),
+    ("A", "aktywność"),
+    ("M", "ocena"),
+    ("O", "inne"),
     ]
 
     # pk generated automaticly
@@ -136,8 +136,8 @@ class Prediction(models.Model):
 class Events(models.Model):
 
     TYPES = [
-    ("ONCE", "Once"),
-    ("DAILY", "Daily"),
+    ("ONCE", "Pojedyncze wydarzenie"),
+    ("DAILY", "Codziennie"),
     # ("WEEKLY", "Weekly"),
     # ("MONTHLY", "Monthly"),
     # ("YEARLY", "Yearly"),
@@ -166,7 +166,7 @@ class Description(models.Model):
     on_delete = models.CASCADE,
     primary_key=True,
     )
-    course = models.BooleanField()
+    course = models.BooleanField(default=False)
     description = models.CharField(max_length=128)
     objects = DescriptionManager()
 
@@ -177,7 +177,7 @@ class Marks(models.Model):
     ("PLUS", "+"),
     ("MINUS", "-"),
     ("PKT", "pkt"),
-    ("MARK", "mark"),
+    ("MARK", "ocena"),
     ]
     course_id = models.OneToOneField(
     Course,

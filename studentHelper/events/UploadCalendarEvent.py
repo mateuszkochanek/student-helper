@@ -3,6 +3,7 @@ from studentHelper.models import Events, Description
 from django.core.exceptions import EmptyResultSet, MultipleObjectsReturned, ObjectDoesNotExist
 from datetime import date, timedelta
 from django.core import serializers
+from django.utils import timezone
 
 
 
@@ -15,9 +16,11 @@ class UploadCalendarEvent(Event):
 
          today = date.today()
          day = today.weekday()
-
-         start_date = today - timedelta(days=day)
-         end_date = today + timedelta(days=(6-day))
+         print(day)
+         start_date = timezone.now().replace(hour=0, minute=0, second=0) - timedelta(days=day)
+         end_date = timezone.now().replace(hour=23, minute=59, second=59) + timedelta(days=(6-day))
+         print(start_date)
+         print(end_date)
          data = [{} for _ in range(7)]
          try:
              events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)

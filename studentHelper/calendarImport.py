@@ -2,8 +2,20 @@ from icalendar import Calendar, Event
 import itertools
 import easygui
 import threading
-from .models import Teacher, Course, Events, Description
+from .models import Teacher, Course, Events, Description, Marks, Rules, Goals, Files, Prediction
 from django.contrib.auth.models import User
+
+def get_teacher_data(teacher):
+    t = teacher.split()
+    name = t[len(t) - 2]
+    surname = t[len(t) - 1]
+    title = t[0:len(t) - 2]
+    title2 = ''
+    for i in title:
+        title2 += i
+        title2 += ' '
+    return name, surname, title2
+
 
 class CalendarImport(threading.Thread):
 
@@ -17,24 +29,20 @@ class CalendarImport(threading.Thread):
         self.user = user
 
         file = easygui.fileopenbox()
-        if file is not None:
-            f = open(file, 'rb')
-            gcal = Calendar.from_ical(f.read())
+        try:
+            if file is not None:
+                f = open(file, 'rb')
+                gcal = Calendar.from_ical(f.read())
 
-            self.read_calendar(gcal)
-            self.add_to_dbase()
+                self.read_calendar(gcal)
+                self.clear_tables()
+                self.add_to_dbase()
+        except ValueError:
+            print("Cos nie tak z plikiem")
 
-
-    def get_teacher_data(self, teacher):
-        t = teacher.split()
-        name = t[len(t) - 2]
-        surname = t[len(t) - 1]
-        title = t[0:len(t) - 2]
-        title2 = ''
-        for i in title:
-            title2 += i
-            title2 += ' '
-        return name, surname, title2
+    def clear_tables(self):
+        Events.objects.filter(client_id=self.user.id, description__course=True).delete()
+        Course.objects.get_records_by_client_id(self.user.id).delete()
 
     def read_calendar(self, calendar):
         course = {'dtstart': '', 'dtend': '', 'description': '', 'location': '', 'summary': ''}
@@ -77,12 +85,12 @@ class CalendarImport(threading.Thread):
 
     def add_to_dbase(self):
         for teacher in self.AllTeachers:
-            name, surname, title = self.get_teacher_data(teacher)
+            name, surname, title = get_teacher_data(teacher)
             Teacher.objects.add_record(name, surname, title, '')
 
         for course2 in self.AllCourses:
             for course in course2:
-                name, surname, title = self.get_teacher_data(course['description'])
+                name, surname, title = get_teacher_data(course['description'])
                 teacher = Teacher.objects.get_record_by_name_surname_title(name, surname, title)
                 if self.user.is_authenticated:
                     Course.objects.add_record(self.user, teacher, 0, course['summary'][2:], course['summary'][0])
