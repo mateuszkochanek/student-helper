@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Events, Description, Course, Teacher
+from studentHelper.models import Events, Description, Course, Teacher
 from bootstrap_datepicker_plus import DateTimePickerInput
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError

@@ -18,9 +18,11 @@ from django.urls import path, include, register_converter
 
 
 from studentHelper.views import *
+from my_calendar.views import *
 from studentHelper.models import Course
 from studentHelper.converts import FloatUrlParameterConverter
 from register.views import register
+
 
 register_converter(FloatUrlParameterConverter, 'float')
 
@@ -30,11 +32,11 @@ urlpatterns = [
     path('register/', register, name="register"),
     path('', main_view),
     path('', include('django.contrib.auth.urls')),
-    path('calendar/', calendar_view, name='calendar'),
-    path('scheduler/', scheduler, name='scheduler'),
-    path('avgGrade/', avg_grade_view),
     path('calendar/new', new_event_view, name='new'),
     path('calendar/course', new_course_view, name='new_course'),
+    path('calendar/<str:shift>', calendar_view, name='calendar'),
+    path('scheduler/<str:shift>', scheduler, name='scheduler'),
+    path('avgGrade/', avg_grade_view),
     path('avgGrade', avg_grade_calc, name='avg_grade_calc'),
     path('avgGrade/grade/<int:pk>/<float:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
     path('avgGrade/ects/<int:pk>/<int:ects>/', avg_grade_view_edit_ects, name="AvgGradeEditEcts"),
