@@ -3,7 +3,7 @@ import itertools
 import easygui
 import threading
 import datetime
-from studentHelper.models import Teacher, Course, Events, Description, Marks, Rules, Goals, Files, Prediction
+from studentHelper.models import Teacher, Course, Events, Description, Marks, Goals, Files, Prediction
 from django.contrib.auth.models import User
 
 
