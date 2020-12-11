@@ -4,15 +4,8 @@ from django.utils import timezone
 from django.shortcuts import reverse
 
 
-from studentHelper.managers import TeacherManager
-from studentHelper.managers import CourseManager
-from studentHelper.managers import RulesManager
-from studentHelper.managers import EventsManager
-from studentHelper.managers import DescriptionManager
-from studentHelper.managers import GoalsManager
-from studentHelper.managers import FilesManager
-from studentHelper.managers import PredictionManager
-from studentHelper.managers import MarksManager
+from studentHelper.managers import *
+
 
 
 class Teacher(models.Model):
@@ -58,7 +51,21 @@ class Course(models.Model):
 
 
 
-class Rules(models.Model):
+class Components(models.Model):
+
+    FORMS = [
+    ("ACTIV", "aktywność"),
+    ("EXAM", "egzamin"),
+    ("QUIZ", "kartkówka"),
+    ("TEST", "kolokwium"),
+    ("LIST", "lista zadań"),
+    ]
+
+    TYPES = [
+    ("POINT", "punkty"),
+    ("MARK", "ocena"),
+    ("PERC", "procent"),
+    ]
 
     course_id = models.OneToOneField(
     Course,
@@ -67,17 +74,82 @@ class Rules(models.Model):
     )
 
 
-    group = models.BooleanField()
-    lab_elements = models.IntegerField(blank=True)
-    exer_elements = models.IntegerField(blank=True)
-    lect_elements = models.IntegerField(blank=True)
-    lab_weight = models.IntegerField(blank=True)
-    exer_weight = models.IntegerField(blank=True)
-    lect_weight = models.IntegerField(blank=True)
-    formula = models.CharField(max_length=30)
-    objects = RulesManager()
+    form = models.CharField(max_length=5, choices=FORMS)
+    weight = models.FloatField()
+    type = models.CharField(max_length=5, choices=TYPES)
+    objects = ComponentsManager()
+
+class Thresholds(models.Model):
+
+    TYPES = [
+    ("POINT", "punkty"),
+    ("MARK", "ocena"),
+    ("PERC", "procent"),
+    ]
+
+    course_id = models.OneToOneField(
+    Course,
+    on_delete = models.CASCADE,
+    primary_key=True,
+    )
 
 
+    p_2_0 = models.FloatField()
+    k_2_0 = models.FloatField()
+    p_2_5 = models.FloatField()
+    k_2_5 = models.FloatField()
+    p_3_0 = models.FloatField()
+    k_3_0 = models.FloatField()
+    p_3_5 = models.FloatField()
+    k_3_5 = models.FloatField()
+    p_4_0 = models.FloatField()
+    k_4_0 = models.FloatField()
+    p_4_5 = models.FloatField()
+    k_4_5 = models.FloatField()
+    p_5_0 = models.FloatField()
+    k_5_0 = models.FloatField()
+    p_5_5 = models.FloatField()
+    k_5_5 = models.FloatField()
+    type = models.CharField(max_length=5, choices=TYPES)
+    objects = ComponentsManager()
+
+
+class Modyfication(models.Model):
+
+    TYPES = [
+    ("POINT", "punkty"),
+    ("MARK", "ocena"),
+    ("PERC", "procent"),
+    ]
+
+    MOD = [
+    ("MINUS", "-"),
+    ("PLUS", "+"),
+    ]
+
+    course_id = models.OneToOneField(
+    Course,
+    on_delete = models.CASCADE,
+    primary_key=True,
+    )
+
+    mod = models.CharField(max_length=5, choices=MOD)
+    val = models.FloatField()
+    type = models.CharField(max_length=5, choices=TYPES)
+    objects = ModyficationManager()
+
+
+class CourseGroup(models.Model):
+
+    course_id = models.OneToOneField(
+    Course,
+    on_delete = models.CASCADE,
+    primary_key=True,
+    )
+
+    weight = models.FloatField()
+    minimum = models.BooleanField(default=False)
+    objects = CourseGroupManager()
 
 
 class Goals(models.Model):

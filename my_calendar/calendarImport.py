@@ -2,7 +2,7 @@ from icalendar import Calendar, Event
 import itertools
 import easygui
 import threading
-from studentHelper.models import Teacher, Course, Events, Description, Marks, Rules, Goals, Files, Prediction
+from studentHelper.models import Teacher, Course, Events, Description, Marks, Goals, Files, Prediction
 from django.contrib.auth.models import User
 
 def get_teacher_data(teacher):
