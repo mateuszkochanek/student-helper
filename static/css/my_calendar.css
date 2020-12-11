@@ -5,6 +5,7 @@
     grid-gap: 5px;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows:auto auto;
+
 }
 
 
@@ -17,6 +18,15 @@
     max-height: 32px;
 }
 
+.titledate {
+
+    grid-column: 2 / 10;
+    grid-row: 1;
+    text-align: center;
+    font-size: 32px;
+    max-height: 32px;
+
+}
 
 .title {
     color: #0099e6;
@@ -63,6 +73,9 @@
     width: 100%
 }
 
+/* Calendar */
+
+
 .calendar {
     grid-column: 1 / 13;
     grid-row: 3 / 55;
@@ -71,7 +84,9 @@
     margin: 1%;
     overflow: scroll;
 
+
 }
+
 .calendar_title {
     grid-column: 1 / 13;
     grid-row: 3;
@@ -79,18 +94,54 @@
     color: white;
     max-height: 50px;
     width: 150%;
+
 }
 
-.calendar_title table {
-    width: 100%;
+
+.calendar table {
+    table-layout: fixed;
     height: 100%;
+    width: 100%;
     text-align:center;
     font-size: 16px;
 }
 
-.calendar_title table td {
+.calendar table td {
     border-right: 1px solid white;
-    text-align: left;
-    padding: 8px;
+    text-align: center;
     width: 1%;
+}
+
+.calendar table th {
+    border-right: 1px solid white;
+    text-align: center;
+    width: 0.5%;
+
+}
+a:link {
+    color: white;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+li{
+    margin-top: 20px;
+    /* border:1px solid grey; */
 }

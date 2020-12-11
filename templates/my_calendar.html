@@ -2,35 +2,39 @@
 {% block extension-styles %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/my_calendar.css' %}">
+    <script type="text/javascript" src="{% static 'scripts/calendar.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
 <div class="grid-container">
     <div class=titlebar>
         <div class=title>
-            Plan zajęć
+            Kalendarz
         </div>
     </div>
     <div class=titledate>
         <div class=title>
-            <a href="{% url 'scheduler' d.prev_shift %}" class=button>
+            <span>{{ d.period }}</span>
+            <a href="{% url 'calendar' d.prev_shift %}" class=button>
                 Poprzedni tydzień
             </a>
-            <a href="{% url 'scheduler' 'main' %}" class=button>
+            <a href="{% url 'calendar' 'main' %}" class=button>
                 Teraz
             </a>
-            <a href="{% url 'scheduler' d.next_shift %}" class=button>
+            <a href="{% url 'calendar' d.next_shift %}" class=button>
                 Następny tydzień
             </a>
 
         </div>
     </div>
     <div class=buttonbar>
-        <a href="{% url 'calendar_import' %}" class=button>
-            Dodaj plan
+        <a href="{% url 'new' %}" class=button>
+            Dodaj wydarzenie
+        </a>
+        <a href="{% url 'new_course' %}" class=button>
+            Dodaj kurs
         </a>
     </div>
-
     <div class=line>
         <hr style="color:CornflowerBlue">
     </div>
@@ -134,5 +138,101 @@
             </table>
         </div>
     </div>
+    <!-- <div class=calendar>
+        <table id="myTable">
+        {% if d %}
+            <tr>
+                <td>Poniedziałek</td>
+                <td>Wtorek</td>
+                <td>Środa</td>
+                <td>Czwartek</td>
+                <td>Piątek</td>
+                <td>Sobota</td>
+                <td>Niedziela</td>
+            </tr>
+                <tr>
+                    <td>
+                        {% for event in d.0 %}
+                        <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                        <div class=""></div>
+                        <span>{{ event.description }}</span>
+                        {% for s in event.size %}
+                            <br></br>
+                        {% endfor %}
+                        <br></br>
+                        {% endfor %}
+                    </td>
+                <td>
+                    {% for event in d.1 %}
+                    <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                    <div class=""></div>
+                    <span>{{ event.description }}</span>
+                    {% for s in event.size %}
+                        <br></br>
+                    {% endfor %}
+                    <br></br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for event in d.2 %}
+                    <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                    <div class=""></div>
+                    <span>{{ event.description }}</span>
+                    {% for s in event.size %}
+                        <br></br>
+                    {% endfor %}
+                    <br></br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for event in d.3 %}
+                    <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                    <div class=""></div>
+                    <span>{{ event.description }}</span>
+                    {% for s in event.size %}
+                        <br></br>
+                    {% endfor %}
+                    <br></br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for event in d.4 %}
+                    <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                    <div class=""></div>
+                    <span>{{ event.description }}</span>
+                    {% for s in event.size %}
+                        <br></br>
+                    {% endfor %}
+                    <br></br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for event in d.5%}
+                    <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                    <div class=""></div>
+                    <span>{{ event.description }}</span>
+                    {% for s in event.size %}
+                        <br></br>
+                    {% endfor %}
+                    <br></br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for event in d.6 %}
+                    <span>{{ event.start_date }} - {{ event.end_date }}</span>
+                    <div class=""></div>
+                    <span>{{ event.description }}</span>
+                    {% for s in event.size %}
+                        <br></br>
+                    {% endfor %}
+                    <br></br>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endif %}
+        </table>
+</div>
+</div> -->
+
 
 {% endblock %}

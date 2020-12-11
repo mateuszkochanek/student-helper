@@ -1,4 +1,3 @@
-
 {% load crispy_forms_tags %}
 {% block extension-styles %}
     {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
@@ -26,7 +25,7 @@
             {{ event_form|crispy }}
             {{ description_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
-            <a href="{% url 'calendar' %}" class="button">Wróć</a>
+            <a href="{% url 'calendar' 'main'%}" class="button">Wróć</a>
         </form>
     </div>
 </div>

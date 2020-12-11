@@ -27,7 +27,7 @@
             {{ course_form|crispy }}
             {{ teacher_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
-            <a href="{% url 'calendar' %}" class="button">Wróć</a>
+            <a href="{% url 'calendar' 'main' %}" class="button">Wróć</a>
         </form>
     </div>
 </div>
