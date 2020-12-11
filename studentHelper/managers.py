@@ -59,25 +59,107 @@ class CourseManager(models.Manager):
     def get_records_by_client_id(self, client_id):
         return self.filter(client_id=client_id)
 
-
-class RulesManager(models.Manager):
+class ComponentsManager(models.Manager):
     """
-        Model: Rules
-        Usage: Import model and then use Rules.objects.[below_options]
+        Model: Components
+        Usage: Import model and then use Components.objects.[below_options]
     """
 
-    def add_record(self, course, group, lab_elements, exer_elements,
-                    lect_elements, lab_weight, exer_weight, lect_weight, formula):
-        """ course: object of Course """
+    def add_record(self, course, form, weight, type):
+        """ Add new record to DB
 
-        rule = self.create(course_id=course, group=lab_elements,
-                    exer_elements=exer_elements,lect_elements=webpage,
-                    lab_weight=lab_weight, exer_weight=exer_weight,
-                    lect_weight=lect_weight, formula=formula)
-        rule.save()
+            course: object of Course,
+            form: ACTIV, EXAM, QUIZ, TEST, LIST
+            weight: Float
+            type: POINT, MARK, PERC
+
+        """
+
+        component = self.create(course_id=course, form=form, weight=weight,
+                    type=type)
+        component.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
+    def get_records_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
+
+
+class ThresholdsManager(models.Manager):
+    """
+        Model: Thresholds
+        Usage: Import model and then use Thresholds.objects.[below_options]
+    """
+
+    def add_record(self, course, p_2_0, k_2_0, p_2_5, k_2_5, p_3_0,
+                   k_3_0, p_3_5, k_3_5, p_4_0, k_4_0, p_4_5, k_4_5, p_5_0, k_5_0,
+                   p_5_5, k_5_5, type):
+        """ Add new record to DB
+
+            course: object of Course,
+
+        """
+
+        component = self.create(course_id=course, p_2_0=p_2_0, k_2_0=k_2_0, p_2_5=p_2_5,
+                                k_2_5=k_2_5, p_3_0=p_3_0, k_3_0=k_3_0, p_3_5=p_3_5,
+                                k_3_5=k_3_5, p_4_0=p_4_0, k_4_0=k_4_0, p_4_5=p_4_5,
+                                k_4_5=k_4_5, p_5_0=p_5_0, k_5_0=k_5_0, p_5_5=p_5_5,
+                                k_5_5=k_5_5, type=type)
+        component.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+    def get_records_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
+
+
+class ModyficationManager(models.Manager):
+    """
+        Model: Modyfication
+        Usage: Import model and then use Modyfication.objects.[below_options]
+    """
+
+    def add_record(self, course, mod, val, type):
+        """ Add new record to DB
+
+            course: object of Course,
+
+        """
+
+        component = self.create(course_id=course, mod=mod, val=val, type=type)
+        component.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+    def get_records_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
+
+class CourseGroupManager(models.Manager):
+    """
+        Model: CourseGroup
+        Usage: Import model and then use CourseGroup.objects.[below_options]
+    """
+
+    def add_record(self, course, weight, minimum):
+        """ Add new record to DB
+
+            course: object of Course,
+
+        """
+
+        component = self.create(course_id=course, weight=weight, minimum=minimum)
+        component.save()
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+    def get_records_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
+
+
 
 
 class EventsManager(models.Manager):

@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required
 def calendar_view(request, shift="main"):
 
     context = UploadCalendarEvent(request.user).execute(shift=shift)
-    print(context)
     return render(request, "my_calendar.html", {'d': context}, content_type="text/html")
 
 @login_required(login_url='/login/')

@@ -44,8 +44,6 @@ class UploadCalendarEvent():
              end_date = start_date + timedelta(days=6)
 
          try:
-             print(start_date)
-             print(end_date)
              events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)
 
              for event in events:
