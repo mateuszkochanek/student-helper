@@ -20,7 +20,7 @@
 
 .titledate {
 
-    grid-column: 5 / 10;
+    grid-column: 2 / 10;
     grid-row: 1;
     text-align: center;
     font-size: 32px;

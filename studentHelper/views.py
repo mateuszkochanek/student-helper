@@ -5,7 +5,6 @@ from datetime import timedelta
 from django.views.generic.list import ListView
 from .events.MainPageEvent import MainPageEvent
 from .models import Events, Description, Course, Teacher
-from .events.UploadCalendarEvent import UploadCalendarEvent
 from django.views.generic import ListView, CreateView
 
 from .avg import get_avg
