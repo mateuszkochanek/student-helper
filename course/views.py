@@ -23,3 +23,7 @@ def course_view(request, pk):
 @login_required(login_url='/login')
 def temp(request):
     pass
+
+@login_required(login_url='/login')
+def add_mark_view(request, course_id):
+    print(course_id)
