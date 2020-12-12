@@ -66,9 +66,22 @@ class CourseManager(models.Manager):
         for type in ['W', 'C', 'L']:
             main_courses += [c for c in all_courses if c.type == type]
             for course in main_courses:
-                all_courses = [c for c in all_courses if c.course_name != course.course_name]
+                all_courses = [c for c in all_courses if not self.__isTheSameSubject(c, course)]
 
         return main_courses
+
+    def __isTheSameSubject(self, c1, c2):
+        return c1.course_name == c2.course_name \
+               or c1.course_name[:-2] == c2.course_name \
+               or c1.course_name == c2.course_name[:-2]\
+               or c1.course_name[:-2] == c2.course_name[:-2]
+
+    def get_all_forms_by_id(self, id):
+        main_course = self.get_record_by_id(id)
+        return list(self.filter(client_id=main_course.client_id, name=main_course.course_name)) \
+               + list(self.filter(client_id=main_course.client_id, name=main_course.course_name + 'TN')) \
+               + list(self.filter(client_id=main_course.client_id, name=main_course.course_name + 'TP'))
+
 
 
 class ComponentsManager(models.Manager):
@@ -263,6 +276,9 @@ class GoalsManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
+    def get_records_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
+
 
 class FilesManager(models.Manager):
     """
@@ -315,4 +331,4 @@ class MarksManager(models.Manager):
         return self.get(pk=id)
 
     def getMarks(self, course):
-        return self.filter(event_id=course).values('mark', 'mark_type', 'weight')
+        return self.filter(course_id=course).values('mark', 'mark_type', 'weight')
