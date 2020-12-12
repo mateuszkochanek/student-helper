@@ -14,7 +14,7 @@
         </div>
 
         <div class=buttonbar>
-            <a href="{% url 'temp' %}" class=button>
+            <a href="{% url 'mark_add' course.id %}" class=button>
                 Dodaj ocenę
             </a>
             <a href="{% url 'temp' %}" class=button>
@@ -101,14 +101,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <table>
+                            <tr>
+                                <td>Ocena</td>
+                                <td>Waga</td>
+                                <td>Typ oceny</td>
+                            </tr>
                             {% for mark in marks %}
-                                {{ mark.mark_type }} {{ mark.mark }} {{ mark.weight }}
-                                <br>
+                                <tr>
+                                    <td> <a href="{% url 'mark_edit' course.id %}"> {{ mark.mark }} </a> </td>
+                                    <td> {{ mark.weight }} </td>
+                                    <td> {{ mark.mark_type }} </td>
+                                </tr>
                             {% endfor %}
-                        </td>
+                        </table>
                     </tr>
                 </table>
+                <button name="Info"></button>
             </div>
 
             <div class="info_pane col-4">
