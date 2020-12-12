@@ -7,9 +7,6 @@ from .events.MainPageEvent import MainPageEvent
 from .models import Events, Description, Course, Teacher
 from django.views.generic import ListView, CreateView
 
-from .avg import get_avg
-from .events.AddFinalGradeEvent import AddFinalGradeEvent
-from .events.AddEctsEvent import AddEctsEvent
 import threading
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -33,9 +30,12 @@ def main_view(request):
         start_date__gte=timezone.now()
     ).order_by('start_date')[:5]
 
+    courses = Course.objects.get_main_records_by_client_id(request.user.id)
+
     context = {
         'events_today': events_today,
-        'next_events': next_events
+        'next_events': next_events,
+        'courses': courses
     }
     return render(request, "index.html", context)
 
@@ -43,32 +43,3 @@ def main_view(request):
 @login_required(login_url='/login/')
 def log_in_view(request):
     return render(request, "login.html")
-
-
-@login_required(login_url='/login/')
-def avg_grade_view(request):
-    context = {
-        'courses': Course.objects.get_records_by_client_id(request.user.id)
-    }
-    return render(request, "avg_grade.html", context)
-
-
-@login_required(login_url='/login/')
-def avg_grade_view_edit_grade(request, pk, grade):
-    AddFinalGradeEvent(request.user).execute(pk, grade)
-    return avg_grade_view(request)
-
-
-@login_required(login_url='/login/')
-def avg_grade_view_edit_ects(request, pk, ects):
-    AddEctsEvent(request.user).execute(pk, ects)
-    return avg_grade_view(request)
-
-
-@login_required(login_url='/login/')
-def avg_grade_calc(request):
-    context = {
-        'courses': Course.objects.get_records_by_client_id(request.user.id),
-        'avg': get_avg(request.user)
-    }
-    return render(request, "avg_grade.html", context)

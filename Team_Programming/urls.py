@@ -22,6 +22,8 @@ from my_calendar.views import *
 from studentHelper.models import Course
 from studentHelper.converts import FloatUrlParameterConverter
 from register.views import register
+from course.views import *
+from avgGrade.views import *
 
 
 register_converter(FloatUrlParameterConverter, 'float')
@@ -40,5 +42,7 @@ urlpatterns = [
     path('avgGrade', avg_grade_calc, name='avg_grade_calc'),
     path('avgGrade/grade/<int:pk>/<float:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
     path('avgGrade/ects/<int:pk>/<int:ects>/', avg_grade_view_edit_ects, name="AvgGradeEditEcts"),
-    path('calendar_import', calendar_import, name='calendar_import')
+    path('calendar_import', calendar_import, name='calendar_import'),
+    path('course/<int:pk>', course_view, name='course'),
+    path('temp/', temp, name='temp')
 ]

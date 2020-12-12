@@ -59,6 +59,18 @@ class CourseManager(models.Manager):
     def get_records_by_client_id(self, client_id):
         return self.filter(client_id=client_id)
 
+    def get_main_records_by_client_id(self, client_id):
+        all_courses = self.get_records_by_client_id(client_id)
+        main_courses = []
+
+        for type in ['W', 'C', 'L']:
+            main_courses += [c for c in all_courses if c.type == type]
+            for course in main_courses:
+                all_courses = [c for c in all_courses if c.name != course.name]
+
+        return main_courses
+
+
 class ComponentsManager(models.Manager):
     """
         Model: Components
@@ -174,7 +186,7 @@ class EventsManager(models.Manager):
         event = self.create(client_id=client, start_date=start_date,
                             end_date=end_date, period_type=period_type)
 
-        #TODO triggers
+        # TODO triggers
         event.save()
         return event
 
@@ -184,28 +196,22 @@ class EventsManager(models.Manager):
     def get_record_by_client_id(self, client_id):
         return self.filter(client_id=client_id)
 
-
     def get_events(self, client_id, start_date, end_date):
-
-        return self.filter( client_id=client_id,
-                            start_date__range=[start_date, end_date],
-                            end_date__range=[start_date, end_date]
-                            )
+        return self.filter(client_id=client_id,
+                           start_date__range=[start_date, end_date],
+                           end_date__range=[start_date, end_date]
+                           )
 
     def get_all_events(self, client_id, start_date, end_date):
-
-
-        q1 = self.filter( client_id=client_id,
-                            start_date__range=[start_date, end_date],
-                            end_date__range=[start_date, end_date] )
-        q2 = self.filter(   client_id=client_id,
-                            start_date__lte=end_date,
-                            end_date__gte=start_date,
-                            period_type="DAILY" )
+        q1 = self.filter(client_id=client_id,
+                         start_date__range=[start_date, end_date],
+                         end_date__range=[start_date, end_date])
+        q2 = self.filter(client_id=client_id, start_date__lte=end_date,
+                         period_type="DAILY")
         return q1.union(q2)
 
     def delete_event_by_id(self, id):
-        #TODO triggers?
+        # TODO triggers?
         self.filter(id=id).delete()
 
 
@@ -236,60 +242,67 @@ class GoalsManager(models.Manager):
         Model: Goals
         Usage: Import model and then use Goals.objects.[below_options]
     """
+
     def add_record(self, course, end_date, type, description):
         """ course: object of Course"""
 
         goal = self.create(course_id=course, end_date=end_date,
-                type=type, description=description)
+                           type=type, description=description)
         goal.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
 
 class FilesManager(models.Manager):
     """
         Model: Files
         Usage: Import model and then use Files.objects.[below_options]
     """
+
     def add_record(self, course, file_path, description):
         """ course: object of Course """
 
         file = self.create(course_id=course, file_path=file_path,
-            description=description)
+                           description=description)
         file.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
 
 class PredictionManager(models.Manager):
     """
         Model: Prediction
         Usage: Import model and then use Prediction.objects.[below_options]
     """
+
     def add_record(self, course, start_date, pred_time, actual_time):
         """ course: object of Course """
 
         prediction = self.create(course_id=course, start_date=start_date,
-                pred_time=pred_time, actual_time=actual_time)
+                                 pred_time=pred_time, actual_time=actual_time)
         prediction.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
 
 class MarksManager(models.Manager):
     """
         Model: Marks
         Usage: Import model and then use Marks.objects.[below_options]
     """
+
     def add_record(self, course, mark, mark_type, weight):
         """ course: object of Course """
 
         prediction = self.create(course_id=course, mark=mark,
-                mark_type=mark_type, weight=weight)
+                                 mark_type=mark_type, weight=weight)
         prediction.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
     def getMarks(self, course):
-        return self.filter(event_id=course).values('mark','mark_type', 'weight')
+        return self.filter(event_id=course).values('mark', 'mark_type', 'weight')
