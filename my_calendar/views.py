@@ -3,6 +3,7 @@ from .UploadCalendarEvent import UploadCalendarEvent
 from .forms import EventForm, DescriptionForm, DescourseForm, CourseForm, TeacherForm
 from .calendarImport import CalendarImport
 from django.contrib.auth.decorators import login_required
+from studentHelper.models import Events, Description
 
 
 @login_required(login_url='/login/')
@@ -77,3 +78,24 @@ def calendar_import(request):
         file = request.FILES['myfile']
         CalendarImport(request.user, file)
     return scheduler(request)
+
+@login_required(login_url='/login/')
+def edit_event_view(request, pk):
+
+    my_event = Events.objects.get_record_by_id(pk)
+    my_description = my_event.description
+
+    if request.method == 'POST':
+        event = EventForm(request.POST, instance=my_event)
+        description = DescriptionForm(request.POST, instance=my_description)
+
+        if event.is_valid() and description.is_valid():
+            event.save()
+            description.save()
+            return redirect('/calendar/main')
+    else:
+
+        event = EventForm(instance=my_event)
+        description = DescriptionForm(instance=my_description)
+
+    return render(request, "new_event.html", {"event_form": event, "description_form": description, "edit": True})

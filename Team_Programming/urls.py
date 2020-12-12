@@ -35,6 +35,7 @@ urlpatterns = [
     path('', main_view),
     path('', include('django.contrib.auth.urls')),
     path('calendar/new', new_event_view, name='new'),
+    path('calendar/edit/<int:pk>', edit_event_view, name='edit_event'),
     path('calendar/course', new_course_view, name='new_course'),
     path('calendar/<str:shift>', calendar_view, name='calendar'),
     path('scheduler/<str:shift>', scheduler, name='scheduler'),
