@@ -67,15 +67,13 @@ class Components(models.Model):
     ("PERC", "procent"),
     ]
 
-    course_id = models.OneToOneField(
+    course_id = models.ForeignKey(
     Course,
     on_delete = models.CASCADE,
-    primary_key=True,
     )
 
 
     form = models.CharField(max_length=5, choices=FORMS)
-    weight = models.FloatField()
     type = models.CharField(max_length=5, choices=TYPES)
     objects = ComponentsManager()
 
@@ -94,7 +92,6 @@ class Thresholds(models.Model):
     )
 
 
-    p_2_0 = models.FloatField()
     k_2_0 = models.FloatField()
     p_2_5 = models.FloatField()
     k_2_5 = models.FloatField()
@@ -109,7 +106,6 @@ class Thresholds(models.Model):
     p_5_0 = models.FloatField()
     k_5_0 = models.FloatField()
     p_5_5 = models.FloatField()
-    k_5_5 = models.FloatField()
     type = models.CharField(max_length=5, choices=TYPES)
     objects = ComponentsManager()
 
