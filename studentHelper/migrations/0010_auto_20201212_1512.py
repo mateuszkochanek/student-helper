@@ -12,15 +12,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Components',
-            fields=[
-                ('course_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='studentHelper.course')),
-                ('form', models.CharField(choices=[('ACTIV', 'aktywność'), ('EXAM', 'egzamin'), ('QUIZ', 'kartkówka'), ('TEST', 'kolokwium'), ('LIST', 'lista zadań')], max_length=5)),
-                ('weight', models.FloatField()),
-                ('type', models.CharField(choices=[('POINT', 'punkty'), ('MARK', 'ocena'), ('PERC', 'procent')], max_length=5)),
-            ],
-        ),
-        migrations.CreateModel(
             name='CourseGroup',
             fields=[
                 ('course_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='studentHelper.course')),
