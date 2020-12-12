@@ -50,7 +50,7 @@ class CourseManager(models.Manager):
             self.get(client_id=client, teacher=teacher, name=name, type=type)
         except:
             course = self.create(client_id=client, teacher_id=teacher, ECTS=ECTS,
-                        name=name, type=type, final=0)
+                        course_name=name, type=type, final=0)
             course.save()
 
     def get_record_by_id(self, id):
@@ -71,16 +71,16 @@ class CourseManager(models.Manager):
         return main_courses
 
     def __isTheSameSubject(self, c1, c2):
-        return c1.name == c2.name \
-               or c1.name[:-2] == c2.name \
-               or c1.name == c2.name[:-2]\
-               or c1.name[:-2] == c2.name[:-2]
+        return c1.course_name == c2.course_name \
+               or c1.course_name[:-2] == c2.course_name \
+               or c1.course_name == c2.course_name[:-2]\
+               or c1.course_name[:-2] == c2.course_name[:-2]
 
     def get_all_forms_by_id(self, id):
         main_course = self.get_record_by_id(id)
-        return list(self.filter(client_id=main_course.client_id, name=main_course.name)) \
-               + list(self.filter(client_id=main_course.client_id, name=main_course.name + 'TN')) \
-               + list(self.filter(client_id=main_course.client_id, name=main_course.name + 'TP'))
+        return list(self.filter(client_id=main_course.client_id, name=main_course.course_name)) \
+               + list(self.filter(client_id=main_course.client_id, name=main_course.course_name + 'TN')) \
+               + list(self.filter(client_id=main_course.client_id, name=main_course.course_name + 'TP'))
 
 
 
@@ -216,12 +216,22 @@ class EventsManager(models.Manager):
                            )
 
     def get_all_events(self, client_id, start_date, end_date):
+
         q1 = self.filter(client_id=client_id,
                          start_date__range=[start_date, end_date],
                          end_date__range=[start_date, end_date])
         q2 = self.filter(client_id=client_id, start_date__lte=end_date,
-                         period_type="DAILY")
-        return q1.union(q2)
+                         end_date__gte=start_date,
+                         period_type__in=["DAILY", "WEEKLY"])
+
+        if start_date.day < end_date.day:
+            q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
+            start_date__day__gte=start_date.day, period_type__in=["MONTHLY", "YEARLY"])
+        else:
+            q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
+            start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"])
+
+        return q1.union(q2, q3)
 
     def delete_event_by_id(self, id):
         # TODO triggers?

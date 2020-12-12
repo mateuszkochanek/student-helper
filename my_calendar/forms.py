@@ -6,6 +6,8 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.forms.widgets import HiddenInput
+from datetime import timedelta
+
 
 
 # pip install django-bootstrap-datepicker-plus
@@ -16,7 +18,7 @@ class EventForm(ModelForm):
 
     class Meta:
         model = Events
-        fields = ['start_date', 'end_date', 'period_type']
+        fields = ['start_date', 'end_date', 'period_type', 'whole_day']
         widgets = {
             'start_date': DateTimePickerInput(),
             'end_date': DateTimePickerInput(),
@@ -27,6 +29,7 @@ class EventForm(ModelForm):
         self.fields["start_date"].label = "Początek wydarzenia"
         self.fields["end_date"].label = "Koniec wydarzenia"
         self.fields["period_type"].label = "Okres trwania"
+        self.fields["whole_day"].label = "Cały dzień"
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
@@ -35,10 +38,6 @@ class EventForm(ModelForm):
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
         period = cleaned_data.get("period_type")
-        print(start_date.date())
-        print(end_date.date())
-        print(period)
-
 
         if start_date and end_date:
             if start_date > end_date:
@@ -58,6 +57,18 @@ class EventForm(ModelForm):
             elif period == "DAILY" and start_date.date() == end_date.date():
                 raise ValidationError(
                     "Opcja codziennie wymaga co najmniej dwóch dni -_- "
+                )
+            elif period == "WEEKLY" and end_date.date() - start_date.date() < timedelta(days=14):
+                raise ValidationError(
+                    "Opcja tygodniowo wymaga co najmniej dwóch tygodni -_- "
+                )
+            elif period == "MONTHLY" and end_date.date() - start_date.date() < timedelta(days=58):
+                raise ValidationError(
+                    "Opcja miesięcznie wymaga co najmniej dwóch miesięcy -_- "
+                )
+            elif period == "YEARLY" and end_date.date() - start_date.date() < timedelta(days=365):
+                raise ValidationError(
+                    "Opcja rocznie wymaga co najmniej dwóch lat -_- "
                 )
 
 class DescriptionForm(ModelForm):
@@ -91,12 +102,12 @@ class CourseForm(ModelForm):
 
     class Meta:
         model = Course
-        fields = ['name', 'ECTS', 'type']
+        fields = ['course_name', 'ECTS', 'type']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["name"].label = "Nazwa kursu"
-        self.fields["name"].help_text = "Poprawna nazwa kursu"
+        self.fields["course_name"].label = "Nazwa kursu"
+        self.fields["course_name"].help_text = "Poprawna nazwa kursu"
         self.fields["ECTS"].label = "ECTS"
         self.fields["ECTS"].initial = 0
         self.fields["type"].label = "Typ zajęć"

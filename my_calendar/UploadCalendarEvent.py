@@ -11,13 +11,16 @@ class ParsedEvent:
     start_date: str
     end_date: str
     description: str
+    id: int
     size: int
 
-    def __init__(self, start_date, end_date, description, size):
+
+    def __init__(self, start_date, end_date, description, id, size):
         self.start_date = start_date
         self.end_date = end_date
         self.description = description
         self.size = size
+        self.id = id
 
 
 class UploadCalendarEvent():
@@ -27,10 +30,26 @@ class UploadCalendarEvent():
     def get_user(self):
         return self.__user
 
+
+    def get_event(self, event, extra):
+        event_app = None
+        cal_size = 30
+
+        sd = event.start_date.time()
+        ed = event.end_date.time()
+        size = ((event.end_date - event.start_date).total_seconds())//(60 * cal_size)
+
+        if event.whole_day == True:
+            event_app = ParsedEvent(str(""), "Cały dzień", str(extra.description), event.id, range((cal_size//60) * 24))
+        else:
+            event_app = ParsedEvent(str(sd), str(ed), str(extra.description), event.id, range(int(size)))
+
+        return event_app
+
     def execute(self, choose=False, shift="main"):
          # get events from db
          # Gap between times in calendar
-         cal_size = 30
+
          data = {}
          today = date.today()
          day = today.weekday()
@@ -42,19 +61,16 @@ class UploadCalendarEvent():
              start_date = timezone.now().replace(year=shift_conv.year, month=shift_conv.month,
                                                  day=shift_conv.day, hour=0, minute=0, second=0)
              end_date = start_date + timedelta(days=6)
-
+         print(start_date, "    ", end_date)
          try:
              events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)
 
              for event in events:
-                 checked = False
                  extra = Description.objects.get_descriptions(event, choose).first()
-                 key = str(event.start_date.weekday())
+
                  if event.period_type == "ONCE" and extra != None:
-                     sd = event.start_date.time()
-                     ed = event.end_date.time()
-                     size = ((event.end_date - event.start_date).total_seconds())//(60 * cal_size)
-                     event_app = ParsedEvent(str(sd), str(ed), str(extra.description), range(int(size)))
+                     key = str(event.start_date.weekday())
+                     event_app = self.get_event(event, extra)
 
                      if key in data:
                          data[key].append(event_app)
@@ -80,13 +96,56 @@ class UploadCalendarEvent():
                         start = 0
                         end = 7
 
-                     event_app = ParsedEvent(str(""), "Codziennie", str(extra.description), range((cal_size//60) * 24))
+                     event_app = self.get_event(event, extra)
+
                      for i in range(start, end):
                          if str(i) in data:
                              data[str(i)].append(event_app)
                          else:
                              data.update({str(i): [event_app]})
 
+                 elif event.period_type == "WEEKLY" and extra != None:
+
+                     event_app = self.get_event(event, extra)
+                     key = event.start_date.weekday()
+                     if str(key) in data:
+                         data[str(key)].append(event_app)
+                     else:
+                         data.update({str(key): [event_app]})
+
+                 elif event.period_type == "MONTHLY" and extra != None:
+                     start_d = start_date.day
+                     end_d = end_date.day
+                     if start_date.day > end_date.day:
+                         start_d = 0
+
+                     if start_d <= event.start_date.day <= end_d:
+
+                         event_app = self.get_event(event, extra)
+                         key = end_date.replace(day=event.start_date.day).weekday()
+                         if str(key) in data:
+                             data[str(key)].append(event_app)
+                         else:
+                             data.update({str(key): [event_app]})
+
+                 elif event.period_type == "YEARLY" and extra != None:
+                     #Todo usunąć niepotrzebne po testach!!!!
+                     check_date_s = start_date
+                     check_date_e = end_date
+                     if start_date.year == end_date.year:
+                         check_date_s = check_date_s.replace(year=event.start_date.year)
+                         check_date_e = check_date_e.replace(year=event.start_date.year)
+                     else:
+                         check_date_s = check_date_s.replace(year=event.start_date.year - 1)
+                         check_date_e = check_date_e.replace(year=event.start_date.year)
+
+                     if (check_date_s <= event.start_date <= check_date_e):
+                         event_app = self.get_event(event, extra)
+                         key = event.start_date.replace(year=end_date.year).weekday()
+                         if str(key) in data:
+                             data[str(key)].append(event_app)
+                         else:
+                             data.update({str(key): [event_app]})
 
          except(EmptyResultSet, MultipleObjectsReturned, ObjectDoesNotExist) as e:
              print("e")
