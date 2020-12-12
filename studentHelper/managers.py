@@ -78,7 +78,9 @@ class CourseManager(models.Manager):
 
     def get_all_forms_by_id(self, id):
         main_course = self.get_record_by_id(id)
-        return self.filter(client_id=main_course.client_id, name=main_course.name)
+        return list(self.filter(client_id=main_course.client_id, name=main_course.name)) \
+               + list(self.filter(client_id=main_course.client_id, name=main_course.name + 'TN')) \
+               + list(self.filter(client_id=main_course.client_id, name=main_course.name + 'TP'))
 
 
 
