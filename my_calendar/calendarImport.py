@@ -21,7 +21,7 @@ def get_teacher_data(teacher):
 
 class CalendarImport(threading.Thread):
 
-    def __init__(self, user):
+    def __init__(self, user, calendar_file):
 
         threading.Thread.__init__(self)
 
@@ -30,11 +30,10 @@ class CalendarImport(threading.Thread):
         self.AllEvents = []
         self.user = user
 
-        file = easygui.fileopenbox()
+        file = calendar_file
         try:
             if file is not None:
-                f = open(file, 'rb')
-                gcal = Calendar.from_ical(f.read())
+                gcal = Calendar.from_ical(file.read())
 
                 self.read_calendar(gcal)
                 self.clear_tables()

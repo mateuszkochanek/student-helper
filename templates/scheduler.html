@@ -26,9 +26,12 @@
         </div>
     </div>
     <div class=buttonbar>
-        <a href="{% url 'calendar_import' %}" class=button>
-            Dodaj plan
-        </a>
+            <form action="{% url 'calendar_import' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <input type="file" name="myfile" accept=".ics">
+                <input type="submit" value="Załaduj kalendarz" />
+            </form>
     </div>
 
     <div class=line>
