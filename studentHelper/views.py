@@ -33,9 +33,12 @@ def main_view(request):
         start_date__gte=timezone.now()
     ).order_by('start_date')[:5]
 
+    courses = Course.objects.get_main_records_by_client_id(request.user.id)
+
     context = {
         'events_today': events_today,
-        'next_events': next_events
+        'next_events': next_events,
+        'courses': courses
     }
     return render(request, "index.html", context)
 
@@ -72,3 +75,19 @@ def avg_grade_calc(request):
         'avg': get_avg(request.user)
     }
     return render(request, "avg_grade.html", context)
+
+
+@login_required(login_url='/login')
+def course_view(request, pk):
+    context = {
+        'course': Course.objects.get_record_by_id(pk)
+    }
+
+    # TODO if it's user's course
+
+    return render(request, "course.html", context)
+
+
+@login_required(login_url='/login')
+def temp(request):
+    pass

@@ -1,18 +1,21 @@
 <div class="top-bar">
     <table>
         <tr>
-            <td>
-                Języki formalne i teoria translacji
-            </td>
-            <td>
-                Obliczenia naukowe
-            </td>
-            <td>
-                Programowanie zespołowe
-            </td>
-            <td>
-                Przyśpieszony kurs css'a
-            </td>
+            {% for course in courses %}
+                <td>
+                    <div class="divBox">
+                       {% url 'course' course.name as url_course %}
+                        <a href="{% url 'course' course.id %}">{{ course.name }}</a>
+                    </div>
+                </td>
+            {% endfor %}
+            {% if not courses %}
+                <td>
+                    <div class="divBox">
+                        Brak zajęć
+                    </div>
+                </td>
+            {% endif %}
         </tr>
     </table>
 </div>
