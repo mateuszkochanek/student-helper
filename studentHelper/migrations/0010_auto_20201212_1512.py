@@ -20,15 +20,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Modyfication',
-            fields=[
-                ('course_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='studentHelper.course')),
-                ('mod', models.CharField(choices=[('MINUS', '-'), ('PLUS', '+')], max_length=5)),
-                ('val', models.FloatField()),
-                ('type', models.CharField(choices=[('POINT', 'punkty'), ('MARK', 'ocena'), ('PERC', 'procent')], max_length=5)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Thresholds',
             fields=[
                 ('course_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='studentHelper.course')),
@@ -53,7 +44,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='course',
-            name='name',
+            name='course_name',
             field=models.CharField(max_length=33),
         ),
         migrations.DeleteModel(

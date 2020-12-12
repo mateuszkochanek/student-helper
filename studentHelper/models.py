@@ -72,7 +72,6 @@ class Components(models.Model):
     on_delete = models.CASCADE,
     )
 
-
     form = models.CharField(max_length=5, choices=FORMS)
     type = models.CharField(max_length=5, choices=TYPES)
     objects = ComponentsManager()
@@ -88,7 +87,7 @@ class Thresholds(models.Model):
     course_id = models.OneToOneField(
     Course,
     on_delete = models.CASCADE,
-    primary_key=True,
+    primary_key=True
     )
 
 
@@ -126,7 +125,6 @@ class Modyfication(models.Model):
     course_id = models.OneToOneField(
     Course,
     on_delete = models.CASCADE,
-    primary_key=True,
     )
 
     mod = models.CharField(max_length=5, choices=MOD)
