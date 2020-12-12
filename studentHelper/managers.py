@@ -47,7 +47,7 @@ class CourseManager(models.Manager):
 
         """
         try:
-            self.get(client_id=client, teacher=teacher, name=name, type=type)
+            self.get(client_id=client, teacher=teacher, course_name=name, type=type)
         except:
             course = self.create(client_id=client, teacher_id=teacher, ECTS=ECTS,
                         course_name=name, type=type, final=0)
@@ -78,9 +78,9 @@ class CourseManager(models.Manager):
 
     def get_all_forms_by_id(self, id):
         main_course = self.get_record_by_id(id)
-        return list(self.filter(client_id=main_course.client_id, name=main_course.course_name)) \
-               + list(self.filter(client_id=main_course.client_id, name=main_course.course_name + 'TN')) \
-               + list(self.filter(client_id=main_course.client_id, name=main_course.course_name + 'TP'))
+        return list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name)) \
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TN')) \
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TP'))
 
 
 
