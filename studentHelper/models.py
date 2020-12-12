@@ -252,7 +252,7 @@ class Marks(models.Model):
     ("PKT", "pkt"),
     ("MARK", "ocena"),
     ]
-    course_id = models.OneToOneField(
+    course_id = models.ForeignKey(
     Course,
     on_delete = models.CASCADE,
     )

@@ -44,5 +44,7 @@ urlpatterns = [
     path('avgGrade/ects/<int:pk>/<int:ects>/', avg_grade_view_edit_ects, name="AvgGradeEditEcts"),
     path('calendar_import', calendar_import, name='calendar_import'),
     path('course/<int:pk>', course_view, name='course'),
+    path('mark/add/<int:pk>', add_mark_view, name='mark_add'),
+    path('mark/edit/<int:pk>', edit_mark_view, name='mark_edit'),
     path('temp/', temp, name='temp')
 ]

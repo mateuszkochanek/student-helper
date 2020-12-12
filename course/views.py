@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from studentHelper.models import Course, Teacher, Marks, Goals
 from studentHelper.views import main_view
+
+from .forms import MarkForm
 
 
 @login_required(login_url='/login')
@@ -25,5 +27,33 @@ def temp(request):
     pass
 
 @login_required(login_url='/login')
-def add_mark_view(request, course_id):
-    print(course_id)
+def add_mark_view(request, pk):
+
+    if request.method == 'POST':
+        mark = MarkForm(request.POST)
+
+        if mark.is_valid():
+            m = mark.save(commit=False)
+            m.course_id = Course.objects.get_record_by_id(pk)
+            m.save()
+            return redirect('/course/'+str(pk))
+    else:
+        mark = MarkForm()
+
+    return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
+
+@login_required(login_url='/login')
+def edit_mark_view(request, pk):
+    mark = Marks.objects.get_record_by_id(pk)
+
+    if request.method == 'POST':
+        mark = MarkForm(request.POST, instance=mark)
+
+        if mark.is_valid():
+            mark.save()
+            return redirect('/course/'+str(pk))
+    else:
+        #TODO info?
+        mark = MarkForm(instance=mark)
+
+    return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
