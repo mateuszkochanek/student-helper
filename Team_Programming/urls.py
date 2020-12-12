@@ -22,6 +22,8 @@ from my_calendar.views import *
 from studentHelper.models import Course
 from studentHelper.converts import FloatUrlParameterConverter
 from register.views import register
+from course.views import *
+from avgGrade.views import *
 
 
 register_converter(FloatUrlParameterConverter, 'float')

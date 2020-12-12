@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .models import Course, Teacher
-from .avg import get_avg
+from avgGrade.avg import get_avg
 from django.contrib.auth.models import User
 
 
