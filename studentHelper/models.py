@@ -44,7 +44,7 @@ class Course(models.Model):
 
     # columns
     ECTS = models.IntegerField()
-    name = models.CharField(max_length=33)
+    course_name = models.CharField(max_length=33)
     type = models.CharField(max_length=1, choices=TYPES)
     final = models.FloatField(blank=True, default=0)
     objects = CourseManager()
@@ -210,9 +210,9 @@ class Events(models.Model):
     TYPES = [
     ("ONCE", "Pojedyncze wydarzenie"),
     ("DAILY", "Codziennie"),
-    # ("WEEKLY", "Weekly"),
-    # ("MONTHLY", "Monthly"),
-    # ("YEARLY", "Yearly"),
+    ("WEEKLY", "Co tydzień"),
+    ("MONTHLY", "Co miesiąc"),
+    ("YEARLY", "Rocznie"),
     # ("EVEN", "Even"),
     # ("ODD", "Odd")
     ]
@@ -226,6 +226,7 @@ class Events(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     period_type = models.CharField(choices=TYPES, max_length=7)
+    whole_day = models.BooleanField(default=False)
     objects = EventsManager()
 
 

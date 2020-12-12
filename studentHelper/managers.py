@@ -50,7 +50,7 @@ class CourseManager(models.Manager):
             self.get(client_id=client, teacher=teacher, name=name, type=type)
         except:
             course = self.create(client_id=client, teacher_id=teacher, ECTS=ECTS,
-                        name=name, type=type, final=0)
+                        course_name=name, type=type, final=0)
             course.save()
 
     def get_record_by_id(self, id):
@@ -66,7 +66,7 @@ class CourseManager(models.Manager):
         for type in ['W', 'C', 'L']:
             main_courses += [c for c in all_courses if c.type == type]
             for course in main_courses:
-                all_courses = [c for c in all_courses if c.name != course.name]
+                all_courses = [c for c in all_courses if c.course_name != course.course_name]
 
         return main_courses
 
@@ -203,12 +203,22 @@ class EventsManager(models.Manager):
                            )
 
     def get_all_events(self, client_id, start_date, end_date):
+
         q1 = self.filter(client_id=client_id,
                          start_date__range=[start_date, end_date],
                          end_date__range=[start_date, end_date])
         q2 = self.filter(client_id=client_id, start_date__lte=end_date,
-                         period_type="DAILY")
-        return q1.union(q2)
+                         end_date__gte=start_date,
+                         period_type__in=["DAILY", "WEEKLY"])
+
+        if start_date.day < end_date.day:
+            q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
+            start_date__day__gte=start_date.day, period_type__in=["MONTHLY", "YEARLY"])
+        else:
+            q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
+            start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"])
+
+        return q1.union(q2, q3)
 
     def delete_event_by_id(self, id):
         # TODO triggers?
