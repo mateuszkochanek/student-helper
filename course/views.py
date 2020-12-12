@@ -9,13 +9,22 @@ from .forms import MarkForm
 
 @login_required(login_url='/login')
 def course_view(request, pk):
+    TYPES = {
+    "PLUS": "+",
+    "MINUS": "-",
+    "PKT": "pkt",
+    "MARK": "ocena",
+    }
     context = {
         'course': Course.objects.get_record_by_id(pk),
         'forms': Course.objects.get_all_forms_by_id(pk),
         'marks': Marks.objects.getMarks(pk),
         'goals': Goals.objects.get_records_by_course_id(pk)
     }
-    print(context['marks'])
+    #TODO czy da się inaczej?
+    for el in context['marks']:
+        el['mark_type'] = TYPES[el['mark_type']]
+
     if context['course'].client_id != request.user:
         return main_view(request)
 
@@ -56,4 +65,4 @@ def edit_mark_view(request, pk):
         #TODO info?
         mark = MarkForm(instance=my_mark)
 
-    return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
+    return render(request, "new_mark.html", {"mark_form": mark, "pk": pk, "edit": True })

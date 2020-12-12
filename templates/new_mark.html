@@ -9,7 +9,11 @@
 <div class="grid">
     <div class="titlebar">
         <div class=title>
-            Dodaj ocenę
+            {% if edit %}
+                Edytuj ocenę
+            {% else %}
+                Dodaj ocenę
+            {% endif %}
         </div>
     </div>
     <div class=line>
