@@ -36,10 +36,114 @@
             <hr style="color:CornflowerBlue">
         </div>
 
-        <div class="info_pane col-1"></div>
-        <div class="info_pane col-2"></div>
-        <div class="info_pane col-3"></div>
-        <div class="info_pane col-4"></div>
+        <div class="info_panels">
+            <div class="info_pane col-1">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Informacje</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Forma:
+                            {% for form in forms %}
+                                {{ form.type }}
+                            {% endfor %}
+                            <br>
+                            Prowadzący: <br>
+                            {% for form in forms %}
+                                - {{ form.type }}: {{ form.teacher_id.name }} {{ form.teacher_id.surname }}
+                                <br>
+                            {% endfor %}
+                            ECTS: {{ course.ECTS }} <br>
+                            Forma zaliczenia: TBA
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Przejdź na stronę prowadzącego
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sprawdź zasady zaliczenia
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Przeglądaj pliki
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info_pane col-2">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Zajęcia</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            TBA
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info_pane col-3">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Oceny</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% for mark in marks %}
+                                {{ mark.mark_type }} {{ mark.mark }} {{ mark.weight }}
+                                <br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info_pane col-4">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Najbliższe wydarzenia</h3>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            TBA
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info_pane col-5">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Cele</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% for goal in goals %}
+                                {{ goal.description }}
+                                <br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
     </div>
 {% endblock %}
