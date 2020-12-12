@@ -122,7 +122,7 @@ class Modyfication(models.Model):
     ("PLUS", "+"),
     ]
 
-    course_id = models.OneToOneField(
+    course_id = models.ForeignKey(
     Course,
     on_delete = models.CASCADE,
     )
