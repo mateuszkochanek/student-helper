@@ -3,9 +3,8 @@ from django.shortcuts import render, redirect
 
 from studentHelper.models import Course, Teacher, Marks, Goals
 from studentHelper.views import main_view
-from studentHelper.forms import RulesForm
 
-from .forms import MarkForm
+from .forms import MarkForm, RulesForm
 
 
 @login_required(login_url='/login')
