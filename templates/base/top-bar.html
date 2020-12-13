@@ -4,7 +4,6 @@
             {% for course in courses %}
                 <td>
                     <div class="divBox">
-                       {% url 'course' course.course_name as url_course %}
                         <a href="{% url 'course' course.id %}">{{ course.course_name }}</a>
                     </div>
                 </td>

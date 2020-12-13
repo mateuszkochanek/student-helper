@@ -15,12 +15,18 @@ def course_view(request, pk):
     "PKT": "pkt",
     "MARK": "ocena",
     }
+
+    course = Course.objects.get_record_by_id(pk)
+
     context = {
-        'course': Course.objects.get_record_by_id(pk),
-        'forms': Course.objects.get_all_forms_by_id(pk),
+        'course': course,
+        'lecture': Course.objects.get_subject_of_type_and_name(course, 'W'),
+        'tutorial': Course.objects.get_subject_of_type_and_name(course, 'C'),
+        'laboratory': Course.objects.get_subject_of_type_and_name(course, 'L'),
         'marks': Marks.objects.getMarks(pk),
         'goals': Goals.objects.get_records_by_course_id(pk)
     }
+
     #TODO czy da się inaczej?
     for el in context['marks']:
         el['mark_type'] = TYPES[el['mark_type']]
