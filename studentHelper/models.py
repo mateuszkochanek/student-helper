@@ -92,8 +92,6 @@ class Thresholds(models.Model):
 
 
     k_2_0 = models.FloatField()
-    p_2_5 = models.FloatField()
-    k_2_5 = models.FloatField()
     p_3_0 = models.FloatField()
     k_3_0 = models.FloatField()
     p_3_5 = models.FloatField()

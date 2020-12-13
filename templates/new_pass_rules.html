@@ -21,6 +21,7 @@
         <form method="post">
             {% csrf_token %}
             {{ rules_form|crispy }}
+            {{ thresholds_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
             <a href="{% url 'course' pk %}" class="button">Wróć</a>
         </form>
