@@ -331,4 +331,4 @@ class MarksManager(models.Manager):
         return self.get(pk=id)
 
     def getMarks(self, course):
-        return self.filter(course_id=course).values('id', 'mark', 'mark_type', 'weight')
+        return self.filter(course_id=course).values('id', 'mark', 'mark_type', 'mark_form', 'weight')

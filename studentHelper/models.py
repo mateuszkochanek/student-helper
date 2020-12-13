@@ -62,7 +62,7 @@ class Components(models.Model):
     ]
 
     TYPES = [
-    ("POINT", "punkty"),
+    ("PKT", "punkty"),
     ("MARK", "ocena"),
     ("PERC", "procent"),
     ]
@@ -79,7 +79,7 @@ class Components(models.Model):
 class Thresholds(models.Model):
 
     TYPES = [
-    ("POINT", "punkty"),
+    ("PKT", "punkty"),
     ("MARK", "ocena"),
     ("PERC", "procent"),
     ]
@@ -112,7 +112,7 @@ class Thresholds(models.Model):
 class Modyfication(models.Model):
 
     TYPES = [
-    ("POINT", "punkty"),
+    ("PKT", "punkty"),
     ("MARK", "ocena"),
     ("PERC", "procent"),
     ]
@@ -245,6 +245,7 @@ class Marks(models.Model):
     ("MINUS", "-"),
     ("PKT", "pkt"),
     ("MARK", "ocena"),
+    ("PERC", "procent"),
     ]
 
     FORMS = [
@@ -259,7 +260,7 @@ class Marks(models.Model):
     Course,
     on_delete = models.CASCADE,
     )
-    mark = models.IntegerField()
+    mark = models.FloatField()
     weight = models.IntegerField()
     mark_type = models.CharField(choices=TYPES, max_length=7)
     mark_form = models.CharField(choices=FORMS, max_length=7)

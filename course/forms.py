@@ -9,29 +9,49 @@ class MarkForm(ModelForm):
 
     class Meta:
         model = Marks
-        fields = ['mark', 'weight', 'mark_type']
+        fields = ['mark', 'weight', 'mark_type', 'mark_form']
 
     def __init__(self, *args, **kwargs):
+        self.course_id = kwargs.pop('course_id')
         super().__init__(*args, **kwargs)
         self.fields["mark"].label = "Ocena"
         self.fields["weight"].label = "Waga oceny"
         self.fields["mark_type"].label = "Typ oceny"
+        self.fields["mark_form"].label = "Otrzymana za"
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
     def clean(self):
         cleaned_data = super().clean()
+        components = Components.objects.get_records_by_course_id(self.course_id).values("form", "type")
+
+        check = {}
+        for el in components:
+            check.update({el['form']: el['type']})
+
         mark = cleaned_data.get("mark")
         weight = cleaned_data.get("weight")
-
-        if mark and weight:
-            if mark < 0:
+        mark_form = cleaned_data.get("mark_form")
+        mark_type = cleaned_data.get("mark_type")
+        if mark and weight and mark_form and mark_type:
+            if mark_type == "PLUS" or mark_type == "MINUS":
+                mark_type = "PKT"
+            if mark < 1:
                 raise ValidationError(
-                    "Jaki prowadzący daje ujemne oceny?"
+                    "Chyba ciężko otrzymać taką ocenę :o"
                 )
             elif weight < 0:
                 raise ValidationError(
                     "Hmmm, ujemna waga?"
+                )
+            elif mark_form not in check:
+                raise ValidationError(
+                    "Nieprawidłowy typ oceny!"
+                )
+
+            elif check[mark_form] != mark_type:
+                raise ValidationError(
+                    "Forma otrzymania oceny nie zgadza się z jej typem!"
                 )
 
 
