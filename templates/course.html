@@ -6,6 +6,11 @@
 {% endblock %}
 
 {% block content %}
+    {% if message %}
+    <script type="text/javascript">
+        alert("Najpierw musisz dodać zasady zaliczenia!");
+    </script>
+    {% endif %}
     <div class="grid-container">
         <div class="titlebar">
             <div class="title">
@@ -106,12 +111,14 @@
                                 <td>Ocena</td>
                                 <td>Waga</td>
                                 <td>Typ oceny</td>
+                                <td>Otrzymana z</td>
                             </tr>
                             {% for mark in marks %}
                                 <tr>
                                     <td> <a href="{% url 'mark_edit' mark.id %}"> {{ mark.mark }} </a> </td>
                                     <td> {{ mark.weight }} </td>
                                     <td> {{ mark.mark_type }} </td>
+                                    <td> {{ mark.mark_form }} </td>
                                 </tr>
                             {% endfor %}
                         </table>

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from studentHelper.models import Course, Teacher, Marks, Goals
+from studentHelper.models import Course, Teacher, Marks, Goals, Components
 from studentHelper.views import main_view
 
 from .forms import MarkForm, RulesForm
@@ -14,6 +14,15 @@ def course_view(request, pk):
     "MINUS": "-",
     "PKT": "pkt",
     "MARK": "ocena",
+    "PERC": "%",
+    }
+
+    FORMS = {
+    "ACTIV": "aktywność",
+    "EXAM": "egzamin",
+    "QUIZ": "kartkówka",
+    "TEST": "kolokwium",
+    "LIST": "lista zadań",
     }
     context = {
         'course': Course.objects.get_record_by_id(pk),
@@ -24,6 +33,7 @@ def course_view(request, pk):
     #TODO czy da się inaczej?
     for el in context['marks']:
         el['mark_type'] = TYPES[el['mark_type']]
+        el['mark_form'] = FORMS[el['mark_form']]
 
     if context['course'].client_id != request.user:
         return main_view(request)
@@ -33,40 +43,45 @@ def course_view(request, pk):
 
 @login_required(login_url='/login')
 def temp(request):
-    pass
+    return main_view(request)
 
 
 @login_required(login_url='/login')
 def add_mark_view(request, pk):
 
-    if request.method == 'POST':
-        mark = MarkForm(request.POST)
+    p = Components.objects.get_records_by_course_id(pk)
+    if(p.exists()):
+        if request.method == 'POST':
+            mark = MarkForm(request.POST, course_id=pk)
 
-        if mark.is_valid():
-            m = mark.save(commit=False)
-            m.course_id = Course.objects.get_record_by_id(pk)
-            m.save()
-            return redirect('/course/'+str(pk))
-    else:
-        mark = MarkForm()
+            if mark.is_valid():
+                m = mark.save(commit=False)
+                m.course_id = Course.objects.get_record_by_id(pk)
+                m.save()
+                return redirect('/course/'+str(pk))
+        else:
+            mark = MarkForm(course_id=pk)
 
-    return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
+        return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
+
+    return redirect('/course/'+str(pk), {"message": True})
 
 @login_required(login_url='/login')
 def edit_mark_view(request, pk):
     my_mark = Marks.objects.get_record_by_id(pk)
+    course_id = my_mark.course_id.id
 
     if request.method == 'POST':
-        mark = MarkForm(request.POST, instance=my_mark)
+        mark = MarkForm(request.POST, instance=my_mark, course_id=course_id)
 
         if mark.is_valid():
             mark.save()
-            return redirect('/course/'+str(my_mark.course_id.id))
+            return redirect('/course/'+str(course_id))
     else:
         #TODO info?
-        mark = MarkForm(instance=my_mark)
+        mark = MarkForm(instance=my_mark, course_id=course_id)
 
-    return render(request, "new_mark.html", {"mark_form": mark, "pk": pk, "edit": True })
+    return render(request, "new_mark.html", {"mark_form": mark, "pk": course_id, "edit": True })
 
 
 @login_required(login_url='/login/')

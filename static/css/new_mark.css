@@ -5,7 +5,7 @@
     grid-gap: 20px;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows:repeat(30, 1fr);
-    background-image: url("1.jpg");
+    background-image: url("");
 
 }
 
@@ -16,12 +16,10 @@
     font-size: 32px;
     margin: 1%;
     max-height: 32px;
-    background-color: white;
 }
 .title {
     color: #0099e6;
     margin: 1%;
-    background-color: white;
 }
 
 .line {
@@ -34,7 +32,7 @@
 
 .formbar {
     grid-column: 5 / 9;
-    grid-row: 3 / 15;
+    grid-row: 3 / 18;
     text-align: center;
     font-size: 18px;
     margin: 1%;
