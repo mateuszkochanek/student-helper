@@ -106,7 +106,7 @@ class Thresholds(models.Model):
     k_5_0 = models.FloatField()
     p_5_5 = models.FloatField()
     type = models.CharField(max_length=5, choices=TYPES)
-    objects = ComponentsManager()
+    objects = ThresholdsManager()
 
 
 class Modyfication(models.Model):
