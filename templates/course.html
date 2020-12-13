@@ -41,6 +41,24 @@
             <hr style="color:CornflowerBlue">
         </div>
 
+        <div class="button_courses_bar">
+            {% if lecture %}
+                <a href="temp" class="button">
+                    Wykład
+                </a>
+            {% endif %}
+            {% if tutorial %}
+                <a href="temp" class="button">
+                    Ćwiczenia
+                </a>
+            {% endif %}
+            {% if laboratory %}
+                <a href="temp" class="button">
+                    Labolatoria
+                </a>
+            {% endif %}
+        </div>
+
         <div class="info_panels">
             <div class="info_pane col-1">
                 <table>
@@ -51,18 +69,10 @@
                     </tr>
                     <tr>
                         <td>
-                            Forma:
-                            {% for form in forms %}
-                                {{ form.type }}
-                            {% endfor %}
-                            <br>
+                            Forma: {{ course.type }} <br>
                             Prowadzący: <br>
-                            {% for form in forms %}
-                                - {{ form.type }}: {{ form.teacher_id.name }} {{ form.teacher_id.surname }}
-                                <br>
-                            {% endfor %}
+                            {{ course.teacher_id.name }} {{ course.teacher_id.surname }} <br>
                             ECTS: {{ course.ECTS }} <br>
-                            Forma zaliczenia: TBA
                         </td>
                     </tr>
                     <tr>

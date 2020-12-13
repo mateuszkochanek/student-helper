@@ -73,14 +73,26 @@ class CourseManager(models.Manager):
     def __isTheSameSubject(self, c1, c2):
         return c1.course_name == c2.course_name \
                or c1.course_name[:-2] == c2.course_name \
-               or c1.course_name == c2.course_name[:-2]\
+               or c1.course_name == c2.course_name[:-2] \
                or c1.course_name[:-2] == c2.course_name[:-2]
 
-    def get_all_forms_by_id(self, id):
+    def get_subject_of_type_and_name(self, course, type):
+        result = []
+        possible_names = [course.course_name,
+                          course.course_name + 'TN',
+                          course.course_name + 'TP',
+                          course.course_name[:-2]]
+        for name in possible_names:
+            result += self.filter(client_id=course.client_id, course_name=name, type=type)
+        return result
+        # return [self.filter(client_id=course.client_id, course_name=name, type=type) for name in possible_names]
+
+    def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)
         return list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name)) \
                + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TN')) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TP'))
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TP')) \
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name[:-2]))
 
 
 
