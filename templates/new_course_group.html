@@ -1,0 +1,29 @@
+{% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_course_group.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class="titlebar">
+        <div class=title>
+            Dodaj zasady zaliczenia
+        </div>
+    </div>
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <form method="post">
+            {% csrf_token %}
+            {{ cg_form|crispy }}
+            <button type="submit" class=button>Zatwierdź</button>
+            <a href="{% url 'course' pk %}" class="button">Wróć</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
