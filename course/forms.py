@@ -1,4 +1,4 @@
-from studentHelper.models import Marks
+from studentHelper.models import Marks, Teacher
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.forms import Form, CheckboxSelectMultiple, MultipleChoiceField, FloatField, ChoiceField
@@ -44,6 +44,25 @@ class MarkForm(ModelForm):
                 raise ValidationError(
                     "Hmmm, ujemna waga?"
                 )
+
+
+class TeacherForm(ModelForm):
+
+    class Meta:
+        model = Teacher
+        fields = ['webpage']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["webpage"].label = "Strona prowadzącego"
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = "To pole jest wymagane."
+
+    def clean(self):
+        cleaned_data = super().clean()
+        webpage = cleaned_data.get("webpage")
+        # TODO check if site was input correctly
+
             elif mark_form not in check:
                 raise ValidationError(
                     "Nieprawidłowy typ oceny!"

@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from studentHelper.models import Course, Teacher, Marks, Goals, Components
+from course.forms import TeacherForm
+from studentHelper.models import Course, Teacher, Marks, Goals
 from studentHelper.views import main_view
 
 from .forms import MarkForm, RulesForm
@@ -50,6 +52,23 @@ def course_view(request, pk):
 @login_required(login_url='/login')
 def temp(request):
     return main_view(request)
+
+
+@login_required(login_url='/login')
+def configure_webpage_view(request, pk):
+    course = Course.objects.get_record_by_id(pk)
+    if request.method == 'POST':
+        teacher_form = TeacherForm(request.POST)
+
+        if teacher_form.is_valid():
+            t = teacher_form.save(commit=False)
+            course.teacher_id.webpage = t.webpage
+            course.teacher_id.save()
+            print(course.teacher_id.webpage)
+            return redirect('/course/'+str(pk))
+    else:
+        teacher_form = TeacherForm(request.POST)
+    return render(request, "course/configure-webpage.html", {"teacher_form": teacher_form, "course": course})
 
 
 @login_required(login_url='/login')
