@@ -5,6 +5,24 @@ from django.forms import Form, CheckboxSelectMultiple, MultipleChoiceField, Floa
 from studentHelper.models import Components, Thresholds, CourseGroup, Modyfication, Course
 
 
+class TeacherForm(ModelForm):
+
+    class Meta:
+        model = Teacher
+        fields = ['webpage']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["webpage"].label = "Strona prowadzącego"
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = "To pole jest wymagane."
+
+    def clean(self):
+        cleaned_data = super().clean()
+        webpage = cleaned_data.get("webpage")
+        # TODO check if site was input correctly
+
+
 class MarkForm(ModelForm):
 
     class Meta:
@@ -44,35 +62,14 @@ class MarkForm(ModelForm):
                 raise ValidationError(
                     "Hmmm, ujemna waga?"
                 )
-
-
-class TeacherForm(ModelForm):
-
-    class Meta:
-        model = Teacher
-        fields = ['webpage']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["webpage"].label = "Strona prowadzącego"
-        for key in self.fields:
-            self.fields[key].error_messages['required'] = "To pole jest wymagane."
-
-    def clean(self):
-        cleaned_data = super().clean()
-        webpage = cleaned_data.get("webpage")
-        # TODO check if site was input correctly
-
             elif mark_form not in check:
                 raise ValidationError(
                     "Nieprawidłowy typ oceny!"
                 )
-
             elif check[mark_form] != mark_type:
                 raise ValidationError(
                     "Forma otrzymania oceny nie zgadza się z jej typem!"
                 )
-
 
 class RulesForm(Form):
 
