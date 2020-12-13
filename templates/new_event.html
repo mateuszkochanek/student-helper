@@ -30,7 +30,11 @@
             {{ event_form|crispy }}
             {{ description_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
-            <a href="{% url 'calendar' 'main'%}" class="button">Wróć</a>
+            {% if edit %}
+                <a href="{% url 'calendar' date %}" class="button">Wróć</a>
+            {% else %}
+                <a href="{% url 'calendar' 'main'%}" class="button">Wróć</a>
+            {% endif %}
         </form>
     </div>
 </div>

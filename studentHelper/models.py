@@ -246,6 +246,15 @@ class Marks(models.Model):
     ("PKT", "pkt"),
     ("MARK", "ocena"),
     ]
+
+    FORMS = [
+    ("ACTIV", "aktywność"),
+    ("EXAM", "egzamin"),
+    ("QUIZ", "kartkówka"),
+    ("TEST", "kolokwium"),
+    ("LIST", "lista zadań"),
+    ]
+
     course_id = models.ForeignKey(
     Course,
     on_delete = models.CASCADE,
@@ -253,4 +262,5 @@ class Marks(models.Model):
     mark = models.IntegerField()
     weight = models.IntegerField()
     mark_type = models.CharField(choices=TYPES, max_length=7)
+    mark_form = models.CharField(choices=FORMS, max_length=7)
     objects = MarksManager()

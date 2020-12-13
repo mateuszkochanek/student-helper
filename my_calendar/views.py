@@ -92,10 +92,10 @@ def edit_event_view(request, pk):
         if event.is_valid() and description.is_valid():
             event.save()
             description.save()
-            return redirect('/calendar/main')
+            return redirect('/calendar/'+str(my_event.start_date.date()))
     else:
 
         event = EventForm(instance=my_event)
         description = DescriptionForm(instance=my_description)
 
-    return render(request, "new_event.html", {"event_form": event, "description_form": description, "edit": True})
+    return render(request, "new_event.html", {"event_form": event, "description_form": description, "edit": True, "date": my_event.start_date.date()})
