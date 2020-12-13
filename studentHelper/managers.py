@@ -94,6 +94,11 @@ class CourseManager(models.Manager):
                + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TP')) \
                + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name[:-2]))
 
+    def delete_course_by_id(self, id):
+        # TODO triggers?
+        self.filter(id=id).delete()
+
+
 
 
 class ComponentsManager(models.Manager):

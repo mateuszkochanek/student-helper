@@ -80,6 +80,11 @@ def calendar_import(request):
     return scheduler(request)
 
 @login_required(login_url='/login/')
+def delete_event_view(request, pk):
+    my_event = Events.objects.delete_event_by_id(pk)
+    return redirect('/calendar/main')
+
+@login_required(login_url='/login/')
 def edit_event_view(request, pk):
 
     my_event = Events.objects.get_record_by_id(pk)
@@ -98,4 +103,10 @@ def edit_event_view(request, pk):
         event = EventForm(instance=my_event)
         description = DescriptionForm(instance=my_description)
 
-    return render(request, "new_event.html", {"event_form": event, "description_form": description, "edit": True, "date": my_event.start_date.date()})
+    return render(request, "new_event.html",
+                {"event_form": event,
+                 "description_form": description,
+                 "edit": True,
+                 "date": my_event.start_date.date(),
+                 "pk": pk,
+                 })

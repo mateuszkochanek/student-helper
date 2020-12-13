@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from studentHelper.models import Course, Teacher, Marks, Goals, Components
-from course.forms import TeacherForm
+from studentHelper.models import Course, Teacher, Marks, Goals, Components, Thresholds, Modyfication
+from course.forms import WebPageForm, ThresholdsForm
 from studentHelper.views import main_view
 from my_calendar.forms import CourseForm, TeacherForm
 
@@ -58,7 +58,7 @@ def temp(request):
 def configure_webpage_view(request, pk):
     course = Course.objects.get_record_by_id(pk)
     if request.method == 'POST':
-        teacher_form = TeacherForm(request.POST)
+        teacher_form = WebPageForm(request.POST)
 
         if teacher_form.is_valid():
             t = teacher_form.save(commit=False)
@@ -67,7 +67,7 @@ def configure_webpage_view(request, pk):
             print(course.teacher_id.webpage)
             return redirect('/course/'+str(pk))
     else:
-        teacher_form = TeacherForm(request.POST)
+        teacher_form = WebPageForm(request.POST)
     return render(request, "course/configure-webpage.html", {"teacher_form": teacher_form, "course": course})
 
 
@@ -133,12 +133,23 @@ def edit_course_view(request, pk):
 def new_pass_rules(request, pk):
     if request.method == 'POST':
         rules = RulesForm(request.POST, course_id=pk)
-        if rules.is_valid():
+        thresholds = ThresholdsForm(request.POST)
+        if rules.is_valid() and thresholds.is_valid():
             rules.save()
+            t = thresholds.save(commit=False)
+            t.course_id = Course.objects.get_record_by_id(pk)
+            t.save()
             return redirect('/course/'+str(pk))
     else:
         rules = RulesForm(course_id=pk)
-    return render(request, 'new_pass_rules.html', {'rules_form': rules, "pk": pk})
+        thresholds = ThresholdsForm()
+    return render(request, 'new_pass_rules.html', {'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
+
+
+@login_required(login_url='/login/')
+def delete_course_view(request, pk):
+    Course.objects.delete_course_by_id(pk)
+    return main_view(request)
 
 
 @login_required(login_url='/login/')

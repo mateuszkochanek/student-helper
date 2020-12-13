@@ -5,7 +5,7 @@ from django.forms import Form, CheckboxSelectMultiple, MultipleChoiceField, Floa
 from studentHelper.models import Components, Thresholds, CourseGroup, Modyfication, Course
 
 
-class TeacherForm(ModelForm):
+class WebPageForm(ModelForm):
 
     class Meta:
         model = Teacher
@@ -21,6 +21,8 @@ class TeacherForm(ModelForm):
         cleaned_data = super().clean()
         webpage = cleaned_data.get("webpage")
         # TODO check if site was input correctly
+
+
 
 
 class MarkForm(ModelForm):
@@ -72,6 +74,53 @@ class MarkForm(ModelForm):
                 )
 
 
+
+class ThresholdsForm(ModelForm):
+
+    class Meta:
+        model = Thresholds
+        fields = ['type', 'k_2_0', 'p_3_0', 'k_3_0', 'p_3_5', 'k_3_5', 'p_4_0', 'k_4_0',
+                'p_4_5', 'k_4_5', 'p_5_0', 'k_5_0', 'p_5_5']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['type'].label = "Wybierz typ w jakim jest skala, według której wystawiana jest \
+                                          ocena końcowa "
+        self.fields["k_2_0"].label = "Koniec zakresu dla oceny " + str(2)
+        mark = 3
+        self.marks = ['p_3_0', 'k_3_0', 'p_3_5', 'k_3_5', 'p_4_0', 'k_4_0',
+                    'p_4_5', 'k_4_5', 'p_5_0', 'k_5_0', 'p_5_5']
+
+        helper = 0
+        for key in self.marks:
+            if helper % 2 == 0:
+                self.fields[key].label = "Początek zakresu dla oceny " + str(mark)
+            else:
+                self.fields[key].label = "Koniec zakresu dla oceny " + str(mark)
+                mark += 0.5
+            helper += 1
+
+
+
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = "To pole jest wymagane."
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+        prev = cleaned_data.get('p_5_5')
+        self.marks = self.marks[:-1]
+
+        for key in self.marks[::-1]:
+            mark = cleaned_data.get(key)
+            if mark < 0:
+                raise ValidationError('Czy za ujemne oceny trzeba płacić?')
+            if mark > prev:
+                raise ValidationError('Wyższa ocena = wyższy próg, nie?')
+            prev = mark
+
+
 class RulesForm(Form):
 
     def __init__(self, *args, **kwargs):
@@ -101,29 +150,6 @@ class RulesForm(Form):
             self.fields[t_name] = ChoiceField(choices=TYPES, required=False)
             self.fields[t_name].label = '{0:d}. Zaznacz rodzaj oceniania formy: {1}'.format(i, form[0])
             i += 1
-
-        self.fields['thresh_type'] = ChoiceField(choices=TYPES)
-        self.fields['thresh_type'].label = '{0:d}. Wybierz typ w jakim jest skala, według której wystawiana jest' \
-                                           ' ocena końcowa:'.format(i)
-        i += 1
-        mark = 2
-        half = 0
-        j = 0
-        while mark+half < 6:
-            name_p = 'p_{0:d}_{1:d}'.format(mark, int(half*10))
-            name_k = 'k_{0:d}_{1:d}'.format(mark, int(half*10))
-            if mark != 2 or half != 0:
-                self.fields[name_p] = FloatField(min_value=0, required=True)
-                self.fields[name_p].label = 'Początek zakresu dla oceny {0:.1f}'.format(mark+half)
-            if mark != 5 or half != 0.5:
-                self.fields[name_k] = FloatField(required=True)
-                self.fields[name_k].label = 'Koniec zakresu dla oceny {0:.1f}'.format(mark + half)
-            if j % 2 == 0:
-                half += 0.5
-            else:
-                mark += 1
-                half = 0
-            j += 1
 
         YN = (
             ('Tak', 'Tak'),
@@ -172,15 +198,6 @@ class RulesForm(Form):
             for form in self.cleaned_data['formy']:
                 Components.objects.add_record(self.course_id, enum_form[form],
                                               enum_type[self.cleaned_data['{}_t'.format(form)]])
-            Thresholds.objects.add_record(self.course_id, self.cleaned_data['k_2_0'],
-                                          self.cleaned_data['p_2_5'], self.cleaned_data['k_2_5'],
-                                          self.cleaned_data['p_3_0'], self.cleaned_data['k_3_0'],
-                                          self.cleaned_data['p_3_5'], self.cleaned_data['k_3_5'],
-                                          self.cleaned_data['p_4_0'], self.cleaned_data['k_4_0'],
-                                          self.cleaned_data['p_4_5'], self.cleaned_data['k_4_5'],
-                                          self.cleaned_data['p_5_0'], self.cleaned_data['k_5_0'],
-                                          self.cleaned_data['p_5_5'], enum_type[self.cleaned_data['thresh_type']])
-
             if self.cleaned_data['mod_plus'] == 'Tak':
                 Modyfication.objects.add_record(self.course_id, 'PLUS', self.cleaned_data['mod_plus_w'],
                                                 enum_type[self.cleaned_data['mod_plus_t']])
@@ -191,27 +208,7 @@ class RulesForm(Form):
             self.course_id.save()
 
     def clean(self):
-        thresholds = [self.cleaned_data['k_2_0']]
-        mark = 3
-        half = 0
-        j = 0
-        while mark + half < 6:
-            name_p = 'p_{0:d}_{1:d}'.format(mark, int(half * 10))
-            thresholds.append(self.cleaned_data[name_p])
-            if mark != 5 or half != 0.5:
-                name_k = 'k_{0:d}_{1:d}'.format(mark, int(half * 10))
-                thresholds.append(self.cleaned_data[name_k])
-            if j % 2 == 0:
-                half += 0.5
-            else:
-                mark += 1
-                half = 0
-            j += 1
-        prev = thresholds[0]
-        for i in range(1, len(thresholds)):
-            if thresholds[i] <= prev:
-                raise ValidationError('Wyższa ocena = wyższy próg, nie?')
-            prev = thresholds[i]
+
 
         if self.cleaned_data['mod_minus'] == 'Tak' and self.cleaned_data['mod_minus_w'] is None:
             raise ValidationError('Jeżeli jest dostępna modyfikacja oceny, to na pewno wiadomo o ile')
