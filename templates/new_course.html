@@ -13,7 +13,11 @@
 <div class="grid">
     <div class="titlebar">
         <div class=title>
-            Dodaj kurs
+            {% if edit %}
+                Edytuj kurs
+            {% else %}
+                Dodaj kurs
+            {% endif %}
         </div>
     </div>
     <div class=line>
@@ -27,7 +31,11 @@
             {{ course_form|crispy }}
             {{ teacher_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
-            <a href="{% url 'calendar' 'main' %}" class="button">Wróć</a>
+            {% if edit %}
+                <a href="{% url 'course' pk %}" class="button">Wróć</a>
+            {% else %}
+                <a href="{% url 'calendar' 'main' %}" class="button">Wróć</a>
+            {% endif %}
         </form>
     </div>
 </div>

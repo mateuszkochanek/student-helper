@@ -9,6 +9,7 @@ from collections import defaultdict
 class ParsedEvent:
 
     start_date: str
+    day_date: str
     end_date: str
     description: str
     id: int
@@ -40,9 +41,11 @@ class UploadCalendarEvent():
         size = ((event.end_date - event.start_date).total_seconds())//(60 * cal_size)
 
         if event.whole_day == True:
-            event_app = ParsedEvent(str(""), "Cały dzień", str(extra.description), event.id, range((cal_size//60) * 24))
+            event_app = ParsedEvent(str(""), "Cały dzień", str(extra.description),
+                        event.id, range((cal_size//60) * 24))
         else:
-            event_app = ParsedEvent(str(sd), str(ed), str(extra.description), event.id, range(int(size)))
+            event_app = ParsedEvent(str(sd), str(ed), str(extra.description),
+                        event.id, range(int(size)))
 
         return event_app
 
@@ -61,11 +64,11 @@ class UploadCalendarEvent():
              start_date = timezone.now().replace(year=shift_conv.year, month=shift_conv.month,
                                                  day=shift_conv.day, hour=0, minute=0, second=0)
              end_date = start_date + timedelta(days=6)
-         print(start_date, "    ", end_date)
          try:
              events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)
 
              for event in events:
+                 print(event.start_date)
                  extra = Description.objects.get_descriptions(event, choose).first()
 
                  if event.period_type == "ONCE" and extra != None:
@@ -129,7 +132,8 @@ class UploadCalendarEvent():
                              data.update({str(key): [event_app]})
 
                  elif event.period_type == "YEARLY" and extra != None:
-                     #Todo usunąć niepotrzebne po testach!!!!
+
+
                      check_date_s = start_date
                      check_date_e = end_date
                      if start_date.year == end_date.year:
@@ -150,11 +154,15 @@ class UploadCalendarEvent():
          except(EmptyResultSet, MultipleObjectsReturned, ObjectDoesNotExist) as e:
              print("e")
 
+
+         for i in range(7):
+             day = start_date.date() + timedelta(days=i)
+             key = "day_" + str(i)
+             data.update({key: str(day)})
+
          next_shift = start_date.date() + timedelta(days=7)
          prev_shift = start_date.date() - timedelta(days=7)
          period = str(start_date.date()) + " - " + str(end_date.date())
          data.update({"next_shift": str(next_shift)})
          data.update({"prev_shift": str(prev_shift)})
-         data.update({"period": period})
-
          return data

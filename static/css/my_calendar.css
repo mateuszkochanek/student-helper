@@ -20,12 +20,36 @@
 
 .titledate {
 
-    grid-column: 2 / 10;
+    grid-column: 4 / 10;
     grid-row: 1;
     text-align: center;
-    font-size: 32px;
-    max-height: 32px;
+    font-size: 16px;
+    max-height: 16px;
 
+}
+
+.nav_button {
+
+     display: inline-block;
+     padding: 10px 20px;
+     font-size: 16px;
+     cursor: pointer;
+     text-align: center;
+     text-decoration: none;
+     outline: none;
+     color: #0077b3;
+     background-color: #66ccff;
+     border: none;
+     border-radius: 15px;
+
+}
+
+.nav_button:hover {background-color:  #004466}
+
+.nav_button:active {
+  background-color: #66ccff;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
 
 .title {

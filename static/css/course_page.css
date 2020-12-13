@@ -21,7 +21,7 @@
 }
 
 .buttonbar {
-    grid-column: 7 / 16;
+    grid-column: 5 / 16;
     grid-row: 1;
     text-align: right;
     margin: 1%;

@@ -231,19 +231,19 @@ class EventsManager(models.Manager):
 
         q1 = self.filter(client_id=client_id,
                          start_date__range=[start_date, end_date],
-                         end_date__range=[start_date, end_date])
+                         end_date__range=[start_date, end_date]).order_by("start_date__hour")
         q2 = self.filter(client_id=client_id, start_date__lte=end_date,
                          end_date__gte=start_date,
-                         period_type__in=["DAILY", "WEEKLY"])
+                         period_type__in=["DAILY", "WEEKLY"]).order_by("start_date__hour")
 
         if start_date.day < end_date.day:
             q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
-            start_date__day__gte=start_date.day, period_type__in=["MONTHLY", "YEARLY"])
+            start_date__day__gte=start_date.day, period_type__in=["MONTHLY", "YEARLY"]).order_by("start_date__hour")
         else:
             q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
-            start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"])
+            start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"]).order_by("start_date__hour")
 
-        return q1.union(q2, q3)
+        return q1.union(q2, q3).order_by("start_date")
 
     def delete_event_by_id(self, id):
         # TODO triggers?

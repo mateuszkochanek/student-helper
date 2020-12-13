@@ -15,13 +15,13 @@
     <div class=titledate>
         <div class=title>
             <span>{{ d.period }}</span>
-            <a href="{% url 'calendar' d.prev_shift %}" class=button>
+            <a href="{% url 'calendar' d.prev_shift %}" class=nav_button>
                 Poprzedni tydzień
             </a>
-            <a href="{% url 'calendar' 'main' %}" class=button>
+            <a href="{% url 'calendar' 'main' %}" class=nav_button>
                 Teraz
             </a>
-            <a href="{% url 'calendar' d.next_shift %}" class=button>
+            <a href="{% url 'calendar' d.next_shift %}" class=nav_button>
                 Następny tydzień
             </a>
 
@@ -45,30 +45,44 @@
                 <tr>
                     <td>
                         Poniedziałek
+                        <div class=""></div>
+                        {{ d.day_0 }}
                         <br></br>
                     </td>
                     <td>
                         Wtorek
+                        <div class=""></div>
+                        {{ d.day_1 }}
                         <br></br>
                     </td>
                     <td>
                         Środa
+                        <div class=""></div>
+                        {{ d.day_2 }}
                         <br></br>
                     </td>
                     <td>
                         Czwartek
+                        <div class=""></div>
+                        {{ d.day_3 }}
                         <br></br>
                     </td>
                     <td>
                         Piątek
+                        <div class=""></div>
+                        {{ d.day_4 }}
                         <br></br>
                     </td>
                     <td>
                         Sobota
+                        <div class=""></div>
+                        {{ d.day_5 }}
                         <br></br>
                     </td>
                     <td>
                         Niedziela
+                        <div class=""></div>
+                        {{ d.day_6 }}
                         <br></br>
                     </td>
                 </tr>
@@ -126,7 +140,7 @@
                         {% for event in d.6 %}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <<a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
+                        <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
