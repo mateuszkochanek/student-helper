@@ -47,5 +47,6 @@ urlpatterns = [
     path('course/<int:pk>', course_view, name='course'),
     path('mark/add/<int:pk>', add_mark_view, name='mark_add'),
     path('mark/edit/<int:pk>', edit_mark_view, name='mark_edit'),
-    path('temp/', temp, name='temp')
+    path('temp/', temp, name='temp'),
+    path('new_pass_rules/<int:pk>', new_pass_rules, name='new_pass_rules')
 ]

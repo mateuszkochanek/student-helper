@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from studentHelper.models import Course, Teacher, Marks, Goals
 from studentHelper.views import main_view
 
-from .forms import MarkForm
+from .forms import MarkForm, RulesForm
 
 
 @login_required(login_url='/login')
@@ -34,6 +34,7 @@ def course_view(request, pk):
 @login_required(login_url='/login')
 def temp(request):
     pass
+
 
 @login_required(login_url='/login')
 def add_mark_view(request, pk):
@@ -66,3 +67,15 @@ def edit_mark_view(request, pk):
         mark = MarkForm(instance=my_mark)
 
     return render(request, "new_mark.html", {"mark_form": mark, "pk": pk, "edit": True })
+
+
+@login_required(login_url='/login/')
+def new_pass_rules(request, pk):
+    if request.method == 'POST':
+        rules = RulesForm(request.POST, course_id=pk)
+        if rules.is_valid():
+            rules.save()
+            return redirect('/course/'+str(pk))
+    else:
+        rules = RulesForm(course_id=pk)
+    return render(request, 'new_pass_rules.html', {'rules_form': rules, "pk": pk})
