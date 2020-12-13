@@ -6,7 +6,7 @@ from course.forms import WebPageForm, ThresholdsForm
 from studentHelper.views import main_view
 from my_calendar.forms import CourseForm, TeacherForm
 
-from .forms import MarkForm, RulesForm
+from .forms import MarkForm, RulesForm, CourseGroupForm
 
 
 @login_required(login_url='/login')
@@ -150,3 +150,15 @@ def new_pass_rules(request, pk):
 def delete_course_view(request, pk):
     Course.objects.delete_course_by_id(pk)
     return main_view(request)
+
+
+@login_required(login_url='/login/')
+def new_course_group(request, pk):
+    if request.method == 'POST':
+        cg = CourseGroupForm(request.POST, course_id=pk)
+        if cg.is_valid():
+            cg.save()
+            return redirect('/new_pass_rules/'+str(pk))
+    else:
+        cg = CourseGroupForm(course_id=pk)
+    return render(request, 'new_course_group.html', {'cg_form': cg, "pk": pk})

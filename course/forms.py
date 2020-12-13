@@ -215,3 +215,90 @@ class RulesForm(Form):
 
         if self.cleaned_data['mod_plus'] == 'Tak' and self.cleaned_data['mod_plus_w'] is None:
             raise ValidationError('Jeżeli jest dostępna modyfikacja oceny, to na pewno wiadomo o ile')
+
+
+class CourseGroupForm(Form):
+
+    def __init__(self, *args, **kwargs):
+        self.cid = kwargs.pop('course_id')
+        self.course_id = Course.objects.get_record_by_id(self.cid)
+        super().__init__(*args, **kwargs)
+        YN = (
+            ('Tak', 'Tak'),
+            ('Nie', 'Nie')
+        )
+        self.fields['if_cg'] = ChoiceField(choices=YN)
+        self.fields['if_cg'].label = '1. Czy kurs jest częścią grupy kursów?'
+
+        COURSES = (
+            ('ćwiczenia', 'ćwiczenia'),
+            ('laboratorium', 'laboratorium'),
+        )
+        self.fields['courses'] = MultipleChoiceField(widget=CheckboxSelectMultiple, choices=COURSES, required=False)
+        self.fields['courses'].label = '2. Zaznacz formy, w których odbywają się zajęcia w ramach grupy kursów:'
+
+        self.fields['weight_c'] = FloatField(min_value=0, max_value=1, required=False)
+        self.fields['weight_c'].label = '3. Wpisz udział oceny z ćwiczeń w ocenie końcowej z grupy kursów:'
+
+        self.fields['weight_l'] = FloatField(min_value=0, max_value=1, required=False)
+        self.fields['weight_l'].label = '4. Wpisz udział oceny z laboratorium w ocenie końcowej z grupy kursów:'
+
+        self.fields['weight_w'] = FloatField(min_value=0, max_value=1, required=False)
+        self.fields['weight_w'].label = '5. Wpisz udział oceny z wykładu w ocenie końcowej z grupy kursów:'
+
+        self.fields['minimum'] = ChoiceField(choices=YN)
+        self.fields['minimum'].label = '6. Czy oceny z wszystkich kursów wchodzących w grupę muszą być większe niż 2?'
+
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = 'To pole jest wymagane.'
+            if 'invalid' in self.fields[key].error_messages:
+                self.fields[key].error_messages['invalid'] = 'To nie jest poprawna wartość'
+            if 'min_value' in self.fields[key].error_messages:
+                self.fields[key].error_messages['min_value'] = 'To nie jest poprawna wartość'
+            if 'max_value' in self.fields[key].error_messages:
+                self.fields[key].error_messages['max_value'] = 'To nie jest poprawna wartość'
+
+    def clean(self):
+        if self.cleaned_data['if_cg'] == 'Tak' and self.cleaned_data['courses'] is None:
+            raise ValidationError('W grupie muszą być jakieś kursy')
+
+        if self.cleaned_data['if_cg'] == 'Tak' and len(self.cleaned_data['courses']) == 1:
+            raise ValidationError('Jeden kurs to nie grupa')
+
+        if self.cleaned_data['weight_c'] is None and 'ćwiczenia' in self.cleaned_data['courses']:
+            raise ValidationError('Podaj wagę oceny z ćwiczeń')
+
+        if self.cleaned_data['weight_l'] is None and 'laboratorium' in self.cleaned_data['courses']:
+            raise ValidationError('Podaj wagę oceny z laboratorum')
+
+        if self.cleaned_data['weight_w'] is None:
+            raise ValidationError('Podaj wagę oceny z ćwiczeń')
+
+        sum = self.cleaned_data['weight_w']
+        if 'laboratorium' in self.cleaned_data['courses']:
+            sum += self.cleaned_data['weight_l']
+
+        if 'ćwiczenia' in self.cleaned_data['courses']:
+            sum += self.cleaned_data['weight_c']
+
+        if sum < 0.99 or sum > 1.01:
+            raise ValidationError('Wagi muszą sumować się do 1')
+
+    def save(self):
+        if self.cleaned_data['if_cg'] == 'Tak' and not CourseGroup.objects.get_records_by_course_id(self.course_id):
+            if self.cleaned_data['minimum'] == 'Tak':
+                minimum = True
+            else:
+                minimum = False
+            CourseGroup.objects.add_record(self.course_id, self.cleaned_data['weight_w'], minimum)
+            all_types = Course.objects.get_all_types_by_id(self.cid)
+            for i in range(len(all_types)):
+                if all_types[i].type == 'C':
+                    ex = all_types[i]
+                elif all_types[i].type == 'L':
+                    l = all_types[i]
+            if 'ćwiczenia' in self.cleaned_data['courses']:
+                CourseGroup.objects.add_record(ex, self.cleaned_data['weight_c'], minimum)
+
+            if 'laboratorium' in self.cleaned_data['courses']:
+                CourseGroup.objects.add_record(l, self.cleaned_data['weight_l'], minimum)
