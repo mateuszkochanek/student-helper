@@ -30,12 +30,9 @@ def main_view(request):
         start_date__gte=timezone.now()
     ).order_by('start_date')[:5]
 
-    courses = Course.objects.get_main_records_by_client_id(request.user.id)
-
     context = {
         'events_today': events_today,
         'next_events': next_events,
-        'courses': courses
     }
     return render(request, "index.html", context)
 
