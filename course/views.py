@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 
 from studentHelper.models import Course, Teacher, Marks, Goals, Components
 from course.forms import TeacherForm
-from studentHelper.models import Course, Teacher, Marks, Goals
 from studentHelper.views import main_view
+from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
 
@@ -107,6 +107,26 @@ def edit_mark_view(request, pk):
         mark = MarkForm(instance=my_mark, course_id=course_id)
 
     return render(request, "new_mark.html", {"mark_form": mark, "pk": course_id, "edit": True })
+
+@login_required(login_url='/login')
+def edit_course_view(request, pk):
+
+    c_course = Course.objects.get_record_by_id(pk)
+    c_teacher = c_course.teacher_id
+
+    if request.method == 'POST':
+        course = CourseForm(request.POST, instance=c_course)
+        teacher = TeacherForm(request.POST, instance=c_teacher)
+
+        if course.is_valid() and teacher.is_valid():
+            course.save()
+            teacher.save()
+            return redirect('/course/'+str(pk))
+    else:
+        course = CourseForm(instance=c_course)
+        teacher = TeacherForm(instance=c_teacher)
+
+    return render(request, "new_course.html", {"course_form": course, "event_form": teacher, "edit": True, "pk": pk})
 
 
 @login_required(login_url='/login/')

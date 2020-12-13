@@ -47,6 +47,7 @@ urlpatterns = [
     path('course/<int:pk>', course_view, name='course'),
     path('temp/', temp, name='temp'),
     path('course/<int:pk>/configure-webpage', configure_webpage_view, name='configure_webpage'),
+    path('course/<int:pk>/edit', edit_course_view, name='edit_course'),
     path('mark/add/<int:pk>', add_mark_view, name='mark_add'),
     path('mark/edit/<int:pk>', edit_mark_view, name='mark_edit'),
     path('temp/', temp, name='temp'),
