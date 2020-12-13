@@ -78,13 +78,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'studentHelper.context_processors.courses_context',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'Team_Programming.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
