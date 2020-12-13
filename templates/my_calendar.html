@@ -78,7 +78,7 @@
                             {% for event in d.0 %}
                             <span>{{ event.start_date }} - {{ event.end_date }}</span>
                             <div class=""></div>
-                            <span>{{ event.description }}</span>
+                            <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                             <br></br>
                             {% endfor %}
                         </td>
@@ -86,7 +86,7 @@
                         {% for event in d.1 %}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <span>{{ event.description }}</span>
+                        <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
@@ -94,7 +94,7 @@
                         {% for event in d.2 %}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <span>{{ event.description }}</span>
+                        <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
@@ -102,7 +102,7 @@
                         {% for event in d.3 %}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <span>{{ event.description }}</span>
+                        <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
@@ -110,7 +110,7 @@
                         {% for event in d.4 %}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <span>{{ event.description }}</span>
+                        <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
@@ -118,7 +118,7 @@
                         {% for event in d.5%}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <span>{{ event.description }}</span>
+                        <a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
@@ -126,7 +126,7 @@
                         {% for event in d.6 %}
                         <span>{{ event.start_date }} - {{ event.end_date }}</span>
                         <div class=""></div>
-                        <span>{{ event.description }}</span>
+                        <<a href="{% url 'edit_event' event.id %}">{{ event.description }} </a>
                         <br></br>
                         {% endfor %}
                     </td>
@@ -138,6 +138,7 @@
             </table>
         </div>
     </div>
+</div>
     <!-- <div class=calendar>
         <table id="myTable">
         {% if d %}
@@ -231,8 +232,8 @@
             </tr>
         {% endif %}
         </table>
-</div>
 </div> -->
+
 
 
 {% endblock %}
