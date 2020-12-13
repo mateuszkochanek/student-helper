@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from studentHelper.models import Course, Teacher, Marks, Goals, Components
-from course.forms import TeacherForm
+from course.forms import WebPageForm
 from studentHelper.views import main_view
 from my_calendar.forms import CourseForm, TeacherForm
 
@@ -58,7 +58,7 @@ def temp(request):
 def configure_webpage_view(request, pk):
     course = Course.objects.get_record_by_id(pk)
     if request.method == 'POST':
-        teacher_form = TeacherForm(request.POST)
+        teacher_form = WebPageForm(request.POST)
 
         if teacher_form.is_valid():
             t = teacher_form.save(commit=False)
@@ -67,7 +67,7 @@ def configure_webpage_view(request, pk):
             print(course.teacher_id.webpage)
             return redirect('/course/'+str(pk))
     else:
-        teacher_form = TeacherForm(request.POST)
+        teacher_form = WebPageForm(request.POST)
     return render(request, "course/configure-webpage.html", {"teacher_form": teacher_form, "course": course})
 
 
@@ -139,3 +139,8 @@ def new_pass_rules(request, pk):
     else:
         rules = RulesForm(course_id=pk)
     return render(request, 'new_pass_rules.html', {'rules_form': rules, "pk": pk})
+
+@login_required(login_url='/login/')
+def delete_course_view(request, pk):
+    Course.objects.delete_course_by_id(pk)
+    return main_view(request)
