@@ -135,38 +135,58 @@ def edit_course_view(request, pk):
 
 @login_required(login_url='/login/')
 def new_pass_rules(request, pk):
-
+    course = Course.objects.get_record_by_id(pk)
+    cg = None
     if request.method == 'POST':
+        if course.type == "W":
+            cg = CourseGroupForm(request.POST, course_id=pk)
+            if cg.is_valid():
+                cg.save()
+
         rules = RulesForm(request.POST, course_id=pk)
         thresholds = ThresholdsForm(request.POST)
+
         if rules.is_valid() and thresholds.is_valid():
             rules.save()
             t = thresholds.save(commit=False)
-            t.course_id = Course.objects.get_record_by_id(pk)
+            t.course_id = course
             t.save()
             return redirect('/course/'+str(pk))
     else:
         rules = RulesForm(course_id=pk)
         thresholds = ThresholdsForm()
-    return render(request, 'new_pass_rules.html', {'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
+        if course.type == "W":
+            cg = CourseGroupForm(course_id=pk)
+    return render(request, 'new_pass_rules.html', {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
 
 @login_required(login_url='/login/')
 def pass_rules_view(request, pk):
     c = Components.objects.get_records_by_course_id(pk)
     if c.exists():
+        course = Course.objects.get_record_by_id(pk)
         t = Thresholds.objects.get(course_id=pk)
+        cg = None
         if request.method == 'POST':
             rules = RulesForm(request.POST, course_id=pk)
             thresholds = ThresholdsForm(request.POST, instance=t)
+            if course.type == "W":
+                cg = CourseGroupForm(request.POST, course_id=pk)
+                if cg.is_valid():
+                    cg.save()
+
             if rules.is_valid() and thresholds.is_valid():
                 rules.save()
                 thresholds.save()
                 return redirect('/course/'+str(pk))
         else:
+            if course.type == "W":
+                cg = CourseGroupForm(course_id=pk)
+                cg.fill_edit()
+                
             rules = RulesForm(course_id=pk)
             rules.fill_edit()
             thresholds = ThresholdsForm(instance=t)
-        return render(request, 'new_pass_rules.html', {'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
+        return render(request, 'new_pass_rules.html', {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
 
     else:
         #TODO informacja o nieistniejących zasadach
@@ -177,21 +197,3 @@ def pass_rules_view(request, pk):
 def delete_course_view(request, pk):
     Course.objects.delete_course_by_id(pk)
     return main_view(request)
-
-
-@login_required(login_url='/login/')
-def new_course_group(request, pk):
-
-    p = Thresholds.objects.get_records_by_course_id(pk)
-    if p.exists():
-        #TODO informacja o istniejących zasadach zaliczenia
-        return redirect('/course/'+str(pk), {"message": True})
-    else:
-        if request.method == 'POST':
-            cg = CourseGroupForm(request.POST, course_id=pk)
-            if cg.is_valid():
-                cg.save()
-                return redirect('/new_pass_rules/'+str(pk))
-        else:
-            cg = CourseGroupForm(course_id=pk)
-        return render(request, 'new_course_group.html', {'cg_form': cg, "pk": pk})

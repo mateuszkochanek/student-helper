@@ -178,19 +178,19 @@ class RulesForm(Form):
             'procenty': 'PERC',
             'ocena': 'MARK'
         }
-        if not Components.objects.get_records_by_course_id(self.course_id):
+        # if not Components.objects.get_records_by_course_id(self.course_id):
 
-            for form in self.cleaned_data['formy']:
-                Components.objects.add_record(self.course_id, enum_form[form],
-                                              enum_type[self.cleaned_data['{}_t'.format(form)]])
-            if self.cleaned_data['mod_plus'] == 'Tak':
-                Modyfication.objects.add_record(self.course_id, 'PLUS', self.cleaned_data['mod_plus_w'],
-                                                enum_type[self.cleaned_data['mod_plus_t']])
-            if self.cleaned_data['mod_minus'] == 'Tak':
-                Modyfication.objects.add_record(self.course_id, 'MINUS', self.cleaned_data['mod_minus_w'],
-                                                enum_type[self.cleaned_data['mod_minus_t']])
-            self.course_id.ECTS = self.cleaned_data['ects']
-            self.course_id.save()
+        for form in self.cleaned_data['formy']:
+            Components.objects.add_record(self.course_id, enum_form[form],
+                                          enum_type[self.cleaned_data['{}_t'.format(form)]])
+        if self.cleaned_data['mod_plus'] == 'Tak':
+            Modyfication.objects.add_record(self.course_id, 'PLUS', self.cleaned_data['mod_plus_w'],
+                                            enum_type[self.cleaned_data['mod_plus_t']])
+        if self.cleaned_data['mod_minus'] == 'Tak':
+            Modyfication.objects.add_record(self.course_id, 'MINUS', self.cleaned_data['mod_minus_w'],
+                                            enum_type[self.cleaned_data['mod_minus_t']])
+        self.course_id.ECTS = self.cleaned_data['ects']
+        self.course_id.save()
 
     def clean(self):
 
@@ -350,6 +350,11 @@ class CourseGroupForm(Form):
             raise ValidationError('Wagi muszą sumować się do 1')
 
     def save(self):
+        cg = CourseGroup.objects.get_records_by_course_id(self.cid)
+        all_types = Course.objects.get_all_types_by_id(self.course_id.id)
+        if self.cleaned_data['if_cg'] == 'Nie' and cg.exists():
+            for el in all_types:
+                CourseGroup.objects.delete_course_group_by_course_id(el.id)
         if self.cleaned_data['if_cg'] == 'Tak' and not CourseGroup.objects.get_records_by_course_id(self.course_id):
             if self.cleaned_data['minimum'] == 'Tak':
                 minimum = True
@@ -367,3 +372,64 @@ class CourseGroupForm(Form):
 
             if 'laboratorium' in self.cleaned_data['courses']:
                 CourseGroup.objects.add_record(l, self.cleaned_data['weight_l'], minimum)
+
+    def fill_edit(self):
+        YN = (
+            ('Tak', 'Tak'),
+            ('Nie', 'Nie')
+        )
+
+        COURSES = (
+            ('ćwiczenia', 'ćwiczenia'),
+            ('laboratorium', 'laboratorium'),
+        )
+        cg = CourseGroup.objects.get_records_by_course_id(self.course_id)
+        group = False
+        if cg.exists():
+            group = True
+
+        comp = Components.objects.get_records_by_course_id(self.course_id)
+        ects = self.course_id.ECTS
+        mod = Modyfication.objects.get_records_by_course_id(self.course_id)
+
+        if group:
+            self.fields['if_cg'] = ChoiceField(choices=YN, initial="Tak")
+        else:
+            self.fields['if_cg'] = ChoiceField(choices=YN, initial="Nie")
+
+        self.fields['if_cg'].label = '1. Czy kurs jest częścią grupy kursów?'
+
+
+        my_list = []
+        weight_list = [("", ""), ("", ""), ("", "")]
+        all_types = Course.objects.get_all_types_by_id(self.course_id.id)
+        if all_types:
+            for el in all_types:
+                if group:
+                    if el.type == "C":
+                        my_list.append("ćwiczenia")
+                        weight_list[0] = (el.coursegroup.weight, el.coursegroup.minimum)
+                    if el.type == "L":
+                        my_list.append("laboratorium")
+                        weight_list[1] = (el.coursegroup.weight, el.coursegroup.minimum)
+                    if el.type == "W":
+                        weight_list[2] = (el.coursegroup.weight, el.coursegroup.minimum)
+
+
+        self.fields['courses'] = MultipleChoiceField(widget=CheckboxSelectMultiple, choices=COURSES, required=False, initial=my_list)
+        self.fields['courses'].label = '2. Zaznacz formy, w których odbywają się zajęcia w ramach grupy kursów:'
+
+        self.fields['weight_c'] = FloatField(min_value=0, max_value=1, required=False, initial=weight_list[0][0])
+        self.fields['weight_c'].label = '3. Wpisz udział oceny z ćwiczeń w ocenie końcowej z grupy kursów:'
+
+        self.fields['weight_l'] = FloatField(min_value=0, max_value=1, required=False, initial=weight_list[1][0])
+        self.fields['weight_l'].label = '4. Wpisz udział oceny z laboratorium w ocenie końcowej z grupy kursów:'
+
+        self.fields['weight_w'] = FloatField(min_value=0, max_value=1, required=False, initial=weight_list[2][0])
+        self.fields['weight_w'].label = '5. Wpisz udział oceny z wykładu w ocenie końcowej z grupy kursów:'
+
+        if weight_list[0] != " " and weight_list[0][1]:
+            self.fields['minimum'] = ChoiceField(choices=YN, initial="Tak")
+        else:
+            self.fields['minimum'] = ChoiceField(choices=YN, initial="Nie")
+        self.fields['minimum'].label = '6. Czy oceny z wszystkich kursów wchodzących w grupę muszą być większe niż 2?'
