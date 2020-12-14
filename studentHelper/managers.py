@@ -135,20 +135,15 @@ class ThresholdsManager(models.Manager):
         Usage: Import model and then use Thresholds.objects.[below_options]
     """
 
-    def add_record(self, course, k_2_0, p_2_5, k_2_5, p_3_0,
-                   k_3_0, p_3_5, k_3_5, p_4_0, k_4_0, p_4_5, k_4_5, p_5_0, k_5_0,
-                   p_5_5, type):
+    def add_record(self, course, p_3_0, p_3_5, p_4_0, p_4_5, p_5_0, p_5_5, type):
         """ Add new record to DB
 
             course: object of Course,
 
         """
 
-        component = self.create(course_id=course, k_2_0=k_2_0, p_2_5=p_2_5,
-                                k_2_5=k_2_5, p_3_0=p_3_0, k_3_0=k_3_0, p_3_5=p_3_5,
-                                k_3_5=k_3_5, p_4_0=p_4_0, k_4_0=k_4_0, p_4_5=p_4_5,
-                                k_4_5=k_4_5, p_5_0=p_5_0, k_5_0=k_5_0, p_5_5=p_5_5,
-                                type=type)
+        component = self.create(course_id=course, p_3_0=p_3_0, p_3_5=p_3_5, p_4_0=p_4_0,
+                                p_4_5=p_4_5, p_5_0=p_5_0,  p_5_5=p_5_5, type=type)
         component.save()
 
     def get_record_by_id(self, id):

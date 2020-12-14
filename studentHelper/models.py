@@ -90,18 +90,11 @@ class Thresholds(models.Model):
     primary_key=True
     )
 
-
-    k_2_0 = models.FloatField()
     p_3_0 = models.FloatField()
-    k_3_0 = models.FloatField()
     p_3_5 = models.FloatField()
-    k_3_5 = models.FloatField()
     p_4_0 = models.FloatField()
-    k_4_0 = models.FloatField()
     p_4_5 = models.FloatField()
-    k_4_5 = models.FloatField()
     p_5_0 = models.FloatField()
-    k_5_0 = models.FloatField()
     p_5_5 = models.FloatField()
     type = models.CharField(max_length=5, choices=TYPES)
     objects = ThresholdsManager()
