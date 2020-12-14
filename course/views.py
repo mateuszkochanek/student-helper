@@ -13,8 +13,6 @@ from .forms import MarkForm, RulesForm, CourseGroupForm
 @login_required(login_url='/login')
 def course_view(request, pk):
     TYPES = {
-    "PLUS": "+",
-    "MINUS": "-",
     "PKT": "pkt",
     "MARK": "ocena",
     "PERC": "%",
@@ -182,7 +180,7 @@ def pass_rules_view(request, pk):
             if course.type == "W":
                 cg = CourseGroupForm(course_id=pk)
                 cg.fill_edit()
-                
+
             rules = RulesForm(course_id=pk)
             rules.fill_edit()
             thresholds = ThresholdsForm(instance=t)

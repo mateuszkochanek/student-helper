@@ -59,8 +59,7 @@ class MarkForm(ModelForm):
         mark_form = cleaned_data.get("mark_form")
         mark_type = cleaned_data.get("mark_type")
         if mark and weight and mark_form and mark_type:
-            if mark_type == "PLUS" or mark_type == "MINUS":
-                mark_type = "PKT"
+
             if mark < 1:
                 raise ValidationError(
                     "Chyba ciężko otrzymać taką ocenę :o"
