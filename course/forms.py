@@ -131,16 +131,14 @@ class RulesForm(Form):
         )
         i = 1
         self.fields['ects'] = IntegerField(min_value=0, max_value=30)
-        self.fields['ects'].label = '{0:d} Wpisz ile punktów ECTS ma kurs:'.format(i)
+        self.fields['ects'].label = '{0:d}. Wpisz ile punktów ECTS ma kurs:'.format(i)
         i += 1
         self.fields['formy'] = MultipleChoiceField(widget=CheckboxSelectMultiple, choices=FORMS)
         self.fields['formy'].label = '{0:d}. Wybierz formy uzyskania ocen cząstkowych na kursie:'.format(i)
         i += 1
-        for form in FORMS:
-            t_name = '{}_t'.format(form[0])
-            self.fields[t_name] = ChoiceField(choices=TYPES, required=False)
-            self.fields[t_name].label = '{0:d}. Zaznacz rodzaj oceniania formy: {1}'.format(i, form[0])
-            i += 1
+        self.fields['form_type'] = ChoiceField(choices=TYPES, required=False)
+        self.fields['form_type'].label = '{0:d}. Zaznacz rodzaj oceniania na kursie:'.format(i)
+        i += 1
 
         YN = (
             ('Tak', 'Tak'),
@@ -149,18 +147,18 @@ class RulesForm(Form):
         self.fields['mod_plus'] = ChoiceField(choices=YN)
         self.fields['mod_plus'].label = '{0:d}. Czy możliwe jest podwyższenie oceny?'.format(i)
         i += 1
-        self.fields['mod_plus_t'] = ChoiceField(choices=TYPES, required=False)
-        self.fields['mod_plus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
         self.fields['mod_plus_w'] = FloatField(min_value=0, required=False)
         self.fields['mod_plus_w'].label = 'Wpisz o ile ocena może zostać podwyższona:'
 
         self.fields['mod_minus'] = ChoiceField(choices=YN)
         self.fields['mod_minus'].label = '{0:d}. Czy możliwe jest obniżenie oceny?'.format(i)
         i += 1
-        self.fields['mod_minus_t'] = ChoiceField(choices=TYPES, required=False)
-        self.fields['mod_minus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
         self.fields['mod_minus_w'] = FloatField(min_value=0, required=False)
         self.fields['mod_minus_w'].label = 'Wpisz o ile ocena może zostać obniżona:'
+
+        self.fields['mod_type'] = ChoiceField(choices=TYPES, required=False)
+        self.fields['mod_type'].label = '{0:d}. Wybierz w jakim typie jest modyfikacja oceny:'.format(i)
+        i += 1
 
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
@@ -188,13 +186,13 @@ class RulesForm(Form):
 
         for form in self.cleaned_data['formy']:
             Components.objects.add_record(self.course_id, enum_form[form],
-                                          enum_type[self.cleaned_data['{}_t'.format(form)]])
+                                          enum_type[self.cleaned_data['form_type']])
         if self.cleaned_data['mod_plus'] == 'Tak':
             Modyfication.objects.add_record(self.course_id, 'PLUS', self.cleaned_data['mod_plus_w'],
-                                            enum_type[self.cleaned_data['mod_plus_t']])
+                                            enum_type[self.cleaned_data['mod_type']])
         if self.cleaned_data['mod_minus'] == 'Tak':
             Modyfication.objects.add_record(self.course_id, 'MINUS', self.cleaned_data['mod_minus_w'],
-                                            enum_type[self.cleaned_data['mod_minus_t']])
+                                            enum_type[self.cleaned_data['mod_type']])
         self.course_id.ECTS = self.cleaned_data['ects']
         self.course_id.save()
 
@@ -238,10 +236,9 @@ class RulesForm(Form):
         comp = Components.objects.get_records_by_course_id(self.course_id)
         ects = self.course_id.ECTS
         mod = Modyfication.objects.get_records_by_course_id(self.course_id)
-        print(mod)
         i = 1
         self.fields['ects'] = IntegerField(min_value=0, max_value=30, initial=ects)
-        self.fields['ects'].label = '{0:d} Wpisz ile punktów ECTS ma kurs:'.format(i)
+        self.fields['ects'].label = '{0:d}. Wpisz ile punktów ECTS ma kurs:'.format(i)
         i += 1
         init_comp = []
         for c in comp:
@@ -250,45 +247,39 @@ class RulesForm(Form):
         self.fields['formy'].label = '{0:d}. Wybierz formy uzyskania ocen cząstkowych na kursie:'.format(i)
         i += 1
 
-        for form in FORMS:
-            t_name = '{}_t'.format(form[0])
-            self.fields[t_name] = ChoiceField(choices=TYPES, required=False)
-            for c in comp:
-                if form[0] == enum_form[c.form]:
-                    self.fields[t_name] = ChoiceField(choices=TYPES, required=False, initial=enum_type[c.type])
-            self.fields[t_name].label = '{0:d}. Zaznacz rodzaj oceniania formy: {1}'.format(i, form[0])
-            i += 1
+        c = enum_type[comp[0].type]
+
+        self.fields['form_type'] = ChoiceField(choices=TYPES, required=False, initial=c)
+        self.fields['form_type'].label = '{0:d}. Zaznacz rodzaj oceniania na kursie:'.format(i)
+        i += 1
 
         self.fields['mod_plus'] = ChoiceField(choices=YN, initial='Nie')
-        self.fields['mod_plus_t'] = ChoiceField(choices=TYPES, required=False)
         self.fields['mod_plus_w'] = FloatField(min_value=0, required=False)
         if mod:
             for m in mod:
                 if m.mod == 'PLUS':
                     self.fields['mod_plus'] = ChoiceField(choices=YN, initial='Tak')
-                    t = enum_type[m.type]
-                    self.fields['mod_plus_t'] = ChoiceField(choices=TYPES, required=False, initial=t)
                     self.fields['mod_plus_w'] = FloatField(min_value=0, required=False, initial=m.val)
 
         self.fields['mod_plus'].label = '{0:d}. Czy możliwe jest podwyższenie oceny?'.format(i)
         i += 1
-        self.fields['mod_plus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
         self.fields['mod_plus_w'].label = 'Wpisz o ile ocena może zostać podwyższona:'
 
         self.fields['mod_minus'] = ChoiceField(choices=YN, initial='Nie')
-        self.fields['mod_minus_t'] = ChoiceField(choices=TYPES, required=False)
         self.fields['mod_minus_w'] = FloatField(min_value=0, required=False)
+        self.fields['mod_type'] = ChoiceField(choices=TYPES, required=False)
         if mod:
             for m in mod:
                 if m.mod == 'MINUS':
                     self.fields['mod_minus'] = ChoiceField(choices=YN, initial='Tak')
                     t = enum_type[m.type]
                     self.fields['mod_minus_t'] = ChoiceField(choices=TYPES, required=False, initial=t)
-                    self.fields['mod_minus_w'] = FloatField(min_value=0, required=False, initial=m.val)
+                    self.fields['mod_type'] = ChoiceField(choices=TYPES, required=False, initial=m.val)
         self.fields['mod_minus'].label = '{0:d}. Czy możliwe jest obniżenie oceny?'.format(i)
         i += 1
-        self.fields['mod_minus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
         self.fields['mod_minus_w'].label = 'Wpisz o ile ocena może zostać obniżona:'
+        self.fields['mod_type'].label = '{0:d}. Wybierz w jakim typie jest modyfikacja oceny:'.format(i)
+        i += 1
 
 
 class CourseGroupForm(Form):
