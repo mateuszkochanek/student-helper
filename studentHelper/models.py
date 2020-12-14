@@ -15,7 +15,7 @@ class Teacher(models.Model):
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
-    webpage = models.CharField(max_length=60)
+    webpage = models.CharField(max_length=60, blank=True)
     objects = TeacherManager()
 
     class Meta:
@@ -232,8 +232,6 @@ class Description(models.Model):
 class Marks(models.Model):
     # pk generated automaticly
     TYPES = [
-    ("PLUS", "+"),
-    ("MINUS", "-"),
     ("PKT", "pkt"),
     ("MARK", "ocena"),
     ("PERC", "procent"),
@@ -252,7 +250,7 @@ class Marks(models.Model):
     on_delete = models.CASCADE,
     )
     mark = models.FloatField()
-    weight = models.IntegerField()
+    weight = models.FloatField()
     mark_type = models.CharField(choices=TYPES, max_length=7)
     mark_form = models.CharField(choices=FORMS, max_length=7)
     objects = MarksManager()

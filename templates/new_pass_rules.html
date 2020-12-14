@@ -25,6 +25,7 @@
     <div class="formbar">
         <form method="post">
             {% csrf_token %}
+            {{ cg_form|crispy }}
             {{ rules_form|crispy }}
             {{ thresholds_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>

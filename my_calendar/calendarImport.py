@@ -114,8 +114,7 @@ class CalendarImport(threading.Thread):
                 name, surname, title = get_teacher_data(course['description'])
                 teacher = Teacher.objects.get_record_by_name_surname_title(name, surname, title)
                 if self.user.is_authenticated:
-                    Course.objects.add_record(self.user, teacher, 0, course['summary'][2:]+" "+course['mode'],
-                                              course['summary'][0])
+                    Course.objects.add_record(self.user, teacher, 0, course['summary'][2:], course['summary'][0])
 
         for events in self.AllEvents:
             if self.user.is_authenticated:

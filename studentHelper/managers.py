@@ -72,28 +72,17 @@ class CourseManager(models.Manager):
         return main_courses
 
     def is_the_same_subjects(self, c1, c2):
-        return c1.course_name == c2.course_name \
-               or c1.course_name[:-2] == c2.course_name \
-               or c1.course_name == c2.course_name[:-2] \
-               or c1.course_name[:-2] == c2.course_name[:-2]
+        return c1.course_name == c2.course_name
 
     def get_subject_of_type_and_name(self, course, type):
-        possible_names = [course.course_name,
-                          course.course_name + 'TN',
-                          course.course_name + 'TP',
-                          course.course_name[:-2]]
-        for name in possible_names:
-            result = self.filter(client_id=course.client_id, course_name=name, type=type)
-            if result:
-                return result[0]
+        result = self.filter(client_id=course.client_id, course_name=course.course_name, type=type)
+        if result:
+            return result[0]
         return None
 
     def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)
-        return list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name)) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TN')) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TP')) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name[:-2]))
+        return list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name))
 
     def delete_course_by_id(self, id):
         # TODO triggers?
@@ -128,6 +117,9 @@ class ComponentsManager(models.Manager):
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
 
+    def delete_by_course_id(self, id):
+        self.filter(course_id=id).delete()
+
 
 class ThresholdsManager(models.Manager):
     """
@@ -152,6 +144,9 @@ class ThresholdsManager(models.Manager):
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
 
+    def delete_by_course_id(self, id):
+        self.filter(course_id=id).delete()
+
 
 class ModyficationManager(models.Manager):
     """
@@ -175,6 +170,10 @@ class ModyficationManager(models.Manager):
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
 
+    def delete_by_course_id(self, id):
+        self.filter(course_id=id).delete()
+
+
 class CourseGroupManager(models.Manager):
     """
         Model: CourseGroup
@@ -196,6 +195,10 @@ class CourseGroupManager(models.Manager):
 
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
+
+    def delete_by_course_id(self, id):
+        # TODO triggers?
+        self.filter(course_id=id).delete()
 
 
 
@@ -250,22 +253,7 @@ class EventsManager(models.Manager):
         return (self.filter(
             client_id=user_id,
             description__course=1,
-            description__description=course_name[:-1],
-            end_date__gte=timezone.now()
-        ) | self.filter(
-            client_id=user_id,
-            description__course=1,
-            description__description=course_name + 'TP',
-            end_date__gte=timezone.now()
-        ) | self.filter(
-            client_id=user_id,
-            description__course=1,
-            description__description=course_name + 'TN',
-            end_date__gte=timezone.now()
-        ) | self.filter(
-            client_id=user_id,
-            description__course=1,
-            description__description=course_name[:-3],
+            description__description=course_name,
             end_date__gte=timezone.now()
         )).order_by('start_date')[:number]
 
