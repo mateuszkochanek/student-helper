@@ -232,8 +232,6 @@ class Description(models.Model):
 class Marks(models.Model):
     # pk generated automaticly
     TYPES = [
-    ("PLUS", "+"),
-    ("MINUS", "-"),
     ("PKT", "pkt"),
     ("MARK", "ocena"),
     ("PERC", "procent"),
