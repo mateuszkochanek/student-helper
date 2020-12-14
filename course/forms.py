@@ -353,12 +353,14 @@ class CourseGroupForm(Form):
         if sum < 0.99 or sum > 1.01:
             raise ValidationError('Wagi muszą sumować się do 1')
 
+
+    def save_edit(self):
+
+        CourseGroup.objects.delete_by_course_id(self.cid)
+        self.save()
+
+
     def save(self):
-        cg = CourseGroup.objects.get_records_by_course_id(self.cid)
-        all_types = Course.objects.get_all_types_by_id(self.course_id.id)
-        if self.cleaned_data['if_cg'] == 'Nie' and cg.exists():
-            for el in all_types:
-                CourseGroup.objects.delete_course_group_by_course_id(el.id)
         if self.cleaned_data['if_cg'] == 'Tak' and not CourseGroup.objects.get_records_by_course_id(self.course_id):
             if self.cleaned_data['minimum'] == 'Tak':
                 minimum = True
@@ -366,6 +368,7 @@ class CourseGroupForm(Form):
                 minimum = False
             CourseGroup.objects.add_record(self.course_id, self.cleaned_data['weight_w'], minimum)
             all_types = Course.objects.get_all_types_by_id(self.cid)
+            print(all_types[0].type)
             for i in range(len(all_types)):
                 if all_types[i].type == 'C':
                     ex = all_types[i]
