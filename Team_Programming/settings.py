@@ -92,15 +92,12 @@ WSGI_APPLICATION = 'Team_Programming.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'studentHelperDB',
-        'USER': 'djangodev',
+        'NAME': 'Erthax$studentHelperDB',
+        'USER': 'Erthax',
         'PASSWORD': 'Root.tooR',
         'TIME_ZONE': 'Europe/Warsaw',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '3325',
-        'OPTIONS': {
-            'init_command': 'ALTER DATABASE studentHelperDB CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci',
-        }
+        'HOST': 'Erthax.mysql.pythonanywhere-services.com',
+        'PORT': ''
     }
 }
 
@@ -141,7 +138,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
