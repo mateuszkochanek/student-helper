@@ -82,13 +82,10 @@ class ThresholdsForm(ModelForm):
 
     class Meta:
         model = Thresholds
-        fields = ['type', 'p_3_0', 'p_3_5',  'p_4_0', 'p_4_5',  'p_5_0', 'p_5_5']
+        fields = ['p_3_0', 'p_3_5',  'p_4_0', 'p_4_5',  'p_5_0', 'p_5_5']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.fields['type'].label = "Wybierz typ w jakim jest skala, według której wystawiana jest \
-                                          ocena końcowa "
         mark = 3.0
         self.marks = ['p_3_0', 'p_3_5', 'p_4_0', 'p_4_5', 'p_5_0', 'p_5_5']
 
@@ -103,6 +100,7 @@ class ThresholdsForm(ModelForm):
         prev = cleaned_data.get('p_5_5')
         self.marks = self.marks[:-1]
 
+
         for key in self.marks[::-1]:
             mark = cleaned_data.get(key)
             if mark < 0:
@@ -115,7 +113,8 @@ class ThresholdsForm(ModelForm):
 class RulesForm(Form):
 
     def __init__(self, *args, **kwargs):
-        self.course_id = Course.objects.get_record_by_id(kwargs.pop('course_id'))
+        self.cid = kwargs.pop('course_id')
+        self.course_id = Course.objects.get_record_by_id(self.cid)
         super().__init__(*args, **kwargs)
         FORMS = (
             ('aktywność', 'aktywność'),
@@ -182,19 +181,18 @@ class RulesForm(Form):
             'procenty': 'PERC',
             'ocena': 'MARK'
         }
-        # if not Components.objects.get_records_by_course_id(self.course_id):
-
-        for form in self.cleaned_data['formy']:
-            Components.objects.add_record(self.course_id, enum_form[form],
-                                          enum_type[self.cleaned_data['form_type']])
-        if self.cleaned_data['mod_plus'] == 'Tak':
-            Modyfication.objects.add_record(self.course_id, 'PLUS', self.cleaned_data['mod_plus_w'],
-                                            enum_type[self.cleaned_data['mod_type']])
-        if self.cleaned_data['mod_minus'] == 'Tak':
-            Modyfication.objects.add_record(self.course_id, 'MINUS', self.cleaned_data['mod_minus_w'],
-                                            enum_type[self.cleaned_data['mod_type']])
-        self.course_id.ECTS = self.cleaned_data['ects']
-        self.course_id.save()
+        if not Components.objects.get_records_by_course_id(self.course_id):
+            for form in self.cleaned_data['formy']:
+                Components.objects.add_record(self.course_id, enum_form[form],
+                                              enum_type[self.cleaned_data['form_type']])
+            if self.cleaned_data['mod_plus'] == 'Tak':
+                Modyfication.objects.add_record(self.course_id, 'PLUS', self.cleaned_data['mod_plus_w'],
+                                                enum_type[self.cleaned_data['mod_type']])
+            if self.cleaned_data['mod_minus'] == 'Tak':
+                Modyfication.objects.add_record(self.course_id, 'MINUS', self.cleaned_data['mod_minus_w'],
+                                                enum_type[self.cleaned_data['mod_type']])
+            self.course_id.ECTS = self.cleaned_data['ects']
+            self.course_id.save()
 
     def clean(self):
 
@@ -203,6 +201,15 @@ class RulesForm(Form):
 
         if self.cleaned_data['mod_plus'] == 'Tak' and self.cleaned_data['mod_plus_w'] is None:
             raise ValidationError('Jeżeli jest dostępna modyfikacja oceny, to na pewno wiadomo o ile')
+
+    def save_edit(self):
+
+        Components.objects.delete_by_course_id(self.cid)
+        Modyfication.objects.delete_by_course_id(self.cid)
+        Thresholds.objects.delete_by_course_id(self.cid)
+
+        self.save()
+
 
     def fill_edit(self):
         enum_form = {
@@ -369,6 +376,8 @@ class CourseGroupForm(Form):
 
             if 'laboratorium' in self.cleaned_data['courses']:
                 CourseGroup.objects.add_record(l, self.cleaned_data['weight_l'], minimum)
+
+
 
     def fill_edit(self):
         YN = (
