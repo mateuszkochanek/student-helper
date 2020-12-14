@@ -145,8 +145,8 @@ class TeacherForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         webpage = cleaned_data.get("webpage")
-
-        if webpage is not None:
+        print("Tyf", webpage)
+        if webpage is not None and webpage is not "":
             valid=validators.url(webpage)
             if not valid:
                 raise ValidationError(

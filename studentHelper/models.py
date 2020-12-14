@@ -15,7 +15,7 @@ class Teacher(models.Model):
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
-    webpage = models.CharField(max_length=60)
+    webpage = models.CharField(max_length=60, blank=True)
     objects = TeacherManager()
 
     class Meta:
