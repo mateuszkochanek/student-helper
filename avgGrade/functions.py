@@ -104,6 +104,20 @@ class Functions:
             final += c.final * cg.weight
             if cg.minimum is True and c.final == 2.0:
                 minimum = True
+        if final >= 5.25:
+            final = 5.5
+        elif final >= 4.75:
+            final = 5.0
+        elif final >= 4.25:
+            final = 4.5
+        elif final >= 3.75:
+            final = 4.0
+        elif final > 3.25:
+            final = 3.5
+        elif final > 2.75:
+            final = 3.0
+        else:
+            final = 2.0
         if minimum:
             course.final = 2.0
             course.save()

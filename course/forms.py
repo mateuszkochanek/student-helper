@@ -357,6 +357,9 @@ class CourseGroupForm(Form):
     def save_edit(self):
 
         CourseGroup.objects.delete_by_course_id(self.cid)
+        all_types = Course.objects.get_all_types_by_id(self.cid)
+        for a in all_types:
+            CourseGroup.objects.delete_by_course_id(a.id)
         self.save()
 
 
@@ -368,16 +371,17 @@ class CourseGroupForm(Form):
                 minimum = False
             CourseGroup.objects.add_record(self.course_id, self.cleaned_data['weight_w'], minimum)
             all_types = Course.objects.get_all_types_by_id(self.cid)
-            print(all_types[0].type)
+            ex = ''
+            l = ''
             for i in range(len(all_types)):
                 if all_types[i].type == 'C':
                     ex = all_types[i]
                 elif all_types[i].type == 'L':
                     l = all_types[i]
-            if 'ćwiczenia' in self.cleaned_data['courses']:
+            if 'ćwiczenia' in self.cleaned_data['courses'] and ex != '':
                 CourseGroup.objects.add_record(ex, self.cleaned_data['weight_c'], minimum)
 
-            if 'laboratorium' in self.cleaned_data['courses']:
+            if 'laboratorium' in self.cleaned_data['courses'] and l != '':
                 CourseGroup.objects.add_record(l, self.cleaned_data['weight_l'], minimum)
 
 
