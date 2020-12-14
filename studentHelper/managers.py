@@ -73,15 +73,15 @@ class CourseManager(models.Manager):
 
     def is_the_same_subjects(self, c1, c2):
         return c1.course_name == c2.course_name \
-               or c1.course_name[:-2] == c2.course_name \
-               or c1.course_name == c2.course_name[:-2] \
-               or c1.course_name[:-2] == c2.course_name[:-2]
+               or c1.course_name[:-3] == c2.course_name \
+               or c1.course_name == c2.course_name[:-3] \
+               or c1.course_name[:-3] == c2.course_name[:-3]
 
     def get_subject_of_type_and_name(self, course, type):
         possible_names = [course.course_name,
-                          course.course_name + 'TN',
-                          course.course_name + 'TP',
-                          course.course_name[:-2]]
+                          course.course_name + ' TN',
+                          course.course_name + ' TP',
+                          course.course_name[:-3]]
         for name in possible_names:
             result = self.filter(client_id=course.client_id, course_name=name, type=type)
             if result:
@@ -91,9 +91,9 @@ class CourseManager(models.Manager):
     def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)
         return list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name)) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TN')) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + 'TP')) \
-               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name[:-2]))
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + ' TN')) \
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name + ' TP')) \
+               + list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name[:-3]))
 
     def delete_course_by_id(self, id):
         # TODO triggers?
@@ -250,17 +250,17 @@ class EventsManager(models.Manager):
         return (self.filter(
             client_id=user_id,
             description__course=1,
-            description__description=course_name[:-1],
+            description__description=course_name,
             end_date__gte=timezone.now()
         ) | self.filter(
             client_id=user_id,
             description__course=1,
-            description__description=course_name + 'TP',
+            description__description=course_name + ' TP',
             end_date__gte=timezone.now()
         ) | self.filter(
             client_id=user_id,
             description__course=1,
-            description__description=course_name + 'TN',
+            description__description=course_name + ' TN',
             end_date__gte=timezone.now()
         ) | self.filter(
             client_id=user_id,
