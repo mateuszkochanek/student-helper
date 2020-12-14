@@ -22,7 +22,6 @@ class WebPageForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         webpage = cleaned_data.get("webpage")
-
         if webpage is not None:
             valid=validators.url(webpage)
             if not valid:
