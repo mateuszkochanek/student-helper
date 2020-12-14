@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date, timedelta
+from django.utils import timezone
 
 
 class TeacherManager(models.Manager):
@@ -77,14 +78,15 @@ class CourseManager(models.Manager):
                or c1.course_name[:-2] == c2.course_name[:-2]
 
     def get_subject_of_type_and_name(self, course, type):
-        result = []
         possible_names = [course.course_name,
                           course.course_name + 'TN',
                           course.course_name + 'TP',
                           course.course_name[:-2]]
         for name in possible_names:
-            result += self.filter(client_id=course.client_id, course_name=name, type=type)
-        return result
+            result = self.filter(client_id=course.client_id, course_name=name, type=type)
+            if result:
+                return result[0]
+        return None
 
     def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)
@@ -248,6 +250,29 @@ class EventsManager(models.Manager):
             start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"]).order_by("start_date__hour")
 
         return q1.union(q2, q3).order_by("start_date")
+
+    def get_next_courses(self, user_id, course_name, number):
+        return (self.filter(
+            client_id=user_id,
+            description__course=1,
+            description__description=course_name[:-1],
+            end_date__gte=timezone.now()
+        ) | self.filter(
+            client_id=user_id,
+            description__course=1,
+            description__description=course_name + 'TP',
+            end_date__gte=timezone.now()
+        ) | self.filter(
+            client_id=user_id,
+            description__course=1,
+            description__description=course_name + 'TN',
+            end_date__gte=timezone.now()
+        ) | self.filter(
+            client_id=user_id,
+            description__course=1,
+            description__description=course_name[:-3],
+            end_date__gte=timezone.now()
+        )).order_by('start_date')[:number]
 
     def delete_event_by_id(self, id):
         # TODO triggers?
