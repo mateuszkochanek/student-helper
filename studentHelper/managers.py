@@ -66,11 +66,11 @@ class CourseManager(models.Manager):
         for type in ['W', 'C', 'L']:
             main_courses += [c for c in all_courses if c.type == type]
             for course in main_courses:
-                all_courses = [c for c in all_courses if not self.__isTheSameSubject(c, course)]
+                all_courses = [c for c in all_courses if not self.is_the_same_subjects(c, course)]
 
         return main_courses
 
-    def __isTheSameSubject(self, c1, c2):
+    def is_the_same_subjects(self, c1, c2):
         return c1.course_name == c2.course_name \
                or c1.course_name[:-2] == c2.course_name \
                or c1.course_name == c2.course_name[:-2] \
@@ -85,7 +85,6 @@ class CourseManager(models.Manager):
         for name in possible_names:
             result += self.filter(client_id=course.client_id, course_name=name, type=type)
         return result
-        # return [self.filter(client_id=course.client_id, course_name=name, type=type) for name in possible_names]
 
     def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)

@@ -8,11 +8,21 @@
 
 {% block content %}
     <div class="avg_grade">
-        <h1>Średnia</h1>
+        <div class="titlebar">
+            <div class="title">
+                Średnia
+            </div>
+        </div>
 
-        <form class="buttonCalcGradeForm" action="{% url 'avg_grade_calc' %}">
-            <button type="submit" class="calcAvgGradeButton">Policz średnią</button>
-        </form>
+        <div class="buttonbar">
+            <a href="{% url 'avg_grade_calc' %}" class="button">
+                Policz średnią
+            </a>
+        </div>
+
+        <div class=line>
+            <hr style="color:CornflowerBlue">
+        </div>
 
         <div class="grades_list">
             <table>
