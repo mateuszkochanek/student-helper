@@ -171,7 +171,7 @@ def pass_rules_view(request, pk):
             if course.type == "W":
                 cg = CourseGroupForm(request.POST, course_id=pk)
                 if cg.is_valid():
-                    cg.save()
+                    cg.save_edit()
 
             if rules.is_valid() and thresholds.is_valid():
                 rules.save_edit()

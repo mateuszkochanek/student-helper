@@ -207,7 +207,7 @@ class CourseGroupManager(models.Manager):
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
 
-    def delete_course_group_by_course_id(self, id):
+    def delete_by_course_id(self, id):
         # TODO triggers?
         self.filter(course_id=id).delete()
 
