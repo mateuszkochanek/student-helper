@@ -164,6 +164,7 @@ def pass_rules_view(request, pk):
                 return redirect('/course/'+str(pk))
         else:
             rules = RulesForm(course_id=pk)
+            rules.fill_edit()
             thresholds = ThresholdsForm(instance=t)
         return render(request, 'new_pass_rules.html', {'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
 

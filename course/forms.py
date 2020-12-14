@@ -23,8 +23,6 @@ class WebPageForm(ModelForm):
         # TODO check if site was input correctly
 
 
-
-
 class MarkForm(ModelForm):
 
     class Meta:
@@ -74,40 +72,27 @@ class MarkForm(ModelForm):
                 )
 
 
-
 class ThresholdsForm(ModelForm):
 
     class Meta:
         model = Thresholds
-        fields = ['type', 'k_2_0', 'p_3_0', 'k_3_0', 'p_3_5', 'k_3_5', 'p_4_0', 'k_4_0',
-                'p_4_5', 'k_4_5', 'p_5_0', 'k_5_0', 'p_5_5']
+        fields = ['type', 'p_3_0', 'p_3_5',  'p_4_0', 'p_4_5',  'p_5_0', 'p_5_5']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['type'].label = "Wybierz typ w jakim jest skala, według której wystawiana jest \
                                           ocena końcowa "
-        self.fields["k_2_0"].label = "Koniec zakresu dla oceny " + str(2)
-        mark = 3
-        self.marks = ['p_3_0', 'k_3_0', 'p_3_5', 'k_3_5', 'p_4_0', 'k_4_0',
-                    'p_4_5', 'k_4_5', 'p_5_0', 'k_5_0', 'p_5_5']
+        mark = 3.0
+        self.marks = ['p_3_0', 'p_3_5', 'p_4_0', 'p_4_5', 'p_5_0', 'p_5_5']
 
-        helper = 0
         for key in self.marks:
-            if helper % 2 == 0:
-                self.fields[key].label = "Początek zakresu dla oceny " + str(mark)
-            else:
-                self.fields[key].label = "Koniec zakresu dla oceny " + str(mark)
-                mark += 0.5
-            helper += 1
-
-
-
+            self.fields[key].label = "Początek zakresu dla oceny " + str(mark)
+            mark += 0.5
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
     def clean(self):
-
         cleaned_data = super().clean()
         prev = cleaned_data.get('p_5_5')
         self.marks = self.marks[:-1]
@@ -209,12 +194,95 @@ class RulesForm(Form):
 
     def clean(self):
 
-
         if self.cleaned_data['mod_minus'] == 'Tak' and self.cleaned_data['mod_minus_w'] is None:
             raise ValidationError('Jeżeli jest dostępna modyfikacja oceny, to na pewno wiadomo o ile')
 
         if self.cleaned_data['mod_plus'] == 'Tak' and self.cleaned_data['mod_plus_w'] is None:
             raise ValidationError('Jeżeli jest dostępna modyfikacja oceny, to na pewno wiadomo o ile')
+
+    def fill_edit(self):
+        enum_form = {
+            'ACTIV': 'aktywność',
+            'EXAM': 'egzamin',
+            'QUIZ': 'kartkówka',
+            'TEST': 'kolokwium',
+            'LIST': 'lista zadań'
+        }
+        enum_type = {
+            'PKT': 'punkty',
+            'PERC': 'procenty',
+            'MARK': 'ocena'
+        }
+        FORMS = (
+            ('aktywność', 'aktywność'),
+            ('egzamin', 'egzamin'),
+            ('kartkówka', 'kartkówka'),
+            ('kolokwium', 'kolokwium'),
+            ('lista zadań', 'lista zadań')
+        )
+        TYPES = (
+            ('punkty', 'punkty'),
+            ('ocena', 'ocena'),
+            ('procenty', 'procenty'),
+        )
+        YN = (
+            ('Tak', 'Tak'),
+            ('Nie', 'Nie')
+        )
+        comp = Components.objects.get_records_by_course_id(self.course_id)
+        ects = self.course_id.ECTS
+        mod = Modyfication.objects.get_records_by_course_id(self.course_id)
+        print(mod)
+        i = 1
+        self.fields['ects'] = IntegerField(min_value=0, max_value=30, initial=ects)
+        self.fields['ects'].label = '{0:d} Wpisz ile punktów ECTS ma kurs:'.format(i)
+        i += 1
+        init_comp = []
+        for c in comp:
+            init_comp.append(enum_form[c.form])
+        self.fields['formy'] = MultipleChoiceField(widget=CheckboxSelectMultiple, choices=FORMS, initial=init_comp)
+        self.fields['formy'].label = '{0:d}. Wybierz formy uzyskania ocen cząstkowych na kursie:'.format(i)
+        i += 1
+
+        for form in FORMS:
+            t_name = '{}_t'.format(form[0])
+            self.fields[t_name] = ChoiceField(choices=TYPES, required=False)
+            for c in comp:
+                if form[0] == enum_form[c.form]:
+                    self.fields[t_name] = ChoiceField(choices=TYPES, required=False, initial=enum_type[c.type])
+            self.fields[t_name].label = '{0:d}. Zaznacz rodzaj oceniania formy: {1}'.format(i, form[0])
+            i += 1
+
+        self.fields['mod_plus'] = ChoiceField(choices=YN)
+        self.fields['mod_plus_t'] = ChoiceField(choices=TYPES, required=False)
+        self.fields['mod_plus_w'] = FloatField(min_value=0, required=False)
+        if mod:
+            for m in mod:
+                if m.mod == 'PLUS':
+                    self.fields['mod_plus'] = ChoiceField(choices=YN, initial='Tak')
+                    t = enum_type[m.type]
+                    self.fields['mod_plus_t'] = ChoiceField(choices=TYPES, required=False, initial=t)
+                    self.fields['mod_plus_w'] = FloatField(min_value=0, required=False, initial=m.val)
+
+        self.fields['mod_plus'].label = '{0:d}. Czy możliwe jest podwyższenie oceny?'.format(i)
+        i += 1
+        self.fields['mod_plus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
+        self.fields['mod_plus_w'].label = 'Wpisz o ile ocena może zostać podwyższona:'
+
+        self.fields['mod_minus'] = ChoiceField(choices=YN)
+        self.fields['mod_minus_t'] = ChoiceField(choices=TYPES, required=False)
+        self.fields['mod_minus_w'] = FloatField(min_value=0, required=False)
+        if mod:
+            for m in mod:
+                if m.mod == 'MINUS':
+                    self.fields['mod_minus'] = ChoiceField(choices=YN, initial='Tak')
+                    t = enum_type[m.type]
+                    self.fields['mod_minus_t'] = ChoiceField(choices=TYPES, required=False, initial=t)
+                    self.fields['mod_minus_w'] = FloatField(min_value=0, required=False, initial=m.val)
+        self.fields['mod_minus'].label = '{0:d}. Czy możliwe jest obniżenie oceny?'.format(i)
+        i += 1
+        self.fields['mod_minus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
+        self.fields['mod_minus_w'].label = 'Wpisz o ile ocena może zostać obniżona:'
 
 
 class CourseGroupForm(Form):
