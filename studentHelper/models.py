@@ -250,7 +250,7 @@ class Marks(models.Model):
     on_delete = models.CASCADE,
     )
     mark = models.FloatField()
-    weight = models.IntegerField()
+    weight = models.FloatField()
     mark_type = models.CharField(choices=TYPES, max_length=7)
     mark_form = models.CharField(choices=FORMS, max_length=7)
     objects = MarksManager()
