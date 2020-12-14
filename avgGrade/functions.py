@@ -1,4 +1,4 @@
-from studentHelper.models import Course
+from studentHelper.models import Course, CourseGroup
 
 
 class Functions:
@@ -35,3 +35,26 @@ class Functions:
         if ects_sum == 0:
             return -1
         return marks_sum / ects_sum
+
+    def get_courses_and_group_courses(self, client_id):
+        all_courses = Course.objects.get_records_by_client_id(client_id)
+        result = []
+
+        for course in all_courses:
+            if self.__is_standalone_course(course) or self.__is_main_course_in_group(course):
+                result += [course]
+
+        return result
+
+    def __is_standalone_course(self, course):
+        return not CourseGroup.objects.get_records_by_course_id(course.id)
+
+    def __is_main_course_in_group(self, course):
+        courses = Course.objects.get_all_types_by_id(course.id)
+        if course.type == "W":
+            return True
+        if course.type == "C" and not any(c.type == "W" for c in courses):
+            return True
+        if course.type == "L" and not any(c.type == "W" or c.type == "L" for c in courses):
+            return True
+        return False
