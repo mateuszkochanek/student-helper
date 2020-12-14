@@ -87,7 +87,10 @@
                     </tr>
                     <tr>
                         <td>
-                            Sprawdź zasady zaliczenia
+                            <form action="{% url 'pass_rules' course.id %}">
+                                <input type="submit" value="Sprawdź/edytuj zasady zaliczenia" />
+                            </form>
+
                         </td>
                     </tr>
                     <tr>

@@ -50,6 +50,7 @@ urlpatterns = [
     path('course/<int:pk>/configure-webpage', configure_webpage_view, name='configure_webpage'),
     path('course/<int:pk>/edit', edit_course_view, name='edit_course'),
     path('course/<int:pk>/deleted', delete_course_view, name='delete_course'),
+    path('course/<int:pk>/pass_rules', pass_rules_view, name='pass_rules'),
     path('mark/add/<int:pk>', add_mark_view, name='mark_add'),
     path('mark/edit/<int:pk>', edit_mark_view, name='mark_edit'),
     path('temp/', temp, name='temp'),

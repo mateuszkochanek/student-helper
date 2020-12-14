@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.forms import formset_factory
 
 from studentHelper.models import Course, Teacher, Marks, Goals, Components, Thresholds, Modyfication
 from course.forms import WebPageForm, ThresholdsForm
@@ -89,7 +90,9 @@ def add_mark_view(request, pk):
 
         return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
 
-    return redirect('/course/'+str(pk), {"message": True})
+    else:
+        #TODO informacja o istniejących zasadach zaliczenia
+        return redirect('/course/'+str(pk), {"message": True})
 
 @login_required(login_url='/login')
 def edit_mark_view(request, pk):
@@ -131,6 +134,7 @@ def edit_course_view(request, pk):
 
 @login_required(login_url='/login/')
 def new_pass_rules(request, pk):
+
     if request.method == 'POST':
         rules = RulesForm(request.POST, course_id=pk)
         thresholds = ThresholdsForm(request.POST)
@@ -145,6 +149,27 @@ def new_pass_rules(request, pk):
         thresholds = ThresholdsForm()
     return render(request, 'new_pass_rules.html', {'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
 
+@login_required(login_url='/login/')
+def pass_rules_view(request, pk):
+    c = Components.objects.get_records_by_course_id(pk)
+    if c.exists():
+        t = Thresholds.objects.get(course_id=pk)
+        if request.method == 'POST':
+            rules = RulesForm(request.POST, course_id=pk)
+            thresholds = ThresholdsForm(request.POST, instance=t)
+            if rules.is_valid() and thresholds.is_valid():
+                rules.save()
+                thresholds.save()
+                return redirect('/course/'+str(pk))
+        else:
+            rules = RulesForm(course_id=pk)
+            thresholds = ThresholdsForm(instance=t)
+        return render(request, 'new_pass_rules.html', {'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
+
+    else:
+        #TODO informacja o nieistniejących zasadach
+        return redirect('/course/'+str(pk))
+
 
 @login_required(login_url='/login/')
 def delete_course_view(request, pk):
@@ -154,11 +179,17 @@ def delete_course_view(request, pk):
 
 @login_required(login_url='/login/')
 def new_course_group(request, pk):
-    if request.method == 'POST':
-        cg = CourseGroupForm(request.POST, course_id=pk)
-        if cg.is_valid():
-            cg.save()
-            return redirect('/new_pass_rules/'+str(pk))
+
+    p = Thresholds.objects.get_records_by_course_id(pk)
+    if p.exists():
+        #TODO informacja o istniejących zasadach zaliczenia
+        return redirect('/course/'+str(pk), {"message": True})
     else:
-        cg = CourseGroupForm(course_id=pk)
-    return render(request, 'new_course_group.html', {'cg_form': cg, "pk": pk})
+        if request.method == 'POST':
+            cg = CourseGroupForm(request.POST, course_id=pk)
+            if cg.is_valid():
+                cg.save()
+                return redirect('/new_pass_rules/'+str(pk))
+        else:
+            cg = CourseGroupForm(course_id=pk)
+        return render(request, 'new_course_group.html', {'cg_form': cg, "pk": pk})
