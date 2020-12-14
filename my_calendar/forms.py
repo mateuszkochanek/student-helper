@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.forms.widgets import HiddenInput
 from datetime import timedelta
+import validators
 
 
 
@@ -140,3 +141,14 @@ class TeacherForm(ModelForm):
         self.fields["webpage"].initial = "brak"
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
+
+    def clean(self):
+        cleaned_data = super().clean()
+        webpage = cleaned_data.get("webpage")
+
+        if webpage is not None:
+            valid=validators.url(webpage)
+            if not valid:
+                raise ValidationError(
+                    "Błędny adres strony"
+                )

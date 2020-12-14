@@ -3,6 +3,8 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.forms import Form, CheckboxSelectMultiple, MultipleChoiceField, FloatField, ChoiceField, IntegerField
 from studentHelper.models import Components, Thresholds, CourseGroup, Modyfication, Course
+import validators
+
 
 
 class WebPageForm(ModelForm):
@@ -20,7 +22,13 @@ class WebPageForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         webpage = cleaned_data.get("webpage")
-        # TODO check if site was input correctly
+
+        if webpage is not None:
+            valid=validators.url(webpage)
+            if not valid:
+                raise ValidationError(
+                    "Błędny adres strony"
+                )
 
 
 class MarkForm(ModelForm):
@@ -253,7 +261,7 @@ class RulesForm(Form):
             self.fields[t_name].label = '{0:d}. Zaznacz rodzaj oceniania formy: {1}'.format(i, form[0])
             i += 1
 
-        self.fields['mod_plus'] = ChoiceField(choices=YN)
+        self.fields['mod_plus'] = ChoiceField(choices=YN, initial='Nie')
         self.fields['mod_plus_t'] = ChoiceField(choices=TYPES, required=False)
         self.fields['mod_plus_w'] = FloatField(min_value=0, required=False)
         if mod:
@@ -269,7 +277,7 @@ class RulesForm(Form):
         self.fields['mod_plus_t'].label = 'Wybierz w jakim typie jest modyfikacja oceny:'
         self.fields['mod_plus_w'].label = 'Wpisz o ile ocena może zostać podwyższona:'
 
-        self.fields['mod_minus'] = ChoiceField(choices=YN)
+        self.fields['mod_minus'] = ChoiceField(choices=YN, initial='Nie')
         self.fields['mod_minus_t'] = ChoiceField(choices=TYPES, required=False)
         self.fields['mod_minus_w'] = FloatField(min_value=0, required=False)
         if mod:
