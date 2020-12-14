@@ -24,7 +24,7 @@ class Functions:
         return ects in range(0, 31)
 
     def get_avg(self, user):
-        courses = Course.objects.get_records_by_client_id(user)
+        courses = self.get_courses_and_group_courses(user)
         marks_sum = 0
         ects_sum = 0
         for c in courses:
