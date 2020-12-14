@@ -148,6 +148,7 @@ def new_pass_rules(request, pk):
             rules.save()
             t = thresholds.save(commit=False)
             t.course_id = course
+            t.type = Components.objects.get_records_by_course_id(pk)[0].type
             t.save()
             return redirect('/course/'+str(pk))
     else:
@@ -173,7 +174,7 @@ def pass_rules_view(request, pk):
                     cg.save()
 
             if rules.is_valid() and thresholds.is_valid():
-                rules.save()
+                rules.save_edit()
                 thresholds.save()
                 return redirect('/course/'+str(pk))
         else:
