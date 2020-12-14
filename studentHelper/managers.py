@@ -75,7 +75,10 @@ class CourseManager(models.Manager):
         return c1.course_name == c2.course_name
 
     def get_subject_of_type_and_name(self, course, type):
-        return self.filter(client_id=course.client_id, course_name=course.course_name, type=type)
+        result = self.filter(client_id=course.client_id, course_name=course.course_name, type=type)
+        if result:
+            return result[0]
+        return None
 
     def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)
