@@ -135,28 +135,34 @@ def edit_course_view(request, pk):
 def new_pass_rules(request, pk):
     course = Course.objects.get_record_by_id(pk)
     cg = None
-    if request.method == 'POST':
-        if course.type == "W":
-            cg = CourseGroupForm(request.POST, course_id=pk)
-            if cg.is_valid():
-                cg.save()
-
-        rules = RulesForm(request.POST, course_id=pk)
-        thresholds = ThresholdsForm(request.POST)
-
-        if rules.is_valid() and thresholds.is_valid():
-            rules.save()
-            t = thresholds.save(commit=False)
-            t.course_id = course
-            t.type = Components.objects.get_records_by_course_id(pk)[0].type
-            t.save()
-            return redirect('/course/'+str(pk))
+    c = Components.objects.get_records_by_course_id(pk)
+    if c.exists():
+        return redirect('/course/'+str(pk))
     else:
-        rules = RulesForm(course_id=pk)
-        thresholds = ThresholdsForm()
-        if course.type == "W":
-            cg = CourseGroupForm(course_id=pk)
-    return render(request, 'new_pass_rules.html', {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
+        if request.method == 'POST':
+            if course.type == "W":
+                cg = CourseGroupForm(request.POST, course_id=pk)
+                if cg.is_valid():
+                    cg.save()
+
+            rules = RulesForm(request.POST, course_id=pk)
+            thresholds = ThresholdsForm(request.POST)
+
+            if rules.is_valid() and thresholds.is_valid():
+                rules.save()
+                t = thresholds.save(commit=False)
+                t.course_id = course
+                t.type = Components.objects.get_records_by_course_id(pk)[0].type
+                t.save()
+                return redirect('/course/'+str(pk))
+        else:
+            rules = RulesForm(course_id=pk)
+            thresholds = ThresholdsForm()
+            if course.type == "W":
+                cg = CourseGroupForm(course_id=pk)
+        return render(request, 'new_pass_rules.html', {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
+
+
 
 @login_required(login_url='/login/')
 def pass_rules_view(request, pk):
