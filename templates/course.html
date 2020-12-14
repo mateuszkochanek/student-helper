@@ -46,17 +46,17 @@
 
         <div class="button_courses_bar">
             {% if lecture %}
-                <a href="temp" class="button">
+                <a href="{% url 'course' lecture.id %}" class="button">
                     Wykład
                 </a>
             {% endif %}
             {% if tutorial %}
-                <a href="temp" class="button">
+                <a href="{% url 'course' tutorial.id %}" class="button">
                     Ćwiczenia
                 </a>
             {% endif %}
             {% if laboratory %}
-                <a href="temp" class="button">
+                <a href="{% url 'course' laboratory.id %}" class="button">
                     Labolatoria
                 </a>
             {% endif %}
@@ -73,7 +73,7 @@
                     <tr>
                         <td>
                             Forma: {{ course.type }} <br>
-                            Prowadzący: <br>
+                            Prowadzący:
                             {{ course.teacher_id.name }} {{ course.teacher_id.surname }} <br>
                             ECTS: {{ course.ECTS }} <br>
                         </td>
@@ -105,14 +105,17 @@
                 <table>
                     <tr>
                         <td>
-                            <h3>Zajęcia</h3>
+                            <h3>Najbliższe zajęcia</h3>
                         </td>
                     </tr>
+                    {% for course in next_courses %}
                     <tr>
                         <td>
-                            TBA
+                            {{ course.start_date }} <br>
+                            {{ course.end_date }}
                         </td>
                     </tr>
+                    {% endfor %}
                 </table>
             </div>
 
@@ -145,21 +148,6 @@
             </div>
 
             <div class="info_pane col-4">
-                <table>
-                    <tr>
-                        <td>
-                            <h3>Najbliższe wydarzenia</h3>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td>
-                            TBA
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="info_pane col-5">
                 <table>
                     <tr>
                         <td>
