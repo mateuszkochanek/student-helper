@@ -328,10 +328,7 @@ class CourseGroupForm(Form):
 
     def clean(self):
         if self.cleaned_data['if_cg'] == 'Tak' and self.cleaned_data['courses'] is None:
-            raise ValidationError('W grupie muszą być jakieś kursy')
-
-        if self.cleaned_data['if_cg'] == 'Tak' and len(self.cleaned_data['courses']) == 1:
-            raise ValidationError('Jeden kurs to nie grupa')
+            raise ValidationError('W grupie muszą być jakieś kursy oprócz wykładu')
 
         if self.cleaned_data['weight_c'] is None and 'ćwiczenia' in self.cleaned_data['courses']:
             raise ValidationError('Podaj wagę oceny z ćwiczeń')
