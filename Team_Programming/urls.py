@@ -55,4 +55,5 @@ urlpatterns = [
     path('mark/edit/<int:pk>', edit_mark_view, name='mark_edit'),
     path('temp/', temp, name='temp'),
     path('new_pass_rules/<int:pk>', new_pass_rules, name='new_pass_rules'),
+    path('file/add/<int:pk>', add_file_view, name='file_add'),
 ]

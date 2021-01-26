@@ -8,7 +8,7 @@ from studentHelper.views import main_view
 from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
-
+from .files import *
 
 @login_required(login_url='/login')
 def course_view(request, pk):
@@ -69,6 +69,27 @@ def configure_webpage_view(request, pk):
     else:
         teacher_form = WebPageForm(request.POST)
     return render(request, "course/configure-webpage.html", {"teacher_form": teacher_form, "course": course})
+
+
+@login_required(login_url='/login')
+def add_file_view(request, pk):
+    p = Components.objects.get_records_by_course_id(pk)  # id kursu
+    gds = GoogleDriveStorage()
+    file_name = "{0}{1}{2}".format(os.path.dirname(os.path.abspath(__file__)), os.path.sep, "apps.py")
+    only_name = gds.split_path(file_name)
+    # file_name pełna ścieżka
+    # print(gds.save("/test4/apps.py", open(file_name, 'rb'), file_name))
+    # print(gds.get_or_create_folder('test4/folder'))
+    # print(gds.check_file_exists('test4'))
+    # print(gds.url('1.txt'))
+    # print(gds.open(u'/test4/apps.py', only_name[-1]))
+    #print(gds.open(u'/test4/apps.py', '/home/paula/PycharmProjects/student-helper2/my_calendar/a.py')) doda pod ta 2 sciezka
+    """
+    (directories, files) = gds.listdir("/test4")
+    print(directories)
+    print(files)
+    """
+    return redirect('/course/' + str(pk), {"message": True})
 
 
 @login_required(login_url='/login')
