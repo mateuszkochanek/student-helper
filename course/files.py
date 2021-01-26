@@ -120,7 +120,7 @@ class GoogleDriveStorage:
         # media_body = MediaIoBaseUpload(content.file, mime_type, resumable=True, chunksize=1024 * 512)
         media_body = MediaFileUpload(path, mimetype=mime_type[0])
         body = {
-            'name': 'apps.py',
+            'name': '2.sh',
             'mimeType': mime_type[0]
         }
         # Set the parent folder.
@@ -147,7 +147,7 @@ class GoogleDriveStorage:
         if file_data is None:
             return None
         else:
-            return file_data["webContentLink"]
+            return file_data["webViewLink"]
 
     def listdir(self, path):
 

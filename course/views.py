@@ -9,21 +9,25 @@ from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
+from django.http import HttpResponse
+from wsgiref.util import FileWrapper
+from gi.repository import GLib
+
 
 @login_required(login_url='/login')
 def course_view(request, pk):
     TYPES = {
-    "PKT": "pkt",
-    "MARK": "ocena",
-    "PERC": "%",
+        "PKT": "pkt",
+        "MARK": "ocena",
+        "PERC": "%",
     }
 
     FORMS = {
-    "ACTIV": "aktywność",
-    "EXAM": "egzamin",
-    "QUIZ": "kartkówka",
-    "TEST": "kolokwium",
-    "LIST": "lista zadań",
+        "ACTIV": "aktywność",
+        "EXAM": "egzamin",
+        "QUIZ": "kartkówka",
+        "TEST": "kolokwium",
+        "LIST": "lista zadań",
     }
 
     course = Course.objects.get_record_by_id(pk)
@@ -38,7 +42,7 @@ def course_view(request, pk):
         'next_courses': Events.objects.get_next_courses(request.user.id, course.course_name, 3)
     }
 
-    #TODO czy da się inaczej?
+    # TODO czy da się inaczej?
     for el in context['marks']:
         el['mark_type'] = TYPES[el['mark_type']]
         el['mark_form'] = FORMS[el['mark_form']]
@@ -65,7 +69,7 @@ def configure_webpage_view(request, pk):
             course.teacher_id.webpage = t.webpage
             course.teacher_id.save()
             print(course.teacher_id.webpage)
-            return redirect('/course/'+str(pk))
+            return redirect('/course/' + str(pk))
     else:
         teacher_form = WebPageForm(request.POST)
     return render(request, "course/configure-webpage.html", {"teacher_form": teacher_form, "course": course})
@@ -75,28 +79,69 @@ def configure_webpage_view(request, pk):
 def add_file_view(request, pk):
     p = Components.objects.get_records_by_course_id(pk)  # id kursu
     gds = GoogleDriveStorage()
-    file_name = "{0}{1}{2}".format(os.path.dirname(os.path.abspath(__file__)), os.path.sep, "apps.py")
+    file_name = "{0}{1}{2}".format(os.path.dirname(os.path.abspath(__file__)), os.path.sep,
+                                   '/home/paula/Pulpit/SrodowiskoProgramisty/l1/2.sh')
     only_name = gds.split_path(file_name)
-    # file_name pełna ścieżka
-    # print(gds.save("/test4/apps.py", open(file_name, 'rb'), file_name))
-    # print(gds.get_or_create_folder('test4/folder'))
-    # print(gds.check_file_exists('test4'))
-    # print(gds.url('1.txt'))
-    # print(gds.open(u'/test4/apps.py', only_name[-1]))
-    #print(gds.open(u'/test4/apps.py', '/home/paula/PycharmProjects/student-helper2/my_calendar/a.py')) doda pod ta 2 sciezka
+
     """
+    1. DODANIE PLIKU ZE SCIEZKI file_name NA DYSK DO FOLDERU test4
+    file_name = '/home/paula/Pulpit/SrodowiskoProgramisty/l1/2.sh'
+    print(gds.save("/test4/2.sh", open(file_name, 'rb'), file_name))
+    """
+
+    """
+    2. WYSWIETLENIE ZAWARTOSCI FOLDERU test4
     (directories, files) = gds.listdir("/test4")
     print(directories)
     print(files)
     """
+
+    """
+    3. POBRANIE PLIKU 1.sh DO FOLDERU POBRANE NA KOMPUTERZE
+    file_name = '2.sh'
+    path = ''
+    if os.name == 'nt':
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        path = location
+        path += '\\' + file_name
+    else:
+        path = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
+        path += '/' + file_name
+    print(gds.open(u'/test4/2.sh', path))
+    """
+
+    """
+    4. WYSWIETLENIE PLIKU ZE SCIEZKI file_path
+    file_path = '/home/paula/Pobrane/2.sh'
+    wrapper = FileWrapper(open(file_path, 'rb'))
+    response = HttpResponse(wrapper, content_type='application/force-download')
+    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+    return response
+    """
+
+    """
+    5. USUNIECIE PLIKU 1.txt Z FOLDERU test4
+    gds.delete('/test4/1.txt')
+    """
+
+    # file_name pełna ścieżka
+    # print(gds.save("/test4/apps.py", open(file_name, 'rb'), file_name))
+    # print(gds.get_or_create_folder('test4/folder'))
+    # print(gds.check_file_exists('test4'))
+    # print(gds.url('/test4/apps.py'))
+    # print(gds.open(u'/test4/apps.py', only_name[-1]))
+    # print(gds.open(u'/test4/apps.py', '/home/paula/PycharmProjects/student-helper2/my_calendar/a.py')) doda pod ta 2 sciezka
     return redirect('/course/' + str(pk), {"message": True})
 
 
 @login_required(login_url='/login')
 def add_mark_view(request, pk):
-
     p = Components.objects.get_records_by_course_id(pk)
-    if(p.exists()):
+    if (p.exists()):
         if request.method == 'POST':
             mark = MarkForm(request.POST, course_id=pk)
 
@@ -104,15 +149,16 @@ def add_mark_view(request, pk):
                 m = mark.save(commit=False)
                 m.course_id = Course.objects.get_record_by_id(pk)
                 m.save()
-                return redirect('/course/'+str(pk))
+                return redirect('/course/' + str(pk))
         else:
             mark = MarkForm(course_id=pk)
 
         return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
 
     else:
-        #TODO informacja o istniejących zasadach zaliczenia
-        return redirect('/course/'+str(pk), {"message": True})
+        # TODO informacja o istniejących zasadach zaliczenia
+        return redirect('/course/' + str(pk), {"message": True})
+
 
 @login_required(login_url='/login')
 def edit_mark_view(request, pk):
@@ -124,16 +170,16 @@ def edit_mark_view(request, pk):
 
         if mark.is_valid():
             mark.save()
-            return redirect('/course/'+str(course_id))
+            return redirect('/course/' + str(course_id))
     else:
-        #TODO info?
+        # TODO info?
         mark = MarkForm(instance=my_mark, course_id=course_id)
 
-    return render(request, "new_mark.html", {"mark_form": mark, "pk": course_id, "edit": True })
+    return render(request, "new_mark.html", {"mark_form": mark, "pk": course_id, "edit": True})
+
 
 @login_required(login_url='/login')
 def edit_course_view(request, pk):
-
     c_course = Course.objects.get_record_by_id(pk)
     c_teacher = c_course.teacher_id
 
@@ -144,7 +190,7 @@ def edit_course_view(request, pk):
         if course.is_valid() and teacher.is_valid():
             course.save()
             teacher.save()
-            return redirect('/course/'+str(pk))
+            return redirect('/course/' + str(pk))
     else:
         course = CourseForm(instance=c_course)
         teacher = TeacherForm(instance=c_teacher)
@@ -158,7 +204,7 @@ def new_pass_rules(request, pk):
     cg = None
     c = Components.objects.get_records_by_course_id(pk)
     if c.exists():
-        return redirect('/course/'+str(pk))
+        return redirect('/course/' + str(pk))
     else:
         if request.method == 'POST':
             if course.type == "W":
@@ -175,14 +221,14 @@ def new_pass_rules(request, pk):
                 t.course_id = course
                 t.type = Components.objects.get_records_by_course_id(pk)[0].type
                 t.save()
-                return redirect('/course/'+str(pk))
+                return redirect('/course/' + str(pk))
         else:
             rules = RulesForm(course_id=pk)
             thresholds = ThresholdsForm()
             if course.type == "W":
                 cg = CourseGroupForm(course_id=pk)
-        return render(request, 'new_pass_rules.html', {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
-
+        return render(request, 'new_pass_rules.html',
+                      {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk})
 
 
 @login_required(login_url='/login/')
@@ -203,7 +249,7 @@ def pass_rules_view(request, pk):
             if rules.is_valid() and thresholds.is_valid():
                 rules.save_edit()
                 thresholds.save()
-                return redirect('/course/'+str(pk))
+                return redirect('/course/' + str(pk))
         else:
             if course.type == "W":
                 cg = CourseGroupForm(course_id=pk)
@@ -212,11 +258,12 @@ def pass_rules_view(request, pk):
             rules = RulesForm(course_id=pk)
             rules.fill_edit()
             thresholds = ThresholdsForm(instance=t)
-        return render(request, 'new_pass_rules.html', {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
+        return render(request, 'new_pass_rules.html',
+                      {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
 
     else:
-        #TODO informacja o nieistniejących zasadach
-        return redirect('/course/'+str(pk))
+        # TODO informacja o nieistniejących zasadach
+        return redirect('/course/' + str(pk))
 
 
 @login_required(login_url='/login/')
