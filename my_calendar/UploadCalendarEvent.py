@@ -84,7 +84,11 @@ class UploadCalendarEvent():
                      else:
                          course_events = query
 
-             result_list = sorted(chain(events, course_events), key=lambda instance: instance.start_date)
+             if course_events != None:
+                 result_list = sorted(chain(events, course_events), key=lambda instance: instance.start_date)
+             else:
+                 result_list = events
+
              for event in result_list:
                  if type(event) == CourseEvents:
                      extra = event.description
