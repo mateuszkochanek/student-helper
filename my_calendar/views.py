@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from .UploadCalendarEvent import UploadCalendarEvent
-from .forms import EventForm, DescriptionForm, DescourseForm, CourseForm, TeacherForm
+from .forms import *
 from .calendarImport import CalendarImport
 from django.contrib.auth.decorators import login_required
-from studentHelper.models import Events, Description
+from studentHelper.models import Events, Description, Course
 
 
 @login_required(login_url='/login/')
@@ -31,6 +31,22 @@ def new_event_view(request):
         description = DescriptionForm()
 
     return render(request, "new_event.html", {"event_form": event, "description_form": description})
+
+
+
+@login_required(login_url='/login/')
+def new_course_event_view(request, pk):
+    if request.method == 'POST':
+        event = CourseEventForm(request.POST)
+        if event.is_valid():
+            e = event.save(commit=False)
+            e.course_id = Course.objects.get_record_by_id(pk)
+            e.save()
+            return redirect('/calendar/main')
+    else:
+        event = CourseEventForm()
+
+    return render(request, "new_event.html", {"event_form": event})
 
 
 @login_required(login_url='/login/')

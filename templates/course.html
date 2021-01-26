@@ -29,7 +29,10 @@
                 Dodaj Plik
             </a>
             <a href="{% url 'configure_webpage' course.id  %}" class=button>
-                Dodaj stronę prowadzącego
+                Dodaj stronę
+            </a>
+            <a href="{% url 'course_event' course.id  %}" class=button>
+                Dodaj wydarzenie
             </a>
             <a href="{% url 'new_pass_rules' course.id %}" class=button>
                 Dodaj zasady zaliczenia
