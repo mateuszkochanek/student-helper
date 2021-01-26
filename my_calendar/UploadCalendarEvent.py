@@ -1,10 +1,12 @@
-from studentHelper.models import Events, Description
+from studentHelper.models import Events, Description, CourseEvents, Course
 from django.core.exceptions import EmptyResultSet, MultipleObjectsReturned, ObjectDoesNotExist
 from datetime import date, timedelta
 from datetime import datetime
 from django.core import serializers
 from django.utils import timezone
 from collections import defaultdict
+
+from itertools import chain
 
 class ParsedEvent:
 
@@ -33,18 +35,24 @@ class UploadCalendarEvent():
 
 
     def get_event(self, event, extra):
+
+        if type(event) == CourseEvents:
+            description = event.course_id.course_name + ': '
+            description += str(event.description)
+        else:
+            description = extra.description
+
         event_app = None
         cal_size = 30
 
         sd = event.start_date.time()
         ed = event.end_date.time()
         size = ((event.end_date - event.start_date).total_seconds())//(60 * cal_size)
-
         if event.whole_day == True:
-            event_app = ParsedEvent(str(""), "Cały dzień", str(extra.description),
+            event_app = ParsedEvent(str(""), "Cały dzień", str(description),
                         event.id, range((cal_size//60) * 24))
         else:
-            event_app = ParsedEvent(str(sd), str(ed), str(extra.description),
+            event_app = ParsedEvent(str(sd), str(ed), str(description),
                         event.id, range(int(size)))
 
         return event_app
@@ -66,10 +74,22 @@ class UploadCalendarEvent():
              end_date = start_date + timedelta(days=6)
          try:
              events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)
+             courses = Course.objects.get_records_by_client_id(self.get_user().id)
+             course_events = None
+             for course in courses:
+                 query = CourseEvents.objects.get_all_events(course.id, start_date, end_date)
+                 if query:
+                     if course_events != None:
+                         course_events = course_events.union(query)
+                     else:
+                         course_events = query
 
-             for event in events:
-                 print(event.start_date)
-                 extra = Description.objects.get_descriptions(event, choose).first()
+             result_list = sorted(chain(events, course_events), key=lambda instance: instance.start_date)
+             for event in result_list:
+                 if type(event) == CourseEvents:
+                     extra = event.description
+                 else:
+                     extra = Description.objects.get_descriptions(event, choose).first()
 
                  if event.period_type == "ONCE" and extra != None:
                      key = str(event.start_date.weekday())

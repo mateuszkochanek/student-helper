@@ -10,7 +10,7 @@
     grid-column: 1 / 7;
     grid-row: 1;
     text-align: left;
-    font-size: 32px;
+    font-size: 24px;
     margin: 1%;
     max-height: 32px;
 }
@@ -21,17 +21,17 @@
 }
 
 .buttonbar {
-    grid-column: 5 / 16;
+    grid-column: 4 / 16;
     grid-row: 1;
     text-align: right;
     margin: 1%;
-    max-height: 32px;
+    max-height: 24px;
 }
 
 .button {
      display: inline-block;
      padding: 10px 20px;
-     font-size: 16px;
+     font-size: 12px;
      cursor: pointer;
      text-align: center;
      text-decoration: none;
