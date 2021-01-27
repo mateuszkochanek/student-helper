@@ -3,7 +3,7 @@ from .UploadCalendarEvent import UploadCalendarEvent
 from .forms import *
 from .calendarImport import CalendarImport
 from django.contrib.auth.decorators import login_required
-from studentHelper.models import Events, Description, Course
+from studentHelper.models import Events, Description, Course, CourseEvents
 
 
 @login_required(login_url='/login/')
@@ -97,32 +97,62 @@ def calendar_import(request):
 
 @login_required(login_url='/login/')
 def delete_event_view(request, pk):
-    my_event = Events.objects.delete_event_by_id(pk)
+    if pk[0] == 'c':
+        pk = pk[1:]
+        CourseEvents.objects.delete_event_by_id(int(pk))
+    else:
+        Events.objects.delete_event_by_id(int(pk))
+
     return redirect('/calendar/main')
 
 @login_required(login_url='/login/')
 def edit_event_view(request, pk):
+    if pk[0] != 'c':
+        pk = int(pk)
+        my_event = Events.objects.get_record_by_id(pk)
+        my_description = my_event.description
 
-    my_event = Events.objects.get_record_by_id(pk)
-    my_description = my_event.description
+        if request.method == 'POST':
+            event = EventForm(request.POST, instance=my_event)
+            description = DescriptionForm(request.POST, instance=my_description)
 
-    if request.method == 'POST':
-        event = EventForm(request.POST, instance=my_event)
-        description = DescriptionForm(request.POST, instance=my_description)
+            if event.is_valid() and description.is_valid():
+                event.save()
+                description.save()
+                return redirect('/calendar/main')
+        else:
 
-        if event.is_valid() and description.is_valid():
-            event.save()
-            description.save()
-            return redirect('/calendar/'+str(my_event.start_date.date()))
+            event = EventForm(instance=my_event)
+            description = DescriptionForm(instance=my_description)
+
+        return render(request, "new_event.html",
+                    {"event_form": event,
+                     "description_form": description,
+                     "edit": True,
+                     "date": my_event.start_date.date(),
+                     "pk": str(pk),
+                     })
     else:
+        pk = pk[1:]
+        pk = int(pk)
+        description = ""
+        my_event = CourseEvents.objects.get_record_by_id(pk)
 
-        event = EventForm(instance=my_event)
-        description = DescriptionForm(instance=my_description)
+        if request.method == 'POST':
+            event = CourseEventForm(request.POST, instance=my_event)
 
-    return render(request, "new_event.html",
-                {"event_form": event,
-                 "description_form": description,
-                 "edit": True,
-                 "date": my_event.start_date.date(),
-                 "pk": pk,
-                 })
+            if event.is_valid():
+                event.save()
+                # return redirect('/calendar/'+str(my_event.start_date.date()))
+                return redirect('/calendar/main')
+        else:
+            event = CourseEventForm(instance=my_event)
+
+
+        return render(request, "new_event.html",
+                    {"event_form": event,
+                     "description_form": description,
+                     "edit": True,
+                     "date": my_event.start_date.date(),
+                     "pk": 'c' + str(pk),
+                     })

@@ -26,13 +26,13 @@
         </div>
     </div>
     <div class=buttonbar>
-            <form action="{% url 'calendar_import' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+        <form action="{% url 'calendar_import' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-                <input type="file" name="myfile" accept=".ics">
-                <input type="submit" value="Załaduj kalendarz" onclick="return confirm('Jesteś pewny/a? Po załadowaniu kalendarza na nowo, ' +
-                 'zostaną usunięte wszystkie dane dotyczące nadpisanych kursów!')"/>
-            </form>
+            <input type="file" name="myfile" accept=".ics">
+            <input type="submit" value="Załaduj kalendarz" onclick="return confirm('Jesteś pewny/a? Po załadowaniu kalendarza na nowo, ' +
+             'zostaną usunięte wszystkie dane dotyczące nadpisanych kursów!')"/>
+        </form>
     </div>
 
     <div class=line>

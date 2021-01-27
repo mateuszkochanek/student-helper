@@ -39,8 +39,10 @@ class UploadCalendarEvent():
         if type(event) == CourseEvents:
             description = event.course_id.course_name + ': '
             description += str(event.description)
+            id = 'c' + str(event.id)
         else:
             description = extra.description
+            id = str(event.id)
 
         event_app = None
         cal_size = 30
@@ -50,10 +52,10 @@ class UploadCalendarEvent():
         size = ((event.end_date - event.start_date).total_seconds())//(60 * cal_size)
         if event.whole_day == True:
             event_app = ParsedEvent(str(""), "Cały dzień", str(description),
-                        event.id, range((cal_size//60) * 24))
+                        id, range((cal_size//60) * 24))
         else:
             event_app = ParsedEvent(str(sd), str(ed), str(description),
-                        event.id, range(int(size)))
+                        id, range(int(size)))
 
         return event_app
 
@@ -74,15 +76,17 @@ class UploadCalendarEvent():
              end_date = start_date + timedelta(days=6)
          try:
              events = Events.objects.get_all_events(self.get_user().id, start_date, end_date)
-             courses = Course.objects.get_records_by_client_id(self.get_user().id)
              course_events = None
-             for course in courses:
-                 query = CourseEvents.objects.get_all_events(course.id, start_date, end_date)
-                 if query:
-                     if course_events != None:
-                         course_events = course_events.union(query)
-                     else:
-                         course_events = query
+             if not choose:
+                 courses = Course.objects.get_records_by_client_id(self.get_user().id)
+
+                 for course in courses:
+                     query = CourseEvents.objects.get_all_events(course.id, start_date, end_date)
+                     if query:
+                         if course_events != None:
+                             course_events = sorted(chain(course_events, query), key=lambda instance: instance.start_date)
+                         else:
+                             course_events = query
 
              if course_events != None:
                  result_list = sorted(chain(events, course_events), key=lambda instance: instance.start_date)

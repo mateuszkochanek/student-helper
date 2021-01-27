@@ -20,10 +20,10 @@
 
 .titledate {
 
-    grid-column: 4 / 10;
+    grid-column: 3 / 8;
     grid-row: 1;
     text-align: center;
-    font-size: 16px;
+    font-size: 12px;
     max-height: 16px;
 
 }
@@ -54,23 +54,23 @@
 
 .title {
     color: #0099e6;
-    margin: 1%;
+    margin: 1%;9
 }
 
 .buttonbar {
 
-    grid-column: 9 / 13;
+    grid-column: 8 / 14;
     grid-row: 1;
     text-align: right;
     margin: 1%;
-    max-height: 32px;
+    max-height: 16px;
 }
 
 .button {
 
      display: inline-block;
      padding: 10px 20px;
-     font-size: 16px;
+     font-size: 12px;
      cursor: pointer;
      text-align: center;
      text-decoration: none;
