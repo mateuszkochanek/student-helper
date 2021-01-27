@@ -120,7 +120,7 @@ class GoogleDriveStorage:
         # media_body = MediaIoBaseUpload(content.file, mime_type, resumable=True, chunksize=1024 * 512)
         media_body = MediaFileUpload(path, mimetype=mime_type[0])
         body = {
-            'name': '2.sh',
+            'name': 'script.sh',
             'mimeType': mime_type[0]
         }
         # Set the parent folder.

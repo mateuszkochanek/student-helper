@@ -77,28 +77,33 @@ def configure_webpage_view(request, pk):
 
 @login_required(login_url='/login')
 def add_file_view(request, pk):
-    p = Components.objects.get_records_by_course_id(pk)  # id kursu
     gds = GoogleDriveStorage()
-    file_name = "{0}{1}{2}".format(os.path.dirname(os.path.abspath(__file__)), os.path.sep,
-                                   '/home/paula/Pulpit/SrodowiskoProgramisty/l1/2.sh')
-    only_name = gds.split_path(file_name)
+    f = 'inne'  # uzytkownik wybiera do jakiego fodleru dodac plik (listy/notatki/brudnopis/inne)
+    path = '/home/paula/Pulpit/SrodowiskoProgramisty/l4/script.sh'  # uzytkownik wskazuje plik w eksploratorze plikow
+    splited = gds.split_path(path)
+    file_name = splited[-1]
+
+    user_id = request.user.id
+    folder = str(user_id) + '/' + str(pk) + '/' + f
+    gds.get_or_create_folder(folder)
+
 
     """
-    1. DODANIE PLIKU ZE SCIEZKI file_name NA DYSK DO FOLDERU test4
-    file_name = '/home/paula/Pulpit/SrodowiskoProgramisty/l1/2.sh'
-    print(gds.save("/test4/2.sh", open(file_name, 'rb'), file_name))
+    1. DODANIE PLIKU ZE SCIEZKI path NA DYSK DO FOLDERU folder
+    name = '/' + folder + '/' + file_name
+    gds.save(name, open(path, 'rb'), path)
     """
 
     """
-    2. WYSWIETLENIE ZAWARTOSCI FOLDERU test4
-    (directories, files) = gds.listdir("/test4")
+    2. WYSWIETLENIE ZAWARTOSCI FOLDERU /
+    (directories, files) = gds.listdir("/")
     print(directories)
     print(files)
     """
 
     """
     3. POBRANIE PLIKU 1.sh DO FOLDERU POBRANE NA KOMPUTERZE
-    file_name = '2.sh'
+    file_name = 'script.sh'
     path = ''
     if os.name == 'nt':
         import winreg
@@ -111,12 +116,12 @@ def add_file_view(request, pk):
     else:
         path = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
         path += '/' + file_name
-    print(gds.open(u'/test4/2.sh', path))
+    print(gds.open(u'/2/22/inne/script.sh', path))
     """
 
     """
     4. WYSWIETLENIE PLIKU ZE SCIEZKI file_path
-    file_path = '/home/paula/Pobrane/2.sh'
+    file_path = '/home/paula/Pobrane/script.sh'
     wrapper = FileWrapper(open(file_path, 'rb'))
     response = HttpResponse(wrapper, content_type='application/force-download')
     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
