@@ -1,11 +1,8 @@
 .main_page {
-    height: calc(100% - 40px);
-    width: calc(100% - 40px);
-    display: grid;
+    height: 100%;
+    width: 100%;
     grid-gap: 20px;
     padding: 20px;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: 1fr 1fr;
 }
 
 .info_pane{
