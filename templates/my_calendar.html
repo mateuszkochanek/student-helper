@@ -2,7 +2,6 @@
 {% block extension-styles %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/my_calendar.css' %}">
-    <script type="text/javascript" src="{% static 'scripts/calendar.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -34,6 +33,7 @@
         <a href="{% url 'new_course' %}" class=button>
             Dodaj kurs
         </a>
+
     </div>
     <div class=line>
         <hr style="color:CornflowerBlue">

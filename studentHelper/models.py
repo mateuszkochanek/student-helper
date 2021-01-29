@@ -229,6 +229,32 @@ class Description(models.Model):
     objects = DescriptionManager()
 
 
+class CourseEvents(models.Model):
+
+    TYPES = [
+    ("ONCE", "Pojedyncze wydarzenie"),
+    ("DAILY", "Codziennie"),
+    ("WEEKLY", "Co tydzień"),
+    ("MONTHLY", "Co miesiąc"),
+    ("YEARLY", "Rocznie"),
+    # ("EVEN", "Even"),
+    # ("ODD", "Odd")
+    ]
+    # pk generated automaticly
+
+    # foreign keys
+    course_id = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+    )
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    period_type = models.CharField(choices=TYPES, max_length=7)
+    whole_day = models.BooleanField(default=False)
+    description = models.CharField(max_length=128)
+    objects = CourseEventsManager()
+
+
 class Marks(models.Model):
     # pk generated automaticly
     TYPES = [

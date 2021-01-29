@@ -247,12 +247,70 @@ class EventsManager(models.Manager):
             q3 = self.filter(client_id=client_id, start_date__day__lte=end_date.day,
             start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"]).order_by("start_date__hour")
 
-        return q1.union(q2, q3).order_by("start_date")
+        return q1.union(q2, q3)
 
     def get_next_courses(self, user_id, course_name, number):
         return (self.filter(
             client_id=user_id,
             description__course=1,
+            description__description=course_name,
+            end_date__gte=timezone.now()
+        )).order_by('start_date')[:number]
+
+    def delete_event_by_id(self, id):
+        # TODO triggers?
+        self.filter(id=id).delete()
+
+class CourseEventsManager(models.Manager):
+    """
+        Model: CourseEvents
+        Usage: Import model and then use CourseEvents.objects.[below_options]
+    """
+
+    def add_record(self, course, start_date, end_date, period_type, description):
+        """ client -> object, current client """
+
+        event = self.create(course=course, start_date=start_date,
+                            end_date=end_date, period_type=period_type,
+                            description=description)
+
+        # TODO triggers
+        event.save()
+        return event
+
+    def get_record_by_id(self, id):
+        return self.get(pk=id)
+
+    def get_record_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
+
+    def get_events(self, course_id, start_date, end_date):
+        return self.filter(course_id=course_id,
+                           start_date__range=[start_date, end_date],
+                           end_date__range=[start_date, end_date]
+                           )
+
+    def get_all_events(self, course_id, start_date, end_date):
+
+        q1 = self.filter(course_id=course_id,
+                         start_date__range=[start_date, end_date],
+                         end_date__range=[start_date, end_date]).order_by("start_date__hour")
+        q2 = self.filter(course_id=course_id, start_date__lte=end_date,
+                         end_date__gte=start_date,
+                         period_type__in=["DAILY", "WEEKLY"]).order_by("start_date__hour")
+
+        if start_date.day < end_date.day:
+            q3 = self.filter(course_id=course_id, start_date__day__lte=end_date.day,
+            start_date__day__gte=start_date.day, period_type__in=["MONTHLY", "YEARLY"]).order_by("start_date__hour")
+        else:
+            q3 = self.filter(course_id=course_id, start_date__day__lte=end_date.day,
+            start_date__day__gte=0, period_type__in=["MONTHLY", "YEARLY"]).order_by("start_date__hour")
+
+        return q1.union(q2, q3)
+
+    def get_next_courses(self, course_id, course_name, number):
+        return (self.filter(
+            course_id=course_id,
             description__description=course_name,
             end_date__gte=timezone.now()
         )).order_by('start_date')[:number]

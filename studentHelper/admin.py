@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 
-from .models import Teacher, Course, Components, Thresholds, Modyfication, CourseGroup, Goals, Files, Prediction, Events, Description, Marks
+from .models import *
 
 admin.site.register(Teacher)
 admin.site.register(Course)
@@ -17,3 +17,4 @@ admin.site.register(Prediction)
 admin.site.register(Events)
 admin.site.register(Description)
 admin.site.register(Marks)
+admin.site.register(CourseEvents)

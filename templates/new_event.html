@@ -31,7 +31,7 @@
             {{ description_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
             {% if edit %}
-                <a href="{% url 'calendar' date %}" class="button">Wróć</a>
+                <a href="{% url 'calendar' 'main' %}" class="button">Wróć</a>
                 <a href="{% url 'delete_event' pk%}" class="button">Usuń</a>
             {% else %}
                 <a href="{% url 'calendar' 'main'%}" class="button">Wróć</a>

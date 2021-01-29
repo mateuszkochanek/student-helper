@@ -19,6 +19,8 @@ def get_teacher_data(teacher):
     return name, surname, title2
 
 
+
+#TODO Events -> CourseEvents
 class CalendarImport(threading.Thread):
 
     def __init__(self, user, calendar_file):
