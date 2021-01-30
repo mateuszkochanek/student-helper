@@ -11,7 +11,6 @@ from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
-from gi.repository import GLib
 
 
 @login_required(login_url='/login')
