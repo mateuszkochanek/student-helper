@@ -80,10 +80,6 @@ def configure_webpage_view(request, pk):
 
 @login_required(login_url='/login')
 def add_file_view(request, pk):
-    if request.method == 'POST' and 'myfile' in request.FILES:
-        file = request.FILES['myfile']
-        path = default_storage.save('tmp/file', ContentFile(file.read()))
-        print(path)
 
     gds = GoogleDriveStorage()
     f = 'inne'  # uzytkownik wybiera do jakiego fodleru dodac plik (listy/notatki/brudnopis/inne)

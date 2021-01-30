@@ -4,6 +4,8 @@ import difflib
 import time
 from django.conf import settings
 from django.core.mail import send_mail
+from studentHelper.models import *
+from studentHelper.managers import *
 
 
 def get_diff(out_text):
@@ -22,15 +24,18 @@ def get_diff(out_text):
 
 class WebsiteMonitoring:
 
-    def __init__(self, url, request):
+    def __init__(self, url, request, course_id):
         self.request = request
         self.url = url
+        self.course_id = course_id
         self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         self.prev_version = ""
         self.first_run = True
         self.old_page = ""
         self.new_page = ""
+
+        self.pdf = []
 
     def monitoring(self):
         while True:
@@ -39,6 +44,16 @@ class WebsiteMonitoring:
     def check_changes(self):
         response = requests.get(self.url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
+
+        if self.first_run:
+            self.add_list(soup)
+        else:
+            for link in soup.select("a[href$='.pdf']"):
+                filename = link['href'].split('/')[-1]
+                if Files.objects.get_record_by_file_path(filename) is None:
+                    # push czy chcesz pobrac?
+                    pass
+
         for script in soup(["script", "style"]):
             script.extract()
         soup = soup.get_text()
@@ -67,3 +82,9 @@ class WebsiteMonitoring:
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [self.request.user.email, ]
         send_mail(subject, message, email_from, recipient_list)
+
+    def add_list(self, soup):
+        # dodanie pdf'ow do bazy
+        for link in soup.select("a[href$='.pdf']"):
+            filename = link['href'].split('/')[-1]
+            Files.objects.add_record(self.course_id, filename, 'pdf')

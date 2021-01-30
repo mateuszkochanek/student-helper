@@ -22,7 +22,7 @@ class GoogleDriveStorage:
             scopes=["https://www.googleapis.com/auth/drive"],
         )
 
-        self.drive_service = build('drive', 'v3', credentials=credentials)
+        self.drive_service = build('drive', 'v3', credentials=credentials, cache_discovery=False)
 
     def split_path(self, p):  # dzieli sciezke na liste poszczegolnych folderow i nazwe pliku
         p = p[1:] if p[0] == '/' else p
