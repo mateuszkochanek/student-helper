@@ -34,5 +34,5 @@ def new_course_goal(request, pk):
             return redirect('/course/'+str(pk))
     else:
         goal = GoalsForm()
-    return render(request, 'new_course_goal.html', {'goals_form': goal})
+    return render(request, 'new_course_goal.html', {'goals_form': goal, 'course_id': pk})
 
