@@ -1,0 +1,75 @@
+{% extends "base/base-template.html" %}
+
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/goals.css' %}">
+
+    <script type="text/javascript" src="{% static 'scripts/goals.js' %}" defer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <input type="hidden" id="goals_achieved_amount" value="{{ goals_achieved | length }}">
+    <input type="hidden" id="goals_not_achieved_amount" value="{{ goals_not_achieved | length }}">
+{% endblock %}
+
+{% block content %}
+    <div class="goals_container">
+         <div class="titlebar">
+            <div class="title">
+                Cele
+            </div>
+        </div>
+
+        <div class="buttonbar">
+            <a href="{% url 'new_goal' %}" class=button>
+                Dodaj cel
+            </a>
+        </div>
+
+        <div class=line>
+            <hr style="color:CornflowerBlue">
+        </div>
+
+        <div class="info_panels">
+            <div class="info_pane col-1">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>W trakcie</h3>
+                        </td>
+                    </tr>
+                    {% for goal in goals_not_achieved %}
+                    <tr>
+                        <td>
+                            {{ goal.course_id.course_name }} <br>
+                            {{ goal.description }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="info_pane col-2">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Osiągnięte</h3>
+                        </td>
+                    </tr>
+                    {% for goal in goals_achieved %}
+                    <tr>
+                        <td>
+                            {{ goal.course_id.course_name }} <br>
+                            {{ goal.description }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="col-3">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+    </div>
+{% endblock %}
