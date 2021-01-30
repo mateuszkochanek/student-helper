@@ -9,7 +9,9 @@ from django.core.mail import send_mail
 def get_diff(out_text):
     msg = ''
     for i in range(0, len(out_text)):
-        if out_text[i] == '+' or out_text[i] == '-':
+        if (out_text[i] == '+' or out_text[i] == '-') and out_text[i + 1] == '\n':
+            i += 2
+        elif out_text[i] == '+' or out_text[i] == '-':
             while i < len(out_text) and out_text[i] != '\n':
                 msg += out_text[i]
                 i += 1
