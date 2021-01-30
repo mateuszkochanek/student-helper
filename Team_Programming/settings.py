@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'goals',
     'gdstorage',
+]
 
 BOOTSTRAP4 = {
     'include_jquery': True,

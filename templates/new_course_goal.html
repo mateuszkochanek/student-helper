@@ -18,6 +18,7 @@
             {% csrf_token %}
             {{ goals_form|crispy }}
             <button type="submit" class=button>Zatwierdź</button>
+            <a href="{% url 'course' course_id %}" class="button">Wróć</a>
         </form>
     </div>
 </div>
