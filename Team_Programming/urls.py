@@ -33,7 +33,7 @@ register_converter(FloatUrlParameterConverter, 'float')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register, name="register"),
-    path('', main_view),
+    path('', main_view, name='main'),
     path('', include('django.contrib.auth.urls')),
     path('calendar/new', new_event_view, name='new'),
     path('calendar/edit/<str:pk>', edit_event_view, name='edit_event'),
@@ -59,5 +59,7 @@ urlpatterns = [
     path('file/add/<int:pk>', add_file_view, name='file_add'),
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
     path('goals/', new_goal_view),
-    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal')
+    path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
+    path('course/edit_goal/<int:pk>/<int:cid>', edit_course_goal_view, name='edit_course_goal'),
+    path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal')
 ]

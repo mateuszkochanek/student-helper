@@ -3,8 +3,6 @@ from bootstrap_datepicker_plus import DateTimePickerInput
 from django.forms import ModelForm, Form, ChoiceField
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.forms.widgets import HiddenInput
-import validators
 
 
 class GoalsForm(ModelForm):
@@ -17,7 +15,7 @@ class GoalsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['end_date'].label = 'Termin, do którego cel ma zostać osiągniętys'
+        self.fields['end_date'].label = 'Termin, do którego cel ma zostać osiągnięty'
         self.fields['type'].label = 'Typ'
         self.fields['value'].label = 'Wartość'
         self.fields['description'].label = 'Opis'
@@ -41,4 +39,3 @@ class CourseForm(Form):
         self.fields['course'] = ChoiceField(choices=options)
         self.fields['course'].label = 'Kurs'
         self.fields['course'].error_messages['required'] = 'To pole jest wymagane.'
-
