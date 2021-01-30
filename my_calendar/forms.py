@@ -9,8 +9,6 @@ from django.forms.widgets import HiddenInput
 from datetime import timedelta
 import validators
 
-
-
 # pip install django-bootstrap-datepicker-plus
 # pip install django-bootstrap4
 
