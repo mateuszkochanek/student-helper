@@ -1,0 +1,27 @@
+{% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <form method="post">
+            {% csrf_token %}
+            {{ goals_form|crispy }}
+            {{ course_form|crispy }}
+            <button type="submit" class=button>Zatwierdź</button>
+            {% if edit %}
+                <a href="{% url 'calendar' 'main' %}" class="button">Wróć</a>
+                <a href="{% url 'delete_event' pk%}" class="button">Usuń</a>
+            {% else %}
+                <a href="{% url 'calendar' 'main'%}" class="button">Wróć</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+    {{ goals_form.media }}            {# Adds date-picker required JS and CSS #}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <form method="post">
+            {% csrf_token %}
+            {{ goals_form|crispy }}
+            <button type="submit" class=button>Zatwierdź</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
