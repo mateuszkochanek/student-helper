@@ -52,6 +52,9 @@ def course_view(request, pk):
         el['mark_type'] = TYPES[el['mark_type']]
         el['mark_form'] = FORMS[el['mark_form']]
 
+    # Aby uzyskać wartość przypisaną do klucza
+    #     print(el.get_description_display())
+
     if context['course'].client_id != request.user:
         return main_view(request)
 

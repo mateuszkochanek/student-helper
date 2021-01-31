@@ -31,7 +31,7 @@
             <a href="{% url 'configure_webpage' course.id  %}" class=button>
                 Dodaj stronę
             </a>
-            <a href="{% url 'course_event' course.id  %}" class=button>
+            <a href="{% url 'course_e_description' course.id  %}" class=button>
                 Dodaj wydarzenie
             </a>
             <a href="{% url 'new_pass_rules' course.id %}" class=button>
@@ -178,7 +178,7 @@
                     {% for course in courseEvents %}
                     <tr>
                         <td>
-                            {{ course.description }} <br>
+                            {{ course.get_description_display }} <br>
                             {{ course.start_date }} <br>
                             {{ course.end_date }}
                         </td>

@@ -58,7 +58,8 @@ urlpatterns = [
     path('temp/', temp, name='temp'),
     path('new_pass_rules/<int:pk>', new_pass_rules, name='new_pass_rules'),
     path('file/add/<int:pk>', add_file_view, name='file_add'),
-    path('course/<int:pk>/events', new_course_event_view, name='course_event'),
+    path('course/<int:pk>/events/<str:desc>/<int:time>', new_course_event_view, name='course_event'),
+    path('course/<int:pk>/description', new_course_event_description_view, name='course_e_description'),
     path('goals/', goals, name="goals"),
     path('goals/new/', new_goal_view, name="new_goal"),
     path('goals/delete/<int:pk>', delete_goal, name='delete_goal'),
@@ -67,6 +68,5 @@ urlpatterns = [
     path('course/delete/<int:pk>/<int:gid>', delete_course_goal, name='delete_course_goal'),
     path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal'),
     path('statistics/', statistics, name='statistics'),
-    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal'),
     path('webpush/expired_event/<int:pk>', expired_event_view, name='expired_event'),
 ]

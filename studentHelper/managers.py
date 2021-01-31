@@ -390,15 +390,18 @@ class PredictionManager(models.Manager):
         Usage: Import model and then use Prediction.objects.[below_options]
     """
 
-    def add_record(self, course, start_date, pred_time, actual_time):
+    def add_record(self, type, course, start_date, pred_time, actual_time):
         """ course: object of Course """
 
-        prediction = self.create(course_id=course, start_date=start_date,
+        prediction = self.create(course_id=course, type=type, start_date=start_date,
                                  pred_time=pred_time, actual_time=actual_time)
         prediction.save()
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
+    def get_record_for_course(self, course_id, type):
+        return self.filter(course_id=course_id, type=type)
 
     def get_record_by_event(self, course_id, start_date, pred_time):
         return self.filter(course_id=course_id, start_date=start_date, pred_time=pred_time)[:1].get()

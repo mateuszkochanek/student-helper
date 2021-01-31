@@ -1,9 +1,19 @@
 from celery import shared_task
-from .models import CourseEvents
+from studentHelper.models import Prediction
 from django.utils import timezone
 
 
 @shared_task
-def check_if_expired(request):
-    print(request.user)
-    return request.user
+def calculate_time(course_id, type):
+    data = Prediction.objects.get_record_for_course(course_id, type)
+    if data:
+        avg = 0
+        elements = 0
+        for d in data:
+            pred_time = d.actual_time
+            if pred_time != -1:
+                elements += 1
+                avg += pred_time
+        if elements >= 5:
+            return (avg / elements)
+    return 0

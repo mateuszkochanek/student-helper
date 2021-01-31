@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from studentHelper.models import Events, Description, Course, Teacher, CourseEvents, Prediction
 from bootstrap_datepicker_plus import DateTimePickerInput
-from django.forms import Form, ModelForm, TimeField, DateInput, FloatField
+from django.forms import Form, ModelForm, TimeField, DateInput, FloatField, ChoiceField, HiddenInput
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.forms.widgets import HiddenInput
@@ -81,12 +81,23 @@ class CourseEventForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+
+        show_desc = False
+        try:
+            self.desc = kwargs.pop('desc')
+        except:
+            show_desc = True
+
         super().__init__(*args, **kwargs)
+
         self.fields["start_date"].label = "Początek wydarzenia"
         self.fields["end_date"].label = "Koniec wydarzenia"
         self.fields["period_type"].label = "Okres trwania"
         self.fields["whole_day"].label = "Cały dzień"
         self.fields["description"].label = "Opis"
+        if not show_desc:
+            self.fields["description"].initial = self.desc
+
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
@@ -95,6 +106,7 @@ class CourseEventForm(ModelForm):
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
         period = cleaned_data.get("period_type")
+
 
         if start_date and end_date:
             if start_date > end_date:
@@ -208,6 +220,33 @@ class TeacherForm(ModelForm):
                     "Błędny adres strony"
                 )
 
+
+class PredTimeForm(Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        TYPES = [
+        ("ACTIV", "aktywność"),
+        ("EXAM", "egzamin"),
+        ("QUIZ", "kartkówka"),
+        ("TEST", "kolokwium"),
+        ("LIST", "lista zadań"),
+        ]
+
+        self.fields["choices"] = ChoiceField(choices=TYPES)
+        self.fields["choices"].label = "Opis"
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = "To pole jest wymagane."
+
+    def save(self):
+        return self.cleaned_data['choices']
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        self.cleaned_data['choices'] = cleaned_data['choices']
+
+
 class PredictionForm(Form):
 
     def __init__(self, *args, **kwargs):
@@ -218,7 +257,7 @@ class PredictionForm(Form):
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
     def save(self, prediction):
-        prediction.actual_time = self.cleaned_data['actual_time'] * 60
+        prediction.actual_time = self.cleaned_data['actual_time']
         prediction.save()
 
 
