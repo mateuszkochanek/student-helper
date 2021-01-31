@@ -63,6 +63,6 @@ urlpatterns = [
     path('goals/new/', new_goal_view, name="new_goal"),
     path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
     path('course/edit_goal/<int:pk>/<int:cid>', edit_course_goal_view, name='edit_course_goal'),
-    path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal')
+    path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal'),
     path('statistics/', statistics, name='statistics')
 ]
