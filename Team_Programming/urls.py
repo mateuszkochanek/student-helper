@@ -24,6 +24,7 @@ from register.views import register
 from course.views import *
 from avgGrade.views import *
 from goals.views import *
+from my_statistics.views import *
 
 
 register_converter(FloatUrlParameterConverter, 'float')
@@ -60,5 +61,6 @@ urlpatterns = [
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
     path('goals/', goals, name="goals"),
     path('goals/new/', new_goal_view, name="new_goal"),
-    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal')
+    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal'),
+    path('statistics/', statistics, name='statistics')
 ]
