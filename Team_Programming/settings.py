@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'bootstrap_datepicker_plus',
+    'django_celery_beat',
+    'django_celery_results',
+    'webpush',
 ]
 
 BOOTSTRAP4 = {
@@ -122,6 +125,25 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BGtfL2z3Nlf_NewV5HlMmJBEkxy8GoIaMmITQdsciMnVlAzeFzh835b9AZxMS622NbjhcGugxVmlh9xUhtybxZ0",
+    "VAPID_PRIVATE_KEY":"8EWjVE4v190OXKiWgD8d4oEbxRbPimzkMWu2oev_HyI",
+    "VAPID_ADMIN_EMAIL": "student.helper12345@gmail.com"
+}
+
+
+# CELERY STUFF
+#TODO change for server
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Warsaw'
+
+
 
 
 # Internationalization
