@@ -9,6 +9,9 @@ from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 
@@ -77,6 +80,7 @@ def configure_webpage_view(request, pk):
 
 @login_required(login_url='/login')
 def add_file_view(request, pk):
+
     gds = GoogleDriveStorage()
     f = 'inne'  # uzytkownik wybiera do jakiego fodleru dodac plik (listy/notatki/brudnopis/inne)
     path = '/home/paula/Pulpit/SrodowiskoProgramisty/l4/script.sh'  # uzytkownik wskazuje plik w eksploratorze plikow
@@ -85,8 +89,7 @@ def add_file_view(request, pk):
 
     user_id = request.user.id
     folder = str(user_id) + '/' + str(pk) + '/' + f
-    gds.get_or_create_folder(folder)
-
+    # gds.get_or_create_folder(folder)
 
     """
     1. DODANIE PLIKU ZE SCIEZKI path NA DYSK DO FOLDERU folder

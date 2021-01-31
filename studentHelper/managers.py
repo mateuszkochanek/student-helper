@@ -374,6 +374,9 @@ class FilesManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
+    def get_record_by_file_path(self, file_path):
+        return self.get(file_path=file_path)
+
 
 class PredictionManager(models.Manager):
     """
