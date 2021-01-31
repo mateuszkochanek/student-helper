@@ -146,7 +146,6 @@ def edit_event_view(request, pk):
 
             if event.is_valid():
                 event.save()
-                # return redirect('/calendar/'+str(my_event.start_date.date()))
                 return redirect('/calendar/main')
         else:
             event = CourseEventForm(instance=my_event)
@@ -159,3 +158,19 @@ def edit_event_view(request, pk):
                      "date": my_event.start_date.date(),
                      "pk": 'c' + str(pk),
                      })
+
+@login_required(login_url='/login/')
+def expired_event_view(request, pk):
+    event = CourseEvents.objects.get_record_by_id(pk)
+    if request.method == 'POST':
+        pred = PredictionForm(request.POST)
+        if pred.is_valid():
+            delta = event.end_date - event.start_date
+            prediction = Prediction.objects.get_record_by_event(event.course_id, event.start_date, delta.total_seconds())
+            pred.save(prediction)
+            CourseEvents.objects.delete_event_by_id(pk)
+            return redirect('/')
+    else:
+        pred = PredictionForm()
+
+    return render(request, "expired_event.html", {"pred_form": pred, "event": event})

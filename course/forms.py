@@ -100,7 +100,6 @@ class ThresholdsForm(ModelForm):
         prev = cleaned_data.get('p_5_5')
         self.marks = self.marks[:-1]
 
-
         for key in self.marks[::-1]:
             mark = cleaned_data.get(key)
             if mark < 0:
@@ -209,7 +208,6 @@ class RulesForm(Form):
         Thresholds.objects.delete_by_course_id(self.cid)
 
         self.save()
-
 
     def fill_edit(self):
         enum_form = {
@@ -384,8 +382,6 @@ class CourseGroupForm(Form):
             if 'laboratorium' in self.cleaned_data['courses'] and l != '':
                 CourseGroup.objects.add_record(l, self.cleaned_data['weight_l'], minimum)
 
-
-
     def fill_edit(self):
         YN = (
             ('Tak', 'Tak'),
@@ -412,7 +408,6 @@ class CourseGroupForm(Form):
 
         self.fields['if_cg'].label = '1. Czy kurs jest częścią grupy kursów?'
 
-
         my_list = []
         weight_list = [("", ""), ("", ""), ("", "")]
         all_types = Course.objects.get_all_types_by_id(self.course_id.id)
@@ -427,7 +422,6 @@ class CourseGroupForm(Form):
                         weight_list[1] = (el.coursegroup.weight, el.coursegroup.minimum)
                     if el.type == "W":
                         weight_list[2] = (el.coursegroup.weight, el.coursegroup.minimum)
-
 
         self.fields['courses'] = MultipleChoiceField(widget=CheckboxSelectMultiple, choices=COURSES, required=False, initial=my_list)
         self.fields['courses'].label = '2. Zaznacz formy, w których odbywają się zajęcia w ramach grupy kursów:'

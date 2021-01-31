@@ -24,6 +24,7 @@ from register.views import register
 from course.views import *
 from avgGrade.views import *
 from goals.views import *
+from my_statistics.views import *
 
 
 register_converter(FloatUrlParameterConverter, 'float')
@@ -33,7 +34,7 @@ urlpatterns = [
     path('webpush/', include('webpush.urls')),
     path('admin/', admin.site.urls),
     path('register/', register, name="register"),
-    path('', main_view),
+    path('', main_view, name='main'),
     path('', include('django.contrib.auth.urls')),
     path('calendar/new', new_event_view, name='new'),
     path('calendar/edit/<str:pk>', edit_event_view, name='edit_event'),
@@ -41,10 +42,8 @@ urlpatterns = [
     path('calendar/course', new_course_view, name='new_course'),
     path('calendar/<str:shift>', calendar_view, name='calendar'),
     path('scheduler/<str:shift>', scheduler, name='scheduler'),
-    path('avgGrade/', avg_grade_view),
-    path('avgGrade', avg_grade_calc, name='avg_grade_calc'),
-    path('avgGrade/grade/<int:pk>/<float:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
-    path('avgGrade/ects/<int:pk>/<int:ects>/', avg_grade_view_edit_ects, name="AvgGradeEditEcts"),
+    path('avgGrade/', avg_grade_view, name='avg_grade_view'),
+    path('avgGrade/avg', avg_grade_calc, name='avg_grade_calc'),
     path('calendar_import', calendar_import, name='calendar_import'),
     path('course/<int:pk>', course_view, name='course'),
     path('temp/', temp, name='temp'),
@@ -60,6 +59,13 @@ urlpatterns = [
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
     path('goals/', goals, name="goals"),
     path('goals/new/', new_goal_view, name="new_goal"),
-    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal'),
+    path('goals/delete/<int:pk>', delete_goal, name='delete_goal'),
+    path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
+    path('course/edit_goal/<int:pk>/<int:cid>', edit_course_goal_view, name='edit_course_goal'),
+    path('course/delete/<int:pk>/<int:gid>', delete_course_goal, name='delete_course_goal'),
+    path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal'),
+    path('statistics/', statistics, name='statistics'),
+    path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
+    path('webpush/expired_event/<int:pk>', expired_event_view, name='expired_event'),
     path('tinymce/', include('tinymce.urls'))
 ]

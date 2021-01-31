@@ -79,6 +79,9 @@ class CourseManager(models.Manager):
             return result[0]
         return None
 
+    def get_course_by_name_and_type(self, name, c_type, client_id):
+        return self.filter(client_id=client_id, course_name=name, type=c_type)[0]
+
     def get_all_types_by_id(self, id):
         main_course = self.get_record_by_id(id)
         return list(self.filter(client_id=main_course.client_id, course_name=main_course.course_name))
@@ -356,6 +359,9 @@ class GoalsManager(models.Manager):
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
 
+    def delete_goal_by_id(self, goal_id):
+        self.filter(id=goal_id).delete()
+
 
 class FilesManager(models.Manager):
     """
@@ -396,6 +402,9 @@ class PredictionManager(models.Manager):
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
+    def get_record_by_event(self, course_id, start_date, pred_time):
+        return self.filter(course_id=course_id, start_date=start_date, pred_time=pred_time)[:1].get()
 
 
 class MarksManager(models.Manager):
