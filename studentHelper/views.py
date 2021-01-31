@@ -11,23 +11,18 @@ import threading
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from .tasks import check_if_expired
-
-
-from django.http.response import JsonResponse, HttpResponse
-from django.views.decorators.http import require_GET, require_POST
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
 from webpush import send_user_notification
-import json
 # Create your views here.
 
 
 @login_required(login_url='/login/')
 def main_view(request):
-    if check_if_expired(request.user.id):
-        payload = {"head": "Welcome!", "body": "Hello World",
-                "icon": "https://i.imgur.com/dRDxiCQ.png", "url": "https://www.example.com"}
+    # without celery
+    # id = check_if_expired(request.user.id)
+    id = check_if_expired.delay(request.user.id).get()
+    if id != -1:
+        payload = {"head": "Wydarzenia", "body": "Istnieją zakończone wydzrzenia! \n Kliknij aby uzupełnić",
+                "icon": "", "url": "expired_event/" + str(id)}
         send_user_notification(user=request.user, payload=payload, ttl=1000)
 
     events_today = Events.objects.filter(

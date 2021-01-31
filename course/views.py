@@ -12,6 +12,8 @@ from .files import *
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 
+from webpush import send_user_notification
+
 
 @login_required(login_url='/login')
 def course_view(request, pk):
@@ -161,7 +163,8 @@ def add_mark_view(request, pk):
         return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
 
     else:
-        # TODO informacja o istniejących zasadach zaliczenia
+        payload = {"head": "Błąd!", "body": "Aby dodać ocenę potrzebne są \n zasady zaliczenia!"}
+        send_user_notification(user=request.user, payload=payload, ttl=1000)
         return redirect('/course/' + str(pk), {"message": True})
 
 
@@ -267,7 +270,8 @@ def pass_rules_view(request, pk):
                       {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
 
     else:
-        # TODO informacja o nieistniejących zasadach
+        payload = {"head": "Błąd!", "body": "Zasady zaliczenia nie zostały jeszcze utworzone!"}
+        send_user_notification(user=request.user, payload=payload, ttl=1000)
         return redirect('/course/' + str(pk))
 
 
