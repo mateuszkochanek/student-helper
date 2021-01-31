@@ -108,24 +108,6 @@
                 <table>
                     <tr>
                         <td>
-                            <h3>Najbliższe zajęcia</h3>
-                        </td>
-                    </tr>
-                    {% for course in next_courses %}
-                    <tr>
-                        <td>
-                            {{ course.start_date }} <br>
-                            {{ course.end_date }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-
-            <div class="info_pane col-3">
-                <table>
-                    <tr>
-                        <td>
                             <h3>Oceny</h3>
                         </td>
                     </tr>
@@ -150,7 +132,7 @@
                 </table>
             </div>
 
-            <div class="info_pane col-4">
+            <div class="info_pane col-3">
                 <table>
                     <tr>
                         <td>
@@ -167,6 +149,45 @@
                     </tr>
                 </table>
             </div>
+
+            <div class="info_pane col-4">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Najbliższe zajęcia</h3>
+                        </td>
+                    </tr>
+                    {% for course in next_courses %}
+                    <tr>
+                        <td>
+                            {{ course.start_date }} <br>
+                            {{ course.end_date }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="info_pane col-5">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Najbliższe wydarzenia</h3>
+                        </td>
+                    </tr>
+                    {% for course in courseEvents %}
+                    <tr>
+                        <td>
+                            {{ course.description }} <br>
+                            {{ course.start_date }} <br>
+                            {{ course.end_date }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+
         </div>
 
     </div>

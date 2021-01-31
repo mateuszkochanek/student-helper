@@ -92,11 +92,38 @@ html, body
     background: white;
 }
 
+.divBoxPush
+{
+    width: 100%;
+    height: 100%;
+}
+
+.divBoxPush a
+{
+    text-decoration: none;
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divBoxPush a:visited {
+  text-decoration: none;
+}
+
+.divBoxPush a:hover
+{
+    background: #9bdcfa;
+}
+
 .divBox
 {
     width: 100%;
     height: 100%;
 }
+
 .divBox a
 {
     text-decoration: none;

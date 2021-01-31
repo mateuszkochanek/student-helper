@@ -1,5 +1,7 @@
 {% extends "base/base-template.html" %}
 {% block extension-styles %}
+    {% load webpush_notifications %}
+    {% webpush_header %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main_page.css' %}">
 {% endblock %}
@@ -88,7 +90,16 @@
         </div>
         </div>
 
+        <div class="popup" onclick="myFunction()">Powiadomienia
+            <span class="popuptext" id="myPopup">
+                <button id="webpush-subscribe-button" data-url="/webpush/save_information" onclick="myFunction()">Włącz powiadomienia</button>
+            </span>
+        </div>
     </div>
-
-
+<script type="text/javascript">
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+</script>
 {% endblock %}

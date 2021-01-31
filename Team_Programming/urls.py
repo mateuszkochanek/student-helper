@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, register_converter
 
-
 from studentHelper.views import *
 from my_calendar.views import *
 from studentHelper.models import Course
@@ -25,15 +24,17 @@ from register.views import register
 from course.views import *
 from avgGrade.views import *
 from goals.views import *
+from my_statistics.views import *
 
 
 register_converter(FloatUrlParameterConverter, 'float')
 
 
 urlpatterns = [
+    path('webpush/', include('webpush.urls')),
     path('admin/', admin.site.urls),
     path('register/', register, name="register"),
-    path('', main_view),
+    path('', main_view, name='main'),
     path('', include('django.contrib.auth.urls')),
     path('calendar/new', new_event_view, name='new'),
     path('calendar/edit/<str:pk>', edit_event_view, name='edit_event'),
@@ -58,6 +59,14 @@ urlpatterns = [
     path('new_pass_rules/<int:pk>', new_pass_rules, name='new_pass_rules'),
     path('file/add/<int:pk>', add_file_view, name='file_add'),
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
-    path('goals/', new_goal_view),
-    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal')
+    path('goals/', goals, name="goals"),
+    path('goals/new/', new_goal_view, name="new_goal"),
+    path('goals/delete/<int:pk>', delete_goal, name='delete_goal'),
+    path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
+    path('course/edit_goal/<int:pk>/<int:cid>', edit_course_goal_view, name='edit_course_goal'),
+    path('course/delete/<int:pk>/<int:gid>', delete_course_goal, name='delete_course_goal'),
+    path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal'),
+    path('statistics/', statistics, name='statistics'),
+    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal'),
+    path('webpush/expired_event/<int:pk>', expired_event_view, name='expired_event'),
 ]
