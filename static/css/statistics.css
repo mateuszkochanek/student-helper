@@ -1,0 +1,28 @@
+.statistics_container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+}
+
+.titlebar {
+    grid-column: 1 / 7;
+    grid-row: 1;
+    text-align: left;
+    font-size: 32px;
+    margin: 1%;
+    max-height: 32px;
+}
+
+.title {
+    color: #0099e6;
+    margin: 1%;
+}
+
+.line {
+    grid-column: 1/ 16;
+    grid-row: 2;
+    max-height: 2px;
+    width: 100%
+}
