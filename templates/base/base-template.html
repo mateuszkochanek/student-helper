@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     {% block default-styles %}
-    {% load webpush_notifications %}
-    {% webpush_header %}
+        {% load webpush_notifications %}
+        
         {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/base-template.css' %}">
     {% endblock %}
@@ -18,7 +17,6 @@
 <body class="bg">
     <div class="container">
         {% block foreground %}
-            {% webpush_button %}
             {% block header %} {% include 'base/header.html' %} {% endblock %}
             {% block top-bar %} {% include 'base/top-bar.html' %} {% endblock %}
             {% block sidebar %} {% include 'base/sidebar.html' %} {% endblock %}

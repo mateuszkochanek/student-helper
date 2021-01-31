@@ -7,4 +7,3 @@ from django.utils import timezone
 def check_if_expired(user_id):
     print(user_id)
     return True
-    
