@@ -360,6 +360,9 @@ class GoalsManager(models.Manager):
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
 
+    def delete_goal_by_id(self, goal_id):
+        self.filter(id=goal_id).delete()
+
 
 class FilesManager(models.Manager):
     """

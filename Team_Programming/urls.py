@@ -61,8 +61,10 @@ urlpatterns = [
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
     path('goals/', goals, name="goals"),
     path('goals/new/', new_goal_view, name="new_goal"),
+    path('goals/delete/<int:pk>', delete_goal, name='delete_goal'),
     path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
     path('course/edit_goal/<int:pk>/<int:cid>', edit_course_goal_view, name='edit_course_goal'),
+    path('course/delete/<int:pk>/<int:gid>', delete_course_goal, name='delete_course_goal'),
     path('goals/edit/<int:pk>', edit_goal_view, name='edit_goal'),
     path('statistics/', statistics, name='statistics')
 ]

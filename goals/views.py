@@ -92,3 +92,15 @@ def edit_course_goal_view(request, pk, cid):
     else:
         goal = GoalsForm(instance=old_version)
     return render(request, 'new_course_goal.html', {'goals_form': goal, 'course_id': pk})
+
+
+@login_required(login_url='/login/')
+def delete_goal(request, pk):
+    Goals.objects.delete_goal_by_id(pk)
+    return redirect('/goals/')
+
+
+@login_required(login_url='/login/')
+def delete_course_goal(request, pk, gid):
+    Goals.objects.delete_goal_by_id(gid)
+    return redirect('/course/'+str(pk))
