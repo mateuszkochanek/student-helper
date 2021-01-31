@@ -374,8 +374,12 @@ class FilesManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
-    def get_record_by_file_path(self, file_path):
-        return self.get(file_path=file_path)
+    def get_record_by_file_path(self, course, file_path, description):
+        return self.get(course_id=course, file_path=file_path, description=description)
+
+    def delete_by_course_id_and_description(self, course_id, description):
+        # TODO triggers?
+        self.filter(course_id=course_id, description=description).delete()
 
 
 class PredictionManager(models.Manager):

@@ -6,6 +6,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from studentHelper.models import *
 from studentHelper.managers import *
+from webpush import send_user_notification
+from urllib.parse import urljoin
 
 
 def get_diff(out_text):
@@ -24,7 +26,7 @@ def get_diff(out_text):
 
 class WebsiteMonitoring:
 
-    def __init__(self, url, request, course_id):
+    def __init__(self, url, request, course_id, teacher_id, course):
         self.request = request
         self.url = url
         self.course_id = course_id
@@ -36,6 +38,8 @@ class WebsiteMonitoring:
         self.new_page = ""
 
         self.pdf = []
+        self.teacher_id = teacher_id
+        self.course = course
 
     def monitoring(self):
         while True:
@@ -45,14 +49,13 @@ class WebsiteMonitoring:
         response = requests.get(self.url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
 
-        if self.first_run:
-            self.add_list(soup)
-        else:
-            for link in soup.select("a[href$='.pdf']"):
-                filename = link['href'].split('/')[-1]
-                if Files.objects.get_record_by_file_path(filename) is None:
-                    # push czy chcesz pobrac?
-                    pass
+        for link in soup.select("a[href$='.pdf']"):
+            url = urljoin(self.url, link['href'])
+            filename = link['href'].split('/')[-1]
+            if Files.objects.get_record_by_file_path(self.course, filename, self.teacher_id) is None:
+                self.send_push_pdf(url)
+                course = Course.objects.get_record_by_id(self.course_id)
+                Files.objects.add_record(course, filename, str(self.teacher_id))
 
         for script in soup(["script", "style"]):
             script.extract()
@@ -69,6 +72,7 @@ class WebsiteMonitoring:
                 out_text = "\n".join([ll.rstrip() for ll in '\n'.join(diff).splitlines() if ll.strip()])
                 msg = get_diff(out_text)
                 self.send_email(msg)
+                self.send_push()
                 self.old_page = self.new_page
                 self.prev_version = soup
         time.sleep(100)
@@ -83,8 +87,22 @@ class WebsiteMonitoring:
         recipient_list = [self.request.user.email, ]
         send_mail(subject, message, email_from, recipient_list)
 
-    def add_list(self, soup):
-        # dodanie pdf'ow do bazy
+    def add_list(self):
+        Files.objects.delete_by_course_id_and_description(self.course, str(self.teacher_id))
+        response = requests.get(self.url, headers=self.headers)
+        soup = BeautifulSoup(response.text, "html.parser")
         for link in soup.select("a[href$='.pdf']"):
             filename = link['href'].split('/')[-1]
-            Files.objects.add_record(self.course_id, filename, 'pdf')
+            course = Course.objects.get_record_by_id(self.course_id)
+            Files.objects.add_record(course, filename, str(self.teacher_id))
+
+    def send_push(self):
+        payload = {"head": "Zmiany na stronie", "body": "Kliknij tutaj, żeby zobaczyć aktualną wersję "
+                                                        "strony. Szczegóły zmian zostały wysłane na Twój adres email",
+                                                        "icon": "https://i.imgur.com/dRDxiCQ.png", "url": self.url}
+        send_user_notification(user=self.request.user, payload=payload, ttl=1000)
+
+    def send_push_pdf(self, url):
+        payload = {"head": "Nowa lista", "body": "Kliknij tutaj, żeby obejrzeć nowo dodaną listę",
+                                                        "icon": "https://i.imgur.com/dRDxiCQ.png", "url": url}
+        send_user_notification(user=self.request.user, payload=payload, ttl=1000)

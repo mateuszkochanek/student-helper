@@ -9,11 +9,13 @@ from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
+from .websites import *
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
+from webpush import send_user_notification
 
 
 @login_required(login_url='/login')
@@ -71,7 +73,9 @@ def configure_webpage_view(request, pk):
             t = teacher_form.save(commit=False)
             course.teacher_id.webpage = t.webpage
             course.teacher_id.save()
-            print(course.teacher_id.webpage)
+            teacher_id = course.teacher_id.id
+            web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher_id, course)
+            web.add_list()
             return redirect('/course/' + str(pk))
     else:
         teacher_form = WebPageForm(request.POST)
