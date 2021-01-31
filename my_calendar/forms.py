@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from studentHelper.models import Events, Description, Course, Teacher, CourseEvents
+from studentHelper.models import Events, Description, Course, Teacher, CourseEvents, Prediction
 from bootstrap_datepicker_plus import DateTimePickerInput
-from django.forms import ModelForm, TimeField, DateInput
+from django.forms import Form, ModelForm, TimeField, DateInput, FloatField
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.forms.widgets import HiddenInput
@@ -201,10 +201,30 @@ class TeacherForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         webpage = cleaned_data.get("webpage")
-        print("Tyf", webpage)
         if webpage is not None and webpage is not "":
             valid=validators.url(webpage)
             if not valid:
                 raise ValidationError(
                     "Błędny adres strony"
                 )
+
+class PredictionForm(Form):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["actual_time"] = FloatField()
+        self.fields["actual_time"].label = "Czas wykonania (w minutach)"
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = "To pole jest wymagane."
+
+    def save(self, prediction):
+        prediction.actual_time = self.cleaned_data['actual_time'] * 60
+        prediction.save()
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        time = cleaned_data['actual_time']
+        self.cleaned_data['actual_time'] = cleaned_data['actual_time']
+        if time < 0:
+            raise ValidationError('Czas nie może być ujemny!')

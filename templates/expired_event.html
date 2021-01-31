@@ -1,12 +1,31 @@
-{% extends "base/base-template.html" %}
+{% load crispy_forms_tags %}
 {% block extension-styles %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main_page.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="">
-            Hejcia
+<div class="grid">
+    <div class="titlebar">
+        <div class=title>
+            Zakończone wydarzenie
+        </div>
     </div>
-
+    <div class="subtitlebar">
+        {{ event.course_id.course_name }}
+        <br>
+        {{ event.description }}
+    </div>
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <form method="post">
+            {% csrf_token %}
+            {{ pred_form|crispy }}
+            <button type="submit" class=button>Zatwierdź</button>
+            <a href="/" class="button">Wróć</a>
+        </form>
+    </div>
+</div>
 {% endblock %}
