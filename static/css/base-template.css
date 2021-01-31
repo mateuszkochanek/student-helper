@@ -1,5 +1,4 @@
-html
-{
+html {
     overflow: hidden;
 }
 
@@ -16,6 +15,15 @@ html, body
     height: 100%;
 
 }
+
+.text-custom-1 {
+    color: #5b80b2;
+}
+
+.bg-custom-1 {
+    background-color: rgba(150, 220, 250, 0.7);
+}
+
 
 ._container {
     width: 100%;
