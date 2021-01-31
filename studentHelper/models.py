@@ -50,7 +50,6 @@ class Course(models.Model):
     objects = CourseManager()
 
 
-
 class Components(models.Model):
 
     FORMS = [
@@ -68,13 +67,14 @@ class Components(models.Model):
     ]
 
     course_id = models.ForeignKey(
-    Course,
-    on_delete = models.CASCADE,
+        Course,
+        on_delete=models.CASCADE,
     )
 
     form = models.CharField(max_length=5, choices=FORMS)
     type = models.CharField(max_length=5, choices=TYPES)
     objects = ComponentsManager()
+
 
 class Thresholds(models.Model):
 
