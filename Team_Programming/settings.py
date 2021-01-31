@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'webpush',
     'goals',
     'gdstorage',
+    'tinymce',
 ]
 
 BOOTSTRAP4 = {

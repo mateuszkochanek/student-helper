@@ -36,6 +36,11 @@ def course_view(request, pk):
 
     course = Course.objects.get_record_by_id(pk)
 
+    teacher = course.teacher_id
+    if teacher.webpage != "":
+        web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher.id, course)
+        web.check_changes()
+
     context = {
         'course': course,
         'lecture': Course.objects.get_subject_of_type_and_name(course, 'W'),
@@ -72,6 +77,12 @@ def configure_webpage_view(request, pk):
         if teacher_form.is_valid():
             t = teacher_form.save(commit=False)
             course.teacher_id.webpage = t.webpage
+            course.teacher_id.save()
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, '
+                                     'like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            r = requests.get(course.teacher_id.webpage, headers=headers)
+            html = r.text
+            course.teacher_id.html = html
             course.teacher_id.save()
             teacher_id = course.teacher_id.id
             web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher_id, course)

@@ -28,7 +28,6 @@ class TeacherManager(models.Manager):
         return self.get(pk=id)
 
     def get_record_by_name_surname_title(self, name, surname, title):
-
         return self.get(name=name, surname=surname, title=title)
 
 

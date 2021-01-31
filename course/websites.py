@@ -8,6 +8,7 @@ from studentHelper.models import *
 from studentHelper.managers import *
 from webpush import send_user_notification
 from urllib.parse import urljoin
+import threading
 
 
 def get_diff(out_text):
@@ -24,15 +25,18 @@ def get_diff(out_text):
     return msg
 
 
-class WebsiteMonitoring:
+class WebsiteMonitoring(threading.Thread):
 
     def __init__(self, url, request, course_id, teacher_id, course):
+
+        threading.Thread.__init__(self)
+
         self.request = request
         self.url = url
         self.course_id = course_id
         self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        self.prev_version = ""
+        self.prev_version = Teacher.objects.get_record_by_id(teacher_id).html
         self.first_run = True
         self.old_page = ""
         self.new_page = ""
@@ -41,13 +45,12 @@ class WebsiteMonitoring:
         self.teacher_id = teacher_id
         self.course = course
 
-    def monitoring(self):
-        while True:
-            self.check_changes()
-
     def check_changes(self):
         response = requests.get(self.url, headers=self.headers)
-        soup = BeautifulSoup(response.text, "html.parser")
+        r = response.text
+        self.course.teacher_id.html = r
+        self.course.teacher_id.save()
+        soup = BeautifulSoup(r, "html.parser")
 
         for link in soup.select("a[href$='.pdf']"):
             url = urljoin(self.url, link['href'])
@@ -60,22 +63,21 @@ class WebsiteMonitoring:
         for script in soup(["script", "style"]):
             script.extract()
         soup = soup.get_text()
+
+        self.prev_version = BeautifulSoup(self.prev_version, "html.parser")
+        for script in self.prev_version(["script", "style"]):
+            script.extract()
+        self.prev_version = self.prev_version.get_text()
+
         if self.prev_version != soup:
-            if self.first_run:
-                self.prev_version = soup
-                self.first_run = False
-            else:
-                self.old_page = self.prev_version.splitlines()
-                self.new_page = soup.splitlines()
-                d = difflib.Differ()
-                diff = d.compare(self.old_page, self.new_page)
-                out_text = "\n".join([ll.rstrip() for ll in '\n'.join(diff).splitlines() if ll.strip()])
-                msg = get_diff(out_text)
-                self.send_email(msg)
-                self.send_push()
-                self.old_page = self.new_page
-                self.prev_version = soup
-        time.sleep(100)
+            self.old_page = self.prev_version.splitlines()
+            self.new_page = soup.splitlines()
+            d = difflib.Differ()
+            diff = d.compare(self.old_page, self.new_page)
+            out_text = "\n".join([ll.rstrip() for ll in '\n'.join(diff).splitlines() if ll.strip()])
+            msg = get_diff(out_text)
+            self.send_email(msg)
+            self.send_push()
 
     def send_email(self, msg):
         subject = 'Zmiany na stronie prowadzącego'
