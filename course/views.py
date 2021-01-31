@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 
-from studentHelper.models import Course, Teacher, Marks, Goals, Components, Thresholds, Modyfication, Events
+from studentHelper.models import Course, Teacher, Marks, Goals, Components, Thresholds, Modyfication, Events, CourseEvents
 from course.forms import WebPageForm, ThresholdsForm
 from studentHelper.views import main_view
 from my_calendar.forms import CourseForm, TeacherForm
@@ -38,7 +38,8 @@ def course_view(request, pk):
         'laboratory': Course.objects.get_subject_of_type_and_name(course, 'L'),
         'marks': Marks.objects.getMarks(pk),
         'goals': Goals.objects.get_records_by_course_id(pk),
-        'next_courses': Events.objects.get_next_courses(request.user.id, course.course_name, 3)
+        'next_courses': Events.objects.get_next_courses(request.user.id, course.course_name, 3),
+        'courseEvents': CourseEvents.objects.get_next_events(course.id, 3)
     }
 
     # TODO czy da się inaczej?

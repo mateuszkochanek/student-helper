@@ -305,10 +305,9 @@ class CourseEventsManager(models.Manager):
 
         return q1.union(q2, q3)
 
-    def get_next_courses(self, course_id, course_name, number):
+    def get_next_events(self, course_id, number):
         return (self.filter(
             course_id=course_id,
-            description__description=course_name,
             end_date__gte=timezone.now()
         )).order_by('start_date')[:number]
 

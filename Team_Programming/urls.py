@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, register_converter
 
-
 from studentHelper.views import *
 from my_calendar.views import *
 from studentHelper.models import Course
@@ -31,6 +30,7 @@ register_converter(FloatUrlParameterConverter, 'float')
 
 
 urlpatterns = [
+    path('webpush/', include('webpush.urls')),
     path('admin/', admin.site.urls),
     path('register/', register, name="register"),
     path('', main_view),
