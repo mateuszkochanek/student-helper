@@ -1,0 +1,21 @@
+{% extends "base/base-template.html" %}
+
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/statistics.css' %}">
+
+{% endblock %}
+
+{% block content %}
+    <div class="statistics_container">
+        <div class="titlebar">
+            <div class="title">
+                Statystyki
+            </div>
+        </div>
+
+        <div class=line>
+            <hr style="color:CornflowerBlue">
+        </div>
+    </div>
+{% endblock %}
