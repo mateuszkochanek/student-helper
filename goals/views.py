@@ -7,6 +7,7 @@ from .forms import *
 def goals(request):
     goals_not_achieved = []
     goals_achieved = []
+    goals_expired = []
 
     for course in Course.objects.get_records_by_client_id(request.user.id):
         for goal in Goals.objects.get_records_by_course_id(course.pk):
@@ -14,10 +15,13 @@ def goals(request):
                 goals_not_achieved.append(goal)
             elif goal.achieved == 'A':
                 goals_achieved.append(goal)
+            elif goal.achieved == 'E':
+                goals_expired.append(goal)
 
     context = {
         'goals_not_achieved': goals_not_achieved,
-        'goals_achieved': goals_achieved
+        'goals_achieved': goals_achieved,
+        'goals_expired': goals_expired
     }
 
     return render(request, "goals.html", context)

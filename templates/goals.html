@@ -10,6 +10,7 @@
 
     <input type="hidden" id="goals_achieved_amount" value="{{ goals_achieved | length }}">
     <input type="hidden" id="goals_not_achieved_amount" value="{{ goals_not_achieved | length }}">
+    <input type="hidden" id="goals_expired_amount" value="{{ goals_expired | length }}">
 {% endblock %}
 
 {% block content %}
@@ -21,9 +22,7 @@
         </div>
 
         <div class="buttonbar">
-            <a href="{% url 'new_goal' %}" class=button>
-                Dodaj cel
-            </a>
+            <a href="{% url 'new_goal' %}" class=button>Dodaj cel</a>
         </div>
 
         <div class=line>
@@ -31,7 +30,7 @@
         </div>
 
         <div class="info_panels">
-            <div class="info_pane col-1">
+            <div class="info_pane my_col-1">
                 <table>
                     <tr>
                         <td>
@@ -49,7 +48,7 @@
                 </table>
             </div>
 
-            <div class="info_pane col-2">
+            <div class="info_pane my_col-2">
                 <table>
                     <tr>
                         <td>
@@ -67,7 +66,25 @@
                 </table>
             </div>
 
-            <div class="col-3">
+            <div class="info_pane my_col-3">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Przedawnione</h3>
+                        </td>
+                    </tr>
+                    {% for goal in goals_expired %}
+                    <tr>
+                        <td>
+                            {{ goal.course_id.course_name }} <br>
+                            {{ goal.description }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="my_col-4" id="chart_div">
                 <canvas id="mainChart"></canvas>
             </div>
         </div>
