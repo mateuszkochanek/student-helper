@@ -308,10 +308,9 @@ class CourseEventsManager(models.Manager):
 
         return q1.union(q2, q3)
 
-    def get_next_courses(self, course_id, course_name, number):
+    def get_next_events(self, course_id, number):
         return (self.filter(
             course_id=course_id,
-            description__description=course_name,
             end_date__gte=timezone.now()
         )).order_by('start_date')[:number]
 
@@ -377,6 +376,9 @@ class FilesManager(models.Manager):
 
     def get_record_by_id(self, id):
         return self.get(pk=id)
+
+    def get_record_by_file_path(self, file_path):
+        return self.get(file_path=file_path)
 
 
 class PredictionManager(models.Manager):

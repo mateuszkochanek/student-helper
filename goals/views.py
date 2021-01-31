@@ -4,6 +4,26 @@ from .forms import *
 
 
 @login_required(login_url='/login/')
+def goals(request):
+    goals_not_achieved = []
+    goals_achieved = []
+
+    for course in Course.objects.get_records_by_client_id(request.user.id):
+        for goal in Goals.objects.get_records_by_course_id(course.pk):
+            if goal.achieved == 'N':
+                goals_not_achieved.append(goal)
+            elif goal.achieved == 'A':
+                goals_achieved.append(goal)
+
+    context = {
+        'goals_not_achieved': goals_not_achieved,
+        'goals_achieved': goals_achieved
+    }
+
+    return render(request, "goals.html", context)
+
+
+@login_required(login_url='/login/')
 def new_goal_view(request):
     if request.method == 'POST':
         course = CourseForm(request.POST, client=request.user)

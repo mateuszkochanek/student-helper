@@ -194,8 +194,8 @@ class Prediction(models.Model):
     )
 
     start_date = models.DateField(default=timezone.now)
-    pred_time = models.TimeField()
-    actual_time = models.TimeField()
+    pred_time = models.IntegerField()
+    actual_time = models.IntegerField(blank=True)
     objects = PredictionManager()
 
 

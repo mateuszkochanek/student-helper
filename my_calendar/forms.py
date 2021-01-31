@@ -2,10 +2,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from studentHelper.models import Events, Description, Course, Teacher, CourseEvents
 from bootstrap_datepicker_plus import DateTimePickerInput
-from django.forms import ModelForm
+from django.forms import ModelForm, TimeField, DateInput
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.forms.widgets import HiddenInput
+from django.contrib.admin import widgets
 from datetime import timedelta
 import validators
 

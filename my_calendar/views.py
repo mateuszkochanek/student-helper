@@ -3,7 +3,8 @@ from .UploadCalendarEvent import UploadCalendarEvent
 from .forms import *
 from .calendarImport import CalendarImport
 from django.contrib.auth.decorators import login_required
-from studentHelper.models import Events, Description, Course, CourseEvents
+from studentHelper.models import Events, Description, Course, CourseEvents, Prediction
+
 
 
 @login_required(login_url='/login/')
@@ -41,6 +42,8 @@ def new_course_event_view(request, pk):
         if event.is_valid():
             e = event.save(commit=False)
             e.course_id = Course.objects.get_record_by_id(pk)
+            delta = e.end_date - e.start_date
+            Prediction.objects.add_record(e.course_id, e.start_date, delta.total_seconds(), -1)
             e.save()
             return redirect('/calendar/main')
     else:

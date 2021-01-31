@@ -1,11 +1,14 @@
 {% extends "base/base-template.html" %}
 {% block extension-styles %}
+    {% load webpush_notifications %}
+    {% webpush_header %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main_page.css' %}">
 {% endblock %}
 
 {% block content %}
     <div class="main_page">
+        {% webpush_button %}
         <div class="info_pane col-1 row-1">
             <table>
                 <tr>
