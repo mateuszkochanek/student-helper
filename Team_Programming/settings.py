@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'bootstrap_datepicker_plus',
-    'django_celery_beat',
     'django_celery_results',
     'webpush',
     'goals',
