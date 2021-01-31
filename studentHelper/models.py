@@ -127,9 +127,9 @@ class Modyfication(models.Model):
 class CourseGroup(models.Model):
 
     course_id = models.OneToOneField(
-    Course,
-    on_delete = models.CASCADE,
-    primary_key=True,
+        Course,
+        on_delete = models.CASCADE,
+        primary_key=True,
     )
 
     weight = models.FloatField()
@@ -140,12 +140,18 @@ class CourseGroup(models.Model):
 class Goals(models.Model):
 
     TYPES = [
-    ("A", "aktywność"),
-    ("M", "ocena"),
-    ("O", "inne"),
+        ("A", "aktywność"),
+        ("M", "ocena"),
+        ("O", "inne"),
     ]
 
-    # pk generated automaticly
+    STATES = [
+        ('A', 'osiągnięty'),
+        ('E', 'przedawniony'),
+        ('N', 'nieosiągnięty'),
+    ]
+
+    # pk generated automatically
 
     # foreign keys
     course_id = models.ForeignKey(
@@ -155,10 +161,13 @@ class Goals(models.Model):
 
     # columns
 
-    end_date = models.DateField()
+    end_date = models.DateTimeField()
+    achieved = models.CharField(max_length=1, choices=STATES)
     type = models.CharField(max_length=1, choices=TYPES)
+    value = models.FloatField()
     description = models.CharField(max_length=128)
     objects = GoalsManager()
+
 
 class Files(models.Model):
 

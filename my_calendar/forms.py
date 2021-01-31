@@ -10,8 +10,6 @@ from django.contrib.admin import widgets
 from datetime import timedelta
 import validators
 
-
-
 # pip install django-bootstrap-datepicker-plus
 # pip install django-bootstrap4
 

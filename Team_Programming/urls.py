@@ -23,6 +23,7 @@ from studentHelper.converts import FloatUrlParameterConverter
 from register.views import register
 from course.views import *
 from avgGrade.views import *
+from goals.views import *
 
 
 register_converter(FloatUrlParameterConverter, 'float')
@@ -55,5 +56,9 @@ urlpatterns = [
     path('mark/edit/<int:pk>', edit_mark_view, name='mark_edit'),
     path('temp/', temp, name='temp'),
     path('new_pass_rules/<int:pk>', new_pass_rules, name='new_pass_rules'),
+    path('file/add/<int:pk>', add_file_view, name='file_add'),
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
+    path('goals/', goals, name="goals"),
+    path('goals/new/', new_goal_view, name="new_goal"),
+    path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal')
 ]

@@ -89,8 +89,6 @@ class CourseManager(models.Manager):
         self.filter(id=id).delete()
 
 
-
-
 class ComponentsManager(models.Manager):
     """
         Model: Components
@@ -201,8 +199,6 @@ class CourseGroupManager(models.Manager):
         self.filter(course_id=id).delete()
 
 
-
-
 class EventsManager(models.Manager):
     """
         Model: Events
@@ -260,6 +256,7 @@ class EventsManager(models.Manager):
     def delete_event_by_id(self, id):
         # TODO triggers?
         self.filter(id=id).delete()
+
 
 class CourseEventsManager(models.Manager):
     """
