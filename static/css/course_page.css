@@ -60,7 +60,7 @@ nav .navbar-nav li a{
     grid-column: 1/ 16;
     grid-row: 2;
     max-height: 2px;
-    width: 100%
+    width: 100%;
 }
 
 .button_courses_bar {
