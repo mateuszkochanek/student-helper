@@ -58,6 +58,7 @@ urlpatterns = [
     path('new_pass_rules/<int:pk>', new_pass_rules, name='new_pass_rules'),
     path('file/add/<int:pk>', add_file_view, name='file_add'),
     path('course/<int:pk>/events', new_course_event_view, name='course_event'),
-    path('goals/', new_goal_view),
+    path('goals/', goals, name="goals"),
+    path('goals/new/', new_goal_view, name="new_goal"),
     path('course/new_goal/<int:pk>', new_course_goal, name='new_course_goal')
 ]

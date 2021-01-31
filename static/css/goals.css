@@ -1,0 +1,88 @@
+.goals_container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+}
+
+.titlebar {
+    grid-column: 1 / 7;
+    grid-row: 1;
+    text-align: left;
+    font-size: 32px;
+    margin: 1%;
+    max-height: 32px;
+}
+
+.title {
+    color: #0099e6;
+    margin: 1%;
+}
+
+.buttonbar {
+    grid-column: 4 / 16;
+    grid-row: 1;
+    text-align: right;
+    margin: 1%;
+    max-height: 24px;
+}
+
+.button {
+     display: inline-block;
+     padding: 10px 20px;
+     font-size: 16px;
+     cursor: pointer;
+     text-align: center;
+     text-decoration: none;
+     outline: none;
+     color: #0077b3;
+     background-color: #66ccff;
+     border: none;
+     border-radius: 15px;
+}
+
+.line {
+    grid-column: 1/ 16;
+    grid-row: 2;
+    max-height: 2px;
+    width: 100%
+}
+
+.info_panels {
+    grid-column: 1 / 16;
+    grid-row: 3 / 15;
+    margin: 1%;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+}
+
+.info_pane {
+    overflow: auto;
+    padding: 10px 10px;
+    border-radius: 25px;
+    background: #9bdcfa;
+}
+
+
+.info_pane table {
+    color: #5b80b2;
+    width: 100%;
+    text-align:left;
+    font-size: 18px;
+}
+
+.info_pane table h3 {
+    text-align: center;
+}
+
+.info_pane table td {
+    border-bottom: 1px solid white;
+    padding: 5px;
+}
+
+.col-1 { grid-column: 1 / 4; }
+.col-2 { grid-column: 4 / 7; }
+.col-3 { grid-column: 7 / 11; }
