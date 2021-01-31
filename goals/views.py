@@ -46,10 +46,10 @@ def new_goal_view(request):
 @login_required(login_url='/login/')
 def edit_goal_view(request, pk):
     old_version = Goals.objects.get_record_by_id(pk)
-    c = Course.objects.get_record_by_id(old_version.course_id)
+    c = Course.objects.get_record_by_id(old_version.course_id.pk)
     if request.method == 'POST':
-        goal = GoalsForm(request.POST, instance=old_version, client=request.user)
-        course = CourseForm(request.POST)
+        goal = GoalsForm(request.POST, instance=old_version)
+        course = CourseForm(request.POST, client=request.user)
         if course.is_valid() and goal.is_valid():
             g = goal.save(commit=False)
             c = course.cleaned_data['course']
@@ -58,8 +58,8 @@ def edit_goal_view(request, pk):
             g.save()
             return redirect('/goals/')
     else:
-        goal = GoalsForm(instance=old_version, client=request.user)
-        course = CourseForm(initial={'course': c.course_name+' '+c.type})
+        goal = GoalsForm(instance=old_version)
+        course = CourseForm(initial={'course': c.course_name+' '+c.type}, client=request.user)
     return render(request, "new_goal.html", {"goals_form": goal, "course_form": course})
 
 
