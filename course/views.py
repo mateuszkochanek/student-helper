@@ -9,11 +9,13 @@ from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
+from .websites import *
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
+from webpush import send_user_notification
 
 from webpush import send_user_notification
 
@@ -35,6 +37,11 @@ def course_view(request, pk):
     }
 
     course = Course.objects.get_record_by_id(pk)
+
+    teacher = course.teacher_id
+    if teacher.webpage != "":
+        web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher.id, course)
+        web.check_changes()
 
     context = {
         'course': course,
@@ -73,7 +80,15 @@ def configure_webpage_view(request, pk):
             t = teacher_form.save(commit=False)
             course.teacher_id.webpage = t.webpage
             course.teacher_id.save()
-            print(course.teacher_id.webpage)
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, '
+                                     'like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            r = requests.get(course.teacher_id.webpage, headers=headers)
+            html = r.text
+            course.teacher_id.html = html
+            course.teacher_id.save()
+            teacher_id = course.teacher_id.id
+            web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher_id, course)
+            web.add_list()
             return redirect('/course/' + str(pk))
     else:
         teacher_form = WebPageForm(request.POST)

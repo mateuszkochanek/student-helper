@@ -67,4 +67,5 @@ urlpatterns = [
     path('statistics/', statistics, name='statistics'),
     path('course/new_goal/<int:pk>', new_course_goal_view, name='new_course_goal'),
     path('webpush/expired_event/<int:pk>', expired_event_view, name='expired_event'),
+    path('tinymce/', include('tinymce.urls'))
 ]

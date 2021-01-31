@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'goals',
     'my_statistics',
     'gdstorage',
+    'tinymce',
 ]
 
 BOOTSTRAP4 = {
