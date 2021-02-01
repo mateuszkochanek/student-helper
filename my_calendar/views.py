@@ -5,6 +5,7 @@ from .calendarImport import CalendarImport
 from .tasks import calculate_time
 from django.contrib.auth.decorators import login_required
 from studentHelper.models import Events, Description, Course, CourseEvents, Prediction
+import math import ceil
 
 
 
@@ -62,7 +63,7 @@ def new_course_event_description_view(request, pk):
         description = PredTimeForm(request.POST)
         if description.is_valid():
             desc = description.save()
-            time = round(calculate_time(float(pk), desc), 2)
+            time = int(ceil(calculate_time(pk, desc)))
             return redirect("/course/"+str(pk)+"/events/"+desc+"/"+str(time))
     else:
         description = PredTimeForm()
