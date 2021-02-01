@@ -17,7 +17,7 @@ html, body
 }
 
 .text-custom-1 {
-    color: #5b80b2;
+    color: #5b80b2!important;
 }
 
 .bg-custom-1 {
@@ -35,7 +35,7 @@ html, body
 }
 
 .bg {
-    background: #c7c7c7;
+    background: bisque;
 }
 
 .header {

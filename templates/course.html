@@ -62,17 +62,17 @@
             <ul class="nav nav-pills">
                 <li class="nav-item button m-1">
                     {% if lecture %}
-                        <a href="{% url 'course' lecture.id %}" class="nav-link">Wykład</a>
+                        <a href="{% url 'course' lecture.id %}" class="nav-link text-custom-1">Wykład</a>
                     {% endif %}
                 </li>
                 <li class="nav-item button m-1">
                     {% if tutorial %}
-                        <a href="{% url 'course' tutorial.id %}" class="nav-link">Ćwiczenia</a>
+                        <a href="{% url 'course' tutorial.id %}" class="nav-link text-custom-1">Ćwiczenia</a>
                     {% endif %}
                 </li>
                 <li class="nav-item button m-1">
                     {% if laboratory %}
-                        <a href="{% url 'course' laboratory.id %}" class="nav-link">Labolatoria</a>
+                        <a href="{% url 'course' laboratory.id %}" class="nav-link text-custom-1">Labolatoria</a>
                     {% endif %}
                 </li>
             </ul>
@@ -96,14 +96,14 @@
                         <tr>
                             <td>
                                 <ul class="nav nav-pills">
-                                    <li class="nav-item button m-1">
-                                            <a href="{{ course.teacher_id.webpage }}" class="nav-link">Strona Prowadzącego</a>
+                                    <li class="nav-item button m-1 w-100">
+                                            <a href="{{ course.teacher_id.webpage }}" class="nav-link text-custom-1">Strona Prowadzącego</a>
                                     </li>
-                                    <li class="nav-item button m-1">
-                                            <a href="{% url 'pass_rules' course.id %}" class="nav-link">Zasady Zaliczenia</a>
+                                    <li class="nav-item button m-1 w-100">
+                                            <a href="{% url 'pass_rules' course.id %}" class="nav-link text-custom-1">Zasady Zaliczenia</a>
                                     </li>
-                                    <li class="nav-item button m-1">
-                                            <a href="{% url 'show_files' course.id %}" class="nav-link">Zarządaj plikami</a>
+                                    <li class="nav-item button m-1 w-100">
+                                            <a href="{% url 'show_files' course.id %}" class="nav-link text-custom-1">Zarządaj plikami</a>
                                     </li>
                                 </ul>
                             </td>
