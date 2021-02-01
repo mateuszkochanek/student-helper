@@ -226,7 +226,6 @@ class PredTimeForm(Form):
         super().__init__(*args, **kwargs)
 
         TYPES = [
-        ("ACTIV", "aktywność"),
         ("EXAM", "egzamin"),
         ("QUIZ", "kartkówka"),
         ("TEST", "kolokwium"),

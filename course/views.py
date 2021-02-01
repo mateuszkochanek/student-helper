@@ -22,6 +22,7 @@ from webpush import send_user_notification
 
 from django.core.files.storage import FileSystemStorage
 import pathlib
+from gi.repository import GLib
 
 
 
@@ -146,6 +147,7 @@ def delete_file_view(request, pk, folder, file):
 @login_required(login_url='/login')
 def download_file_view(request, pk, folder, file):
     path = ''
+    gds = GoogleDriveStorage()
     if os.name == 'nt':
         import winreg
         sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
@@ -153,14 +155,15 @@ def download_file_view(request, pk, folder, file):
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
             location = winreg.QueryValueEx(key, downloads_guid)[0]
         path = location
-        path += '\\' + file_name
+        path += '/' + folder + '/' + file
     else:
         path = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
-        path += '/' + folder + '/' + file
+        path += '/' + file
 
-    print(gds.open(u'/2/22/inne/script.sh', path))
+    google_url = str(request.user.id) + "/" + str(pk) + "/" + folder + "/" + file
+    gds.open(google_url, path)
 
-    wrapper = FileWrapper(open(file_path, 'rb'))
+    wrapper = FileWrapper(open(path, 'rb'))
     response = HttpResponse(wrapper, content_type='application/force-download')
     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(path)
     return response
