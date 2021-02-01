@@ -21,8 +21,7 @@
         <div class="buttonbar">
             <a href="{% url 'statisticsDays' %}" class=button>Koniec semestru</a>
             <a href="{% url 'statisticsTimeSpentOnCourses' %}" class=button>Czas poświęcony na przedmiot</a>
-            <a href="{% url 'statisticsRatios' %}" class=button>Czas poświęcony na grupę kursów</a>
-            <a href="{% url 'statisticsByForm' %}" class=button>Przewidywany czas na naukę</a>
+            <a href="{% url 'statisticsRatios' %}" class=button>Predykcja</a>
         </div>
 
         <div class=line>
@@ -52,12 +51,6 @@
        <script>
             window.onload = function () {
                 createRatiosChart({{ courseNames| safe }}, {{ ratios | safe }});
-            }
-        </script>
-    {% elif forms %}
-       <script>
-            window.onload = function () {
-                createFormsChart({{ forms| safe }}, {{ times | safe }});
             }
         </script>
     {% endif %}

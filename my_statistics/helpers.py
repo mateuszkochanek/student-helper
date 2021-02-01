@@ -48,17 +48,3 @@ def get_ratios_by_courses(client_id):
             course_names.append(course.course_name)
     return course_names, ratios
 
-
-def get_times_by_course_and_form(course_id):
-    components = Components.objects.get_records_by_course_id(course_id)
-    forms = []
-    times = []
-    for c in components:
-        predictions = Prediction.objects.get_record_course_and_form(course_id, c.form)
-        time = 0
-        for p in predictions:
-            if p.actual_time != '':
-                time += p.actual_time
-        forms.append(c.form)
-        times.append(time)
-    return forms, times

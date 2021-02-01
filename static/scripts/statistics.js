@@ -76,32 +76,3 @@ function createRatiosChart(courseNames, ratios) {
     });
 }
 
-function createFormsChart(forms, times) {
-    let ctx = document.getElementById('chart').getContext('2d');
-    let chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            datasets: [{
-                data: ratios,
-                borderWidth: 1,
-                backgroundColor: '#5b80b2'
-            }],
-            labels: times
-        },
-        options: {
-            legend: {
-                display: false
-             },
-             tooltips: {
-                enabled: false
-             },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-}

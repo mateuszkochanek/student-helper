@@ -40,14 +40,3 @@ def statisticsRatios(request):
 
     return render(request, 'statistics.html', context)
 
-
-@login_required(login_url='/login/')
-def statisticsByForm(request):
-    forms, times = get_times_by_course_and_form(request.user.id)
-
-    context = {
-        'forms': forms,
-        'times': times
-    }
-
-    return render(request, 'statistics.html', context)
