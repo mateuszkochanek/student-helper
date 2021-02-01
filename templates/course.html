@@ -95,14 +95,10 @@
                                     <li class="nav-item button m-1">
                                             <a href="{% url 'pass_rules' course.id %}" class="nav-link">Zasady Zaliczenia</a>
                                     </li>
+                                    <li class="nav-item button m-1">
+                                            <a href="{% url 'show_files' course.id %}" class="nav-link">Zarządaj plikami</a>
+                                    </li>
                                 </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <form action="{% url 'show_files' course.id %}">
-                                    <input type="submit" value="Zarządaj plikami" />
-                                </form>
                             </td>
                         </tr>
                     </table>
@@ -180,7 +176,7 @@
                         {% for course in courseEvents %}
                         <tr>
                             <td>
-                                {{ course.description }} <br>
+                                {{ course.get_description_display }} <br>
                                 {{ course.start_date }} <br>
                                 {{ course.end_date }}
                             </td>

@@ -16,11 +16,16 @@
     </div>
     <div class="formbar">
         <form method="post" enctype="multipart/form-data">
+            <br>
             {% csrf_token %}
             {{ new_file|crispy }}
+            <br>
             <input type="file" name="myfile">
+            <br>
+            <br>
             <button type="submit" class=button>Zatwierdź</button>
             <a href="{% url 'course' pk%}" class="button">Wróć</a>
+            <br>
         </form>
     </div>
 </div>

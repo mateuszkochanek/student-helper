@@ -97,6 +97,7 @@ class CourseEventForm(ModelForm):
         self.fields["description"].label = "Opis"
         if not show_desc:
             self.fields["description"].initial = self.desc
+            self.fields["description"].widget = HiddenInput()
 
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
@@ -233,7 +234,7 @@ class PredTimeForm(Form):
         ]
 
         self.fields["choices"] = ChoiceField(choices=TYPES)
-        self.fields["choices"].label = "Opis"
+        self.fields["choices"].label = "Typ"
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
@@ -251,7 +252,7 @@ class PredictionForm(Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["actual_time"] = FloatField()
-        self.fields["actual_time"].label = "Czas wykonania (w minutach)"
+        self.fields["actual_time"].label = "Faktyczny czas wykonania (w minutach)"
         for key in self.fields:
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 

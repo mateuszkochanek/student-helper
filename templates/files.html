@@ -1,8 +1,13 @@
 {% load crispy_forms_tags %}
+{% load bootstrap4 %}
 {% block extension-styles %}
+    <meta charset="UTF-8">
+    {% bootstrap_javascript %}
+    {% bootstrap_css %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}">
 {% endblock %}
+
 
 {% block content %}
 <div class="grid">
@@ -11,21 +16,41 @@
             Zarządzaj plikami
         </div>
     </div>
+    <div class="buttonbar">
+        <a href="{% url 'course' pk %}" class="button">Wróć</a>
+    </div>
     <div class=line>
         <hr style="color:CornflowerBlue">
     </div>
-    <div class="formbar">
-        <table id="myTable">
+    <div class="main_list">
+        <div class="main_list_title">
+            <table id="myTable">
             <tr>
-                <th>Listy</th>
+                <td>
+                    Listy
+                    <br></br>
+                </td>
+                <td>
+                    Notatki
+                    <br></br>
+                </td>
+                <td>
+                    Brudnopis
+                    <br></br>
+                </td>
+                <td>
+                    Inne
+                    <br></br>
+                </td>
+            </tr>
+            <tr>
                 <td>
                     {% for file in d.listy %}
                         <div class=""></div>
-                        <a href="{% url 'edit_file' pk 'listy' file %}">{{ file }} </a>
+                            <a href="{% url 'edit_file' pk 'listy' file %}">{{ file }} </a>
                         <br></br>
                     {% endfor %}
                 </td>
-                <th>Notatki</th>
                 <td>
                     {% for file in d.notatki %}
                         <div class=""></div>
@@ -33,7 +58,6 @@
                         <br></br>
                     {% endfor %}
                 </td>
-                <th>Brudnopis</th>
                 <td>
                     {% for file in d.brudnopis %}
                         <div class=""></div>
@@ -41,7 +65,6 @@
                         <br></br>
                     {% endfor %}
                 </td>
-                <th>Inne</th>
                 <td>
                     {% for file in d.inne %}
                         <div class=""></div>
@@ -50,8 +73,7 @@
                     {% endfor %}
                 </td>
             </tr>
-        </table>
+        </div>
     </div>
-    <a href="{% url 'course' pk %}" class="button">Wróć</a>
 </div>
 {% endblock %}

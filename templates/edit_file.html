@@ -1,7 +1,8 @@
 {% load crispy_forms_tags %}
 {% block extension-styles %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/new_mark.css' %}">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -11,14 +12,26 @@
             Opcje związane z plikiem:
         </div>
     </div>
+    <div class="subtitlebar">
+        {{ file }}
+    </div>
     <div class=line>
         <hr style="color:CornflowerBlue">
     </div>
     <div class="formbar">
+        <br>
         <a href="{% url 'delete_file' pk folder file %}" class="button">Usuń</a>
         <a href="{% url 'download_file' pk folder file %}" class="button">Pobierz i wyświetl</a>
-        <a href="{% url 'show_files' pk%}" class="button">Wróć</a>
+        <!-- <a href="{% url 'show_files' pk%}" class="button">Wróć</a> -->
+        <button class="button" onclick="goBack()">Wróć</button>
+        <br>
+        <br>
 
     </div>
 </div>
+<script>
+    function goBack() {
+     window.history.back();
+    }
+</script>
 {% endblock %}
