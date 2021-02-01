@@ -10,12 +10,13 @@ from my_calendar.forms import CourseForm, TeacherForm
 from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
 from .websites import *
+from .finals_update import *
+from goals.helpers import update_goals
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
-from webpush import send_user_notification
 
 from webpush import send_user_notification
 
@@ -35,6 +36,9 @@ def course_view(request, pk):
         "TEST": "kolokwium",
         "LIST": "lista zadań",
     }
+
+    update_goals(request.user)
+    update_finals(request.user)
 
     course = Course.objects.get_record_by_id(pk)
 
@@ -174,6 +178,7 @@ def add_mark_view(request, pk):
                 m = mark.save(commit=False)
                 m.course_id = Course.objects.get_record_by_id(pk)
                 m.save()
+                calc_final(Course.objects.get_record_by_id(pk))
                 return redirect('/course/' + str(pk))
         else:
             mark = MarkForm(course_id=pk)
@@ -196,6 +201,7 @@ def edit_mark_view(request, pk):
 
         if mark.is_valid():
             mark.save()
+            calc_final(Course.objects.get_record_by_id(pk))
             return redirect('/course/' + str(course_id))
     else:
         # TODO info?

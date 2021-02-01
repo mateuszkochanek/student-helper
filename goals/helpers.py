@@ -25,7 +25,6 @@ def update_goals(user_id):
             if goal.end_date < timezone.now():
                 goal.achieved = 'E'
             if goal.type == 'M':
-                calc_final(course)
                 if course.final >= goal.value:
                     goal.achieved = 'A'
             elif goal.type == 'A':
@@ -37,29 +36,3 @@ def update_goals(user_id):
                 if act >= goal.value:
                     goal.achieved = 'A'
             goal.save()
-
-
-def calc_final(course):
-    marks = Marks.objects.getMarks(course)
-    final = 0
-    for m in marks:
-        final += m['weight'] * m['mark']
-
-    thresholds = Thresholds.objects.get_records_by_course_id(course)
-    thresholds = thresholds[0]
-    if final > thresholds.p_5_5:
-        final = 5.5
-    elif final > thresholds.p_5_0:
-        final = 5.0
-    elif final > thresholds.p_4_5:
-        final = 4.5
-    elif final > thresholds.p_4_0:
-        final = 4.0
-    elif final > thresholds.p_3_5:
-        final = 3.5
-    elif final > thresholds.p_3_0:
-        final = 3.0
-    else:
-        final = 2.0
-    course.final = final
-    course.save()
