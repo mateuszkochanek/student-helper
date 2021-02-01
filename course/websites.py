@@ -25,6 +25,17 @@ def get_diff(out_text):
     return msg
 
 
+def monitoring(request):
+    print("Start monitoring")
+    while True:
+        for course in Course.objects.all():
+            teacher = Teacher.objects.get_record_by_id(course.teacher_id.id)
+            if teacher.webpage != "":
+                print(teacher.webpage)
+                web = WebsiteMonitoring(teacher.webpage, request, course.id, teacher.id, course)
+                web.check_changes()
+
+
 class WebsiteMonitoring(threading.Thread):
 
     def __init__(self, url, request, course_id, teacher_id, course):
@@ -55,7 +66,7 @@ class WebsiteMonitoring(threading.Thread):
         for link in soup.select("a[href$='.pdf']"):
             url = urljoin(self.url, link['href'])
             filename = link['href'].split('/')[-1]
-            if Files.objects.get_record_by_file_path(self.course, filename, self.teacher_id) is None:
+            if not Files.objects.check_if_exists(self.course, filename, self.teacher_id):
                 self.send_push_pdf(url)
                 course = Course.objects.get_record_by_id(self.course_id)
                 Files.objects.add_record(course, filename, str(self.teacher_id))
@@ -84,7 +95,6 @@ class WebsiteMonitoring(threading.Thread):
         message = f'Cześć {self.request.user.username},\n Na stronie ' + self.url + 'zostały wykryte następujące ' \
                                                                                     'zmiany: \n '
         message += msg
-        print(message)
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [self.request.user.email, ]
         send_mail(subject, message, email_from, recipient_list)
