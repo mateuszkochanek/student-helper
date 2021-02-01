@@ -42,10 +42,8 @@ urlpatterns = [
     path('calendar/course', new_course_view, name='new_course'),
     path('calendar/<str:shift>', calendar_view, name='calendar'),
     path('scheduler/<str:shift>', scheduler, name='scheduler'),
-    path('avgGrade/', avg_grade_view),
-    path('avgGrade', avg_grade_calc, name='avg_grade_calc'),
-    path('avgGrade/grade/<int:pk>/<float:grade>/', avg_grade_view_edit_grade, name="AvgGradeEditGrade"),
-    path('avgGrade/ects/<int:pk>/<int:ects>/', avg_grade_view_edit_ects, name="AvgGradeEditEcts"),
+    path('avgGrade/', avg_grade_view, name='avg_grade_view'),
+    path('avgGrade/avg', avg_grade_calc, name='avg_grade_calc'),
     path('calendar_import', calendar_import, name='calendar_import'),
     path('course/<int:pk>', course_view, name='course'),
     path('temp/', temp, name='temp'),
@@ -73,4 +71,5 @@ urlpatterns = [
     path('course/files/show/<int:pk>/', show_files_view, name='show_files'),
     path('course/files/delete/<int:pk>/<str:folder>/<str:file>', delete_file_view, name='delete_file'),
     path('course/files/download/<int:pk>/<str:folder>/<str:file>', download_file_view, name='download_file'),
+    path('tinymce/', include('tinymce.urls')),
 ]

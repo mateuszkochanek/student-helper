@@ -1,33 +1,16 @@
-from studentHelper.models import Course, CourseGroup, Marks, Thresholds
+from studentHelper.models import Course, CourseGroup
+from course.finals_update import calc_final
 
 
 class Functions:
     def __init__(self):
         pass
 
-    def add_final_grade(self, coursePk, grade):
-        if self.__isGradeValid(grade):
-            c = Course.objects.get_record_by_id(coursePk)
-            c.final = grade
-            c.save()
-
-    def __isGradeValid(self, grade):
-        return grade in [0.0, 2.0, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5]
-
-    def add_ects(self, coursePk, ects):
-        if self.__isEctsValid(ects):
-            c = Course.objects.get_record_by_id(coursePk)
-            c.ECTS = ects
-            c.save()
-
-    def __isEctsValid(self, ects):
-        return ects in range(0, 31)
-
     def get_avg(self, user):
         courses = self.get_courses_and_group_courses(user)
         for c in courses:
-            self.calc_final(c)
             if self.__is_main_course_in_group(c):
+                calc_final(c)
                 self.calc_cg_final(c)
         marks_sum = 0
         ects_sum = 0
@@ -63,40 +46,12 @@ class Functions:
             return True
         return False
 
-    def calc_final(self, course):
-        marks = Marks.objects.getMarks(course)
-        final = 0
-        for m in marks:
-            final += m['weight'] * m['mark']
-
-        thresholds = Thresholds.objects.get_records_by_course_id(course)
-        if not thresholds:
-            return 0
-        thresholds = thresholds[0]
-        if final > thresholds.p_5_5:
-            final = 5.5
-        elif final > thresholds.p_5_0:
-            final = 5.0
-        elif final > thresholds.p_4_5:
-            final = 4.5
-        elif final > thresholds.p_4_0:
-            final = 4.0
-        elif final > thresholds.p_3_5:
-            final = 3.5
-        elif final > thresholds.p_3_0:
-            final = 3.0
-        else:
-            final = 2.0
-        course.final = final
-        course.save()
-
     def calc_cg_final(self, course):
         all_types = Course.objects.get_all_types_by_id(course.id)
         courses = []
         for c in all_types:
             if CourseGroup.objects.get_records_by_course_id(c):
                 courses.append(c)
-                self.calc_final(c)
         minimum = False
         final = 0
         for c in courses:

@@ -108,24 +108,19 @@ class GoogleDriveStorage:
         return File(fh2, name)
 
     def save(self, name, content, path):
-        # name = os.path.join(settings.GOOGLE_DRIVE_STORAGE_MEDIA_ROOT, name)
         splited = self.split_path(path)
         file_name = splited[-1]
         folder_path = os.path.sep.join(self.split_path(name)[:-1])
         folder_data = self.get_or_create_folder(folder_path)
         parent_id = None if folder_data is None else folder_data['id']
-        # Now we had created (or obtained) folder on GDrive
-        # Upload the file
         mime_type = mimetypes.guess_type(name)
         if mime_type[0] is None:
             mime_type = self.UNKNOWN_MIMETYPE
-        # media_body = MediaIoBaseUpload(content.file, mime_type, resumable=True, chunksize=1024 * 512)
         media_body = MediaFileUpload(path, mimetype=mime_type[0])
         body = {
             'name': file_name,
             'mimeType': mime_type[0]
         }
-        # Set the parent folder.
         if parent_id:
             body['parents'] = [parent_id]
         file_data = self.drive_service.files().create(

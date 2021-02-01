@@ -7,53 +7,87 @@
 {% endblock %}
 
 {% block content %}
-    <div class="main_page">
-        <div class="info_pane col-1 row-1">
-            <table>
-                <tr>
-                    <td>
-                        <h1>Plan na dziś</h1>
-                    </td>
-                </tr>
-                {% for event in events_today %}
-                    <tr>
-                        <td>
-                            {{ event.description.description }} <br>
-                            {{ event.start_date }}
-                            {{ event.end_date }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="info_pane col-2 row-1">
-            <table>
-                <tr>
-                    <td>
-                        <h1>Najbliższe wydarzenia</h1>
-                    </td>
-                </tr>
-                {% for event in next_events %}
-                    <tr>
-                        <td>
-                            {{ event.description.description }} <br>
-                            {{ event.start_date.date }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="info_pane col-3 row-1">
+    <div class="p-4 h-100">
+    <div class="container h-100">
+        <div class="row h-50">
+            <div class="col mh-100 p-2">
+                <div class="card text-center text-white bg-custom-1 h-100 overflow-auto">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Plan na dzis</h2>
+                        <table class="table card-text text-white mh-100">
+                            {% for event in events_today %}
+                                <tr>
+                                    <td>
+                                        {{ event.description.description }} <br>
+                                        {{ event.start_date }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-        </div>
-        <div class="info_pane col-1 row-2">
+            <div class="col mh-100 p-2">
+                <div class="card text-center text-white bg-custom-1 h-100 overflow-auto">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Najbliższe wydarzenia</h2>
+                        <table class="table card-text text-white mh-100">
+                            {% for event in next_events %}
+                                <tr>
+                                    <td>
+                                        {{ event.description.description }} <br>
+                                        {{ event.start_date }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col mh-100 p-2">
+                <div class="card text-center text-white bg-custom-1 h-100 overflow-auto">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Lorem ipsum</h2>
+                        <table class="table card-text text-white mh-100">
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="info_pane col-2 row-2">
 
+        <div class="row h-50">
+             <div class="col mh-100 p-2">
+                <div class="card text-center text-white bg-custom-1 h-100 overflow-auto">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Lorem ipsum</h2>
+                        <table class="table card-text text-white mh-100">
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col mh-100 p-2">
+                <div class="card text-center text-white bg-custom-1 h-100 overflow-auto">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Lorem ipsum</h2>
+                        <table class="table card-text text-white mh-100">
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col mh-100 p-2">
+                <div class="card text-center text-white bg-custom-1 h-100 overflow-auto">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Lorem ipsum</h2>
+                        <table class="table card-text text-white mh-100">
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="info_pane col-3 row-2">
-
         </div>
 
         <div class="popup" onclick="myFunction()">Powiadomienia

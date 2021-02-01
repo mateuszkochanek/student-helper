@@ -28,7 +28,6 @@ class TeacherManager(models.Manager):
         return self.get(pk=id)
 
     def get_record_by_name_surname_title(self, name, surname, title):
-
         return self.get(name=name, surname=surname, title=title)
 
 
@@ -363,6 +362,9 @@ class GoalsManager(models.Manager):
     def delete_goal_by_id(self, goal_id):
         self.filter(id=goal_id).delete()
 
+    def get_not_achieved_goals_by_course_id(self, course_id):
+        return self.filter(course_id=course_id, type='N')
+
 
 class FilesManager(models.Manager):
     """
@@ -380,8 +382,15 @@ class FilesManager(models.Manager):
     def get_record_by_id(self, id):
         return self.get(pk=id)
 
-    def get_record_by_file_path(self, file_path):
-        return self.get(file_path=file_path)
+    def get_record_by_file_path(self, course, file_path, description):
+        return self.get(course_id=course, file_path=file_path, description=description)
+
+    def delete_by_course_id_and_description(self, course_id, description):
+        # TODO triggers?
+        self.filter(course_id=course_id, description=description).delete()
+
+    def check_if_exists(self, course, file_path, description):
+        return self.filter(course_id=course, file_path=file_path, description=description).exists()
 
 
 class PredictionManager(models.Manager):
@@ -405,6 +414,9 @@ class PredictionManager(models.Manager):
 
     def get_record_by_event(self, course_id, start_date, pred_time):
         return self.filter(course_id=course_id, start_date=start_date, pred_time=pred_time, actual_time=-1)[:1].get()
+
+    def get_records_by_course_id(self, course_id):
+        return self.filter(course_id=course_id)
 
 
 class MarksManager(models.Manager):

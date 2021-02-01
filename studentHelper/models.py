@@ -2,31 +2,32 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.shortcuts import reverse
+from tinymce import models as tinymce_models
 
 from studentHelper.managers import *
 
 
-
 class Teacher(models.Model):
-
     # pk generated automaticly
 
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
     webpage = models.CharField(max_length=60, blank=True)
+    html = tinymce_models.HTMLField(default="")
     objects = TeacherManager()
 
     class Meta:
-        #TODO Indexes ect.
+        # TODO Indexes ect.
         verbose_name_plural = "Teacher"
+
 
 class Course(models.Model):
 
     TYPES = [
-    ("W", "wykład"),
-    ("C", "ćwiczenia"),
-    ("L", "laboratoria"),
+        ("W", "wykład"),
+        ("C", "ćwiczenia"),
+        ("L", "laboratoria"),
     ]
 
     # pk generated automaticly
@@ -49,44 +50,42 @@ class Course(models.Model):
     objects = CourseManager()
 
 
-
 class Components(models.Model):
-
     FORMS = [
-    ("ACTIV", "aktywność"),
-    ("EXAM", "egzamin"),
-    ("QUIZ", "kartkówka"),
-    ("TEST", "kolokwium"),
-    ("LIST", "lista zadań"),
+        ("ACTIV", "aktywność"),
+        ("EXAM", "egzamin"),
+        ("QUIZ", "kartkówka"),
+        ("TEST", "kolokwium"),
+        ("LIST", "lista zadań"),
     ]
 
     TYPES = [
-    ("PKT", "punkty"),
-    ("MARK", "ocena"),
-    ("PERC", "procent"),
+        ("PKT", "punkty"),
+        ("MARK", "ocena"),
+        ("PERC", "procent"),
     ]
 
     course_id = models.ForeignKey(
-    Course,
-    on_delete = models.CASCADE,
+        Course,
+        on_delete=models.CASCADE,
     )
 
     form = models.CharField(max_length=5, choices=FORMS)
     type = models.CharField(max_length=5, choices=TYPES)
     objects = ComponentsManager()
 
-class Thresholds(models.Model):
 
+class Thresholds(models.Model):
     TYPES = [
-    ("PKT", "punkty"),
-    ("MARK", "ocena"),
-    ("PERC", "procent"),
+        ("PKT", "punkty"),
+        ("MARK", "ocena"),
+        ("PERC", "procent"),
     ]
 
     course_id = models.OneToOneField(
-    Course,
-    on_delete = models.CASCADE,
-    primary_key=True
+        Course,
+        on_delete=models.CASCADE,
+        primary_key=True
     )
 
     p_3_0 = models.FloatField()
@@ -100,21 +99,20 @@ class Thresholds(models.Model):
 
 
 class Modyfication(models.Model):
-
     TYPES = [
-    ("PKT", "punkty"),
-    ("MARK", "ocena"),
-    ("PERC", "procent"),
+        ("PKT", "punkty"),
+        ("MARK", "ocena"),
+        ("PERC", "procent"),
     ]
 
     MOD = [
-    ("MINUS", "-"),
-    ("PLUS", "+"),
+        ("MINUS", "-"),
+        ("PLUS", "+"),
     ]
 
     course_id = models.ForeignKey(
-    Course,
-    on_delete = models.CASCADE,
+        Course,
+        on_delete=models.CASCADE,
     )
 
     mod = models.CharField(max_length=5, choices=MOD)
@@ -124,10 +122,9 @@ class Modyfication(models.Model):
 
 
 class CourseGroup(models.Model):
-
     course_id = models.OneToOneField(
         Course,
-        on_delete = models.CASCADE,
+        on_delete=models.CASCADE,
         primary_key=True,
     )
 
@@ -137,7 +134,6 @@ class CourseGroup(models.Model):
 
 
 class Goals(models.Model):
-
     TYPES = [
         ("A", "aktywność"),
         ("M", "ocena"),
@@ -180,6 +176,7 @@ class Files(models.Model):
     file_path = models.FileField()
     objects = FilesManager()
 
+
 class Prediction(models.Model):
 
     # pk generated automaticly
@@ -206,15 +203,14 @@ class Prediction(models.Model):
 
 
 class Events(models.Model):
-
     TYPES = [
-    ("ONCE", "Pojedyncze wydarzenie"),
-    ("DAILY", "Codziennie"),
-    ("WEEKLY", "Co tydzień"),
-    ("MONTHLY", "Co miesiąc"),
-    ("YEARLY", "Rocznie"),
-    # ("EVEN", "Even"),
-    # ("ODD", "Odd")
+        ("ONCE", "Pojedyncze wydarzenie"),
+        ("DAILY", "Codziennie"),
+        ("WEEKLY", "Co tydzień"),
+        ("MONTHLY", "Co miesiąc"),
+        ("YEARLY", "Rocznie"),
+        # ("EVEN", "Even"),
+        # ("ODD", "Odd")
     ]
     # pk generated automaticly
 
@@ -230,14 +226,11 @@ class Events(models.Model):
     objects = EventsManager()
 
 
-
 class Description(models.Model):
-
-
     event_id = models.OneToOneField(
-    Events,
-    on_delete = models.CASCADE,
-    primary_key=True,
+        Events,
+        on_delete=models.CASCADE,
+        primary_key=True,
     )
     course = models.BooleanField(default=False)
     description = models.CharField(max_length=128)
@@ -245,15 +238,14 @@ class Description(models.Model):
 
 
 class CourseEvents(models.Model):
-
     TYPES = [
-    ("ONCE", "Pojedyncze wydarzenie"),
-    ("DAILY", "Codziennie"),
-    ("WEEKLY", "Co tydzień"),
-    ("MONTHLY", "Co miesiąc"),
-    ("YEARLY", "Rocznie"),
-    # ("EVEN", "Even"),
-    # ("ODD", "Odd")
+        ("ONCE", "Pojedyncze wydarzenie"),
+        ("DAILY", "Codziennie"),
+        ("WEEKLY", "Co tydzień"),
+        ("MONTHLY", "Co miesiąc"),
+        ("YEARLY", "Rocznie"),
+        # ("EVEN", "Even"),
+        # ("ODD", "Odd")
     ]
     FORMS = [
     ("ACTIV", "aktywność"),
@@ -282,22 +274,22 @@ class CourseEvents(models.Model):
 class Marks(models.Model):
     # pk generated automaticly
     TYPES = [
-    ("PKT", "pkt"),
-    ("MARK", "ocena"),
-    ("PERC", "procent"),
+        ("PKT", "pkt"),
+        ("MARK", "ocena"),
+        ("PERC", "procent"),
     ]
 
     FORMS = [
-    ("ACTIV", "aktywność"),
-    ("EXAM", "egzamin"),
-    ("QUIZ", "kartkówka"),
-    ("TEST", "kolokwium"),
-    ("LIST", "lista zadań"),
+        ("ACTIV", "aktywność"),
+        ("EXAM", "egzamin"),
+        ("QUIZ", "kartkówka"),
+        ("TEST", "kolokwium"),
+        ("LIST", "lista zadań"),
     ]
 
     course_id = models.ForeignKey(
-    Course,
-    on_delete = models.CASCADE,
+        Course,
+        on_delete=models.CASCADE,
     )
     mark = models.FloatField()
     weight = models.FloatField()

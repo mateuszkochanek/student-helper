@@ -19,8 +19,7 @@ from webpush import send_user_notification
 def main_view(request):
     # without celery
     id = check_if_expired(request.user.id)
-    # id = check_if_expired.delay(request.user.id).get()
-    print(id)
+    #id = check_if_expired.delay(request.user.id).get()
     if id != -1:
         payload = {"head": "Wydarzenia", "body": "Istnieją zakończone wydzrzenia! \n Kliknij aby uzupełnić",
                 "icon": "", "url": "expired_event/" + str(id)}

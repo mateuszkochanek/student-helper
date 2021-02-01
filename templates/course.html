@@ -11,109 +11,110 @@
         alert("Najpierw musisz dodać zasady zaliczenia!");
     </script>
     {% endif %}
-    <div class="grid-container">
-        <div class="titlebar">
-            <div class="title">
-                {{ course.course_name }}
+    <div class="container-fluid h-100 p-4">
+        <div class="row">
+            <div class="col">
+                <h2 class="title">{{ course.course_name }}</h2>
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a href="{% url 'mark_add' course.id %}" class="nav-link">Dodaj ocenę</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'new_course_goal' course.id %}" class="nav-link">Dodaj cel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'file_add' course.id%}" class="nav-link">Dodaj plik</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'configure_webpage' course.id  %}" class="nav-link">Dodaj stronę</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'course_event' course.id  %}" class="nav-link">Dodaj wydarzenie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'configure_webpage' course.id  %}" class="nav-link">Dodaj stronę</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'new_pass_rules' course.id %}" class="nav-link">Dodaj zasady zaliczenia</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'edit_course' course.id %}" class="nav-link">Edytuj kurs</a>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <div class=buttonbar>
-            <a href="{% url 'mark_add' course.id %}" class=button>
-                Dodaj ocenę
-            </a>
-            <a href="{% url 'new_course_goal' course.id %}" class=button>
-                Dodaj cel
-            </a>
-            <a href="{% url 'file_add' course.id%}" class=button>
-                Dodaj plik
-            </a>
-            <a href="{% url 'configure_webpage' course.id  %}" class=button>
-                Dodaj stronę
-            </a>
-            <a href="{% url 'course_e_description' course.id  %}" class=button>
-                Dodaj wydarzenie
-            </a>
-            <a href="{% url 'new_pass_rules' course.id %}" class=button>
-                Dodaj zasady zaliczenia
-            </a>
-            <a href="{% url 'edit_course' course.id %}" class=button>
-                Edytuj kurs
-            </a>
-
-        </div>
-
-        <div class=line>
-            <hr style="color:CornflowerBlue">
-        </div>
-
-        <div class="button_courses_bar">
-            {% if lecture %}
-                <a href="{% url 'course' lecture.id %}" class="button">
-                    Wykład
-                </a>
-            {% endif %}
-            {% if tutorial %}
-                <a href="{% url 'course' tutorial.id %}" class="button">
-                    Ćwiczenia
-                </a>
-            {% endif %}
-            {% if laboratory %}
-                <a href="{% url 'course' laboratory.id %}" class="button">
-                    Labolatoria
-                </a>
-            {% endif %}
-        </div>
-
-        <div class="info_panels">
-            <div class="info_pane col-1">
-                <table>
-                    <tr>
-                        <td>
-                            <h3>Informacje</h3>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Forma: {{ course.type }} <br>
-                            Prowadzący:
-                            {{ course.teacher_id.name }} {{ course.teacher_id.surname }} <br>
-                            ECTS: {{ course.ECTS }} <br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <form action="{{ course.teacher_id.webpage }}">
-                                <input type="submit" value="Przejdź na stronę prowadzącego" />
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <form action="{% url 'pass_rules' course.id %}">
-                                <input type="submit" value="Sprawdź/edytuj zasady zaliczenia" />
-                            </form>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <form action="{% url 'show_files' course.id %}">
-                                <input type="submit" value="Zarządaj plikami" />
-                            </form>
-                        </td>
-                    </tr>
-                </table>
+        <div class="row">
+            <div class=col line>
+                <hr style="color:CornflowerBlue">
             </div>
+        </div>
 
-            <div class="info_pane col-2">
-                <table>
-                    <tr>
-                        <td>
-                            <h3>Oceny</h3>
-                        </td>
-                    </tr>
-                    <tr>
+    <div class="row h-">
+        <div class="col ">
+            <ul class="nav nav-pills">
+                <li class="nav-item button m-1">
+                    {% if lecture %}
+                        <a href="{% url 'course' lecture.id %}" class="nav-link">Wykład</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item button m-1">
+                    {% if tutorial %}
+                        <a href="{% url 'course' tutorial.id %}" class="nav-link">Ćwiczenia</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item button m-1">
+                    {% if laboratory %}
+                        <a href="{% url 'course' laboratory.id %}" class="nav-link">Labolatoria</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row h-75" >
+        <div class="col mh-100 p-2">
+            <div class="card info_pane text-custom-1 h-100 overflow-auto">
+                <div class="card-body">
+                    <h3 class="card-title" >Informacje</h3>
+                    <table class="table card-text mh-100">
+                        <tr>
+                            <td>
+                                Forma: {{ course.type }} <br>
+                                Prowadzący:
+                                {{ course.teacher_id.name }} {{ course.teacher_id.surname }} <br>
+                                ECTS: {{ course.ECTS }} <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item button m-1">
+                                            <a href="{{ course.teacher_id.webpage }}" class="nav-link">Strona Prowadzącego</a>
+                                    </li>
+                                    <li class="nav-item button m-1">
+                                            <a href="{% url 'pass_rules' course.id %}" class="nav-link">Zasady Zaliczenia</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form action="{% url 'show_files' course.id %}">
+                                    <input type="submit" value="Zarządaj plikami" />
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mh-100 p-2">
+            <div class="card info_pane text-custom-1 h-100 overflow-auto">
+                <div class="card-body">
+                    <h3 class="card-title" >Oceny</h3>
+                    <table class="table card-text mh-100">
                         <table>
                             <tr>
                                 <td>Ocena</td>
@@ -130,67 +131,65 @@
                                 </tr>
                             {% endfor %}
                         </table>
-                    </tr>
-                </table>
+                    </table>
+                </div>
             </div>
-
-            <div class="info_pane col-3">
-                <table>
-                    <tr>
-                        <td>
-                            <h3>Cele</h3>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {% for goal in goals %}
-                                {{ goal.description }}
-                                <br>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="info_pane col-4">
-                <table>
-                    <tr>
-                        <td>
-                            <h3>Najbliższe zajęcia</h3>
-                        </td>
-                    </tr>
-                    {% for course in next_courses %}
-                    <tr>
-                        <td>
-                            {{ course.start_date }} <br>
-                            {{ course.end_date }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-
-            <div class="info_pane col-5">
-                <table>
-                    <tr>
-                        <td>
-                            <h3>Najbliższe wydarzenia</h3>
-                        </td>
-                    </tr>
-                    {% for course in courseEvents %}
-                    <tr>
-                        <td>
-                            {{ course.get_description_display }} <br>
-                            {{ course.start_date }} <br>
-                            {{ course.end_date }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-
-
         </div>
 
+        <div class="col mh-100 p-2">
+            <div class="card info_pane text-custom-1 h-100 overflow-auto">
+                <div class="card-body">
+                    <h3 class="card-title" >Cele</h3>
+                    <table class="table card-text mh-100">
+                        <tr>
+                            <td>
+                                {% for goal in goals %}
+                                    {{ goal.description }}
+                                    <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       <div class="col mh-100 p-2">
+            <div class="card info_pane text-custom-1 h-100 overflow-auto">
+                <div class="card-body">
+                    <h3 class="card-title" >Najbliższe zajęcia</h3>
+                    <table class="table card-text mh-100">
+                        {% for course in next_courses %}
+                        <tr>
+                            <td>
+                                {{ course.start_date }} <br>
+                                {{ course.end_date }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+       </div>
+
+       <div class="col mh-100 p-2">
+            <div class="card info_pane text-custom-1 h-100 overflow-auto">
+                <div class="card-body">
+                    <h3 class="card-title">Najbliższe wydarzenia</h3>
+                    <table class="table card-text mh-100">
+                        {% for course in courseEvents %}
+                        <tr>
+                            <td>
+                                {{ course.description }} <br>
+                                {{ course.start_date }} <br>
+                                {{ course.end_date }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 {% endblock %}

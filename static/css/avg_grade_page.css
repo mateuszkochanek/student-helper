@@ -52,7 +52,7 @@
 }
 
 .grades_list {
-    grid-column: 1 / 8;
+    grid-column: 1 / 7;
     grid-row: 3 / 16;
     border-radius: 25px;
     background: #9bdcfa;
@@ -69,17 +69,6 @@
 
 .grades_list table, .grades_list tr, .grades_list td {
     border: 1px solid white;
-}
-
-.editDiv {
-    grid-column: 8 / 9;
-    grid-row: 3;
-    visibility: hidden;
-}
-
-.buttonCalcGradeForm {
-    grid-column: 11;
-    grid-row: 2;
 }
 
 .avgGradeResult {
