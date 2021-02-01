@@ -11,9 +11,9 @@ def get_times_by_courses(client_id):
         time = 0
         predictions = Prediction.objects.get_records_by_course_id(course)
         for p in predictions:
-            if p.actual_time != '':
-                time += p.actual_time
-        course_names.append(course.course_name)
+            if p.actual_time != -1:
+                time += p.actual_time/3600
+        course_names.append(course.course_name+' '+course.type)
         times.append(time)
     return course_names, times
 
@@ -40,11 +40,11 @@ def get_ratios_by_courses(client_id):
         estimated = 0
         predictions = Prediction.objects.get_records_by_course_id(course)
         for p in predictions:
-            if p.actual_time != '':
-                actual += p.actual_time
-                estimated += p.pred_time
+            if p.actual_time != -1:
+                actual += p.actual_time/3600
+                estimated += p.pred_time/3600
         if actual != 0:
             ratios.append(estimated/actual)
-            course_names.append(course.course_name)
+            course_names.append(course.course_name+' '+course.type)
     return course_names, ratios
 
