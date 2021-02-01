@@ -15,5 +15,5 @@ def calculate_time(course_id, type):
                 elements += 1
                 avg += pred_time
         if elements >= 5:
-            return (avg / elements) / 60
+            return (avg / elements) / 3600
     return 0
