@@ -404,7 +404,7 @@ class PredictionManager(models.Manager):
         return self.filter(course_id=course_id, type=type)
 
     def get_record_by_event(self, course_id, start_date, pred_time):
-        return self.filter(course_id=course_id, start_date=start_date, pred_time=pred_time)[:1].get()
+        return self.filter(course_id=course_id, start_date=start_date, pred_time=pred_time, actual_time=-1)[:1].get()
 
 
 class MarksManager(models.Manager):

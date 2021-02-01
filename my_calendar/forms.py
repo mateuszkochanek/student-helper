@@ -257,13 +257,13 @@ class PredictionForm(Form):
             self.fields[key].error_messages['required'] = "To pole jest wymagane."
 
     def save(self, prediction):
-        prediction.actual_time = self.cleaned_data['actual_time']
+        prediction.actual_time = self.cleaned_data['actual_time'] * 60
         prediction.save()
-
 
     def clean(self):
         cleaned_data = super().clean()
         time = cleaned_data['actual_time']
         self.cleaned_data['actual_time'] = cleaned_data['actual_time']
+        print(self.cleaned_data['actual_time'])
         if time < 0:
             raise ValidationError('Czas nie może być ujemny!')
