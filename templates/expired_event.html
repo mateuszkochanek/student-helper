@@ -31,7 +31,8 @@
         <form method="post">
             {% csrf_token %}
             {{ pred_form|crispy }}
-            <button type="submit" class=button">Zatwierdź</button>
+            <br>
+            <button type="submit" class="button">Zatwierdź</button>
             <a href="/" class="button" onclick="window.close()">Wróć</a>
         </form>
     </div>

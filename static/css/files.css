@@ -47,7 +47,6 @@ body {
 .main_list_title {
     grid-column: 2 / 12;
     grid-row: 3;
-    background: #5b80b2;
     color: white;
     max-height: 50px;
     width: 100%;
@@ -65,6 +64,7 @@ body {
 
 .main_list table td {
     border-right: 1px solid white;
+    border-bottom: 1px solid white;
     text-align: center;
     width: auto;
 }
