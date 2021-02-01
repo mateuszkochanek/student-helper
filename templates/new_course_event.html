@@ -21,13 +21,6 @@
 
         </div>
     </div>
-    <div class="subtitlebar">
-        {% if time != 0 %}
-            Szacowany czas wykonania w minutach:
-            <br>
-            {{ time }}
-        {% endif %}
-    </div>
     <div class=line>
         <hr style="color:CornflowerBlue">
     </div>
@@ -36,9 +29,9 @@
             {% csrf_token %}
             {{ event_form|crispy }}
             {{ description_form|crispy }}
-            <button type="submit" class=button> Zatwierdź</button>
+            <button type="submit" class=button>Zatwierdź</button>
             {% if edit %}
-                <a href="{% url 'calendar' 'main' %}" class="button">Wróć</a>
+                <a href="{% url 'course' pk %}" class="button">Wróć</a>
                 <a href="{% url 'delete_event' pk%}" class="button">Usuń</a>
             {% else %}
                 <a href="{% url 'course' pk%}" class="button">Wróć</a>
