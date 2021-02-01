@@ -67,7 +67,6 @@ urlpatterns = [
     path('statistics/days', statisticsDays, name='statisticsDays'),
     path('statistics/timeSpentOnCourses', statisticsTimeSpentOnCourses, name='statisticsTimeSpentOnCourses'),
     path('statistics/ratios', statisticsRatios, name='statisticsRatios'),
-    path('statistics/byForm', statisticsByForm, name='statisticsByForm'),
     path('webpush/expired_event/<int:pk>', expired_event_view, name='expired_event'),
     path('course/<int:pk>/file/add/', add_file_view, name='file_add'),
     path('course/files/edit<int:pk>/<str:folder>/<str:file>', edit_files_view, name='edit_file'),
