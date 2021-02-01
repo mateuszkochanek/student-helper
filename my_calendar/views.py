@@ -62,7 +62,7 @@ def new_course_event_description_view(request, pk):
         description = PredTimeForm(request.POST)
         if description.is_valid():
             desc = description.save()
-            time = int(calculate_time(pk, desc))
+            time = round(calculate_time(pk, desc), 2)
             return redirect("/course/"+str(pk)+"/events/"+desc+"/"+str(time))
     else:
         description = PredTimeForm()
