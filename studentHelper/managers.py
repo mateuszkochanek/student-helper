@@ -386,6 +386,9 @@ class FilesManager(models.Manager):
         # TODO triggers?
         self.filter(course_id=course_id, description=description).delete()
 
+    def check_if_exists(self, course, file_path, description):
+        return self.filter(course_id=course, file_path=file_path, description=description).exists()
+
 
 class PredictionManager(models.Manager):
     """
