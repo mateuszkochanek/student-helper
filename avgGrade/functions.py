@@ -1,4 +1,5 @@
-from studentHelper.models import Course, CourseGroup, Marks, Thresholds
+from studentHelper.models import Course, CourseGroup
+from course.finals_update import calc_final
 
 
 class Functions:
@@ -8,8 +9,8 @@ class Functions:
     def get_avg(self, user):
         courses = self.get_courses_and_group_courses(user)
         for c in courses:
-            self.calc_final(c)
             if self.__is_main_course_in_group(c):
+                calc_final(c)
                 self.calc_cg_final(c)
         marks_sum = 0
         ects_sum = 0
@@ -45,40 +46,12 @@ class Functions:
             return True
         return False
 
-    def calc_final(self, course):
-        marks = Marks.objects.getMarks(course)
-        final = 0
-        for m in marks:
-            final += m['weight'] * m['mark']
-
-        thresholds = Thresholds.objects.get_records_by_course_id(course)
-        if not thresholds:
-            return 0
-        thresholds = thresholds[0]
-        if final > thresholds.p_5_5:
-            final = 5.5
-        elif final > thresholds.p_5_0:
-            final = 5.0
-        elif final > thresholds.p_4_5:
-            final = 4.5
-        elif final > thresholds.p_4_0:
-            final = 4.0
-        elif final > thresholds.p_3_5:
-            final = 3.5
-        elif final > thresholds.p_3_0:
-            final = 3.0
-        else:
-            final = 2.0
-        course.final = final
-        course.save()
-
     def calc_cg_final(self, course):
         all_types = Course.objects.get_all_types_by_id(course.id)
         courses = []
         for c in all_types:
             if CourseGroup.objects.get_records_by_course_id(c):
                 courses.append(c)
-                self.calc_final(c)
         minimum = False
         final = 0
         for c in courses:
