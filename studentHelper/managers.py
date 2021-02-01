@@ -259,6 +259,9 @@ class EventsManager(models.Manager):
         # TODO triggers?
         self.filter(id=id).delete()
 
+    def get_classes_by_client_id(self, client_id):
+        return self.filter(client_id=client_id, description__course=True)
+
 
 class CourseEventsManager(models.Manager):
     """
@@ -417,6 +420,9 @@ class PredictionManager(models.Manager):
 
     def get_records_by_course_id(self, course_id):
         return self.filter(course_id=course_id)
+
+    def get_record_course_and_form(self, course_id, form):
+        return self.filter(course_id=course_id, type=form)
 
 
 class MarksManager(models.Manager):
