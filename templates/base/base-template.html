@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% load bootstrap4 %}
     {% block default-styles %}
         {% load static %}
+        {% bootstrap_css %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/base-template.css' %}">
     {% endblock %}
     {% block extension-styles %}{% endblock %}
-
+    {% bootstrap_javascript %}
     {% block title %}
         <title>Student Helper</title>
     {% endblock %}
 </head>
 <body class="bg">
-    <div class="container">
+    <div class="_container">
         {% block foreground %}
             {% block header %} {% include 'base/header.html' %} {% endblock %}
             {% block top-bar %} {% include 'base/top-bar.html' %} {% endblock %}

@@ -8,6 +8,7 @@ from .helpers import *
 def goals(request):
     goals_not_achieved = []
     goals_achieved = []
+    goals_expired = []
 
     update_goals(request.user)
 
@@ -17,10 +18,13 @@ def goals(request):
                 goals_not_achieved.append(goal)
             elif goal.achieved == 'A':
                 goals_achieved.append(goal)
+            elif goal.achieved == 'E':
+                goals_expired.append(goal)
 
     context = {
         'goals_not_achieved': goals_not_achieved,
-        'goals_achieved': goals_achieved
+        'goals_achieved': goals_achieved,
+        'goals_expired': goals_expired
     }
 
     return render(request, "goals.html", context)

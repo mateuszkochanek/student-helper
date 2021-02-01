@@ -9,11 +9,15 @@ from my_calendar.forms import CourseForm, TeacherForm
 
 from .forms import MarkForm, RulesForm, CourseGroupForm
 from .files import *
+from .websites import *
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
+from webpush import send_user_notification
+
+from webpush import send_user_notification
 
 
 @login_required(login_url='/login')
@@ -33,6 +37,11 @@ def course_view(request, pk):
     }
 
     course = Course.objects.get_record_by_id(pk)
+
+    teacher = course.teacher_id
+    if teacher.webpage != "":
+        web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher.id, course)
+        web.check_changes()
 
     context = {
         'course': course,
@@ -71,7 +80,15 @@ def configure_webpage_view(request, pk):
             t = teacher_form.save(commit=False)
             course.teacher_id.webpage = t.webpage
             course.teacher_id.save()
-            print(course.teacher_id.webpage)
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, '
+                                     'like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            r = requests.get(course.teacher_id.webpage, headers=headers)
+            html = r.text
+            course.teacher_id.html = html
+            course.teacher_id.save()
+            teacher_id = course.teacher_id.id
+            web = WebsiteMonitoring(course.teacher_id.webpage, request, pk, teacher_id, course)
+            web.add_list()
             return redirect('/course/' + str(pk))
     else:
         teacher_form = WebPageForm(request.POST)
@@ -164,7 +181,8 @@ def add_mark_view(request, pk):
         return render(request, "new_mark.html", {"mark_form": mark, "pk": pk})
 
     else:
-        # TODO informacja o istniejących zasadach zaliczenia
+        payload = {"head": "Błąd!", "body": "Aby dodać ocenę potrzebne są \n zasady zaliczenia!"}
+        send_user_notification(user=request.user, payload=payload, ttl=1000)
         return redirect('/course/' + str(pk), {"message": True})
 
 
@@ -270,7 +288,8 @@ def pass_rules_view(request, pk):
                       {'cg_form': cg, 'rules_form': rules, 'thresholds_form': thresholds, "pk": pk, "edit": True})
 
     else:
-        # TODO informacja o nieistniejących zasadach
+        payload = {"head": "Błąd!", "body": "Zasady zaliczenia nie zostały jeszcze utworzone!"}
+        send_user_notification(user=request.user, payload=payload, ttl=1000)
         return redirect('/course/' + str(pk))
 
 

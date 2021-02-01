@@ -13,18 +13,6 @@ def avg_grade_view(request):
 
 
 @login_required(login_url='/login/')
-def avg_grade_view_edit_grade(request, pk, grade):
-    Functions().add_final_grade(pk, grade)
-    return avg_grade_view(request)
-
-
-@login_required(login_url='/login/')
-def avg_grade_view_edit_ects(request, pk, ects):
-    Functions().add_ects(pk, ects)
-    return avg_grade_view(request)
-
-
-@login_required(login_url='/login/')
 def avg_grade_calc(request):
     context = {
         'all_courses': Functions().get_courses_and_group_courses(request.user.id),
