@@ -90,14 +90,10 @@
                             <td>
                                 <ul class="nav nav-pills">
                                     <li class="nav-item button m-1">
-                                        {% if lecture %}
                                             <a href="{{ course.teacher_id.webpage }}" class="nav-link">Strona Prowadzącego</a>
-                                        {% endif %}
                                     </li>
                                     <li class="nav-item button m-1">
-                                        {% if lecture %}
                                             <a href="{% url 'pass_rules' course.id %}" class="nav-link">Zasady Zaliczenia</a>
-                                        {% endif %}
                                     </li>
                                 </ul>
                             </td>
