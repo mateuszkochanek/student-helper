@@ -2,12 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 
-from studentHelper.models import Course, Teacher, Marks, Goals, Components, Thresholds, Modyfication, Events, CourseEvents
+from studentHelper.models import Course, Teacher, Marks, Goals, Components, Thresholds, Modyfication, Events, CourseEvents, Files
 from course.forms import WebPageForm, ThresholdsForm
 from studentHelper.views import main_view
 from my_calendar.forms import CourseForm, TeacherForm
 
-from .forms import MarkForm, RulesForm, CourseGroupForm
+from .forms import *
 from .files import *
 from .websites import *
 from .finals_update import *
@@ -19,6 +19,11 @@ from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 
 from webpush import send_user_notification
+
+from django.core.files.storage import FileSystemStorage
+import pathlib
+from gi.repository import GLib
+
 
 
 @login_required(login_url='/login')
@@ -63,6 +68,9 @@ def course_view(request, pk):
         el['mark_type'] = TYPES[el['mark_type']]
         el['mark_form'] = FORMS[el['mark_form']]
 
+    # Aby uzyskać wartość przypisaną do klucza
+    #     print(el.get_description_display())
+
     if context['course'].client_id != request.user:
         return main_view(request)
 
@@ -95,12 +103,103 @@ def configure_webpage_view(request, pk):
             web.add_list()
             return redirect('/course/' + str(pk))
     else:
-        teacher_form = WebPageForm(request.POST)
+        teacher_form = WebPageForm()
     return render(request, "course/configure-webpage.html", {"teacher_form": teacher_form, "course": course})
 
 
 @login_required(login_url='/login')
 def add_file_view(request, pk):
+    if request.method == 'POST':
+        new_file = NewFileForm(request.POST, request.FILES)
+        if new_file.is_valid():
+            gds = GoogleDriveStorage()
+
+            type = new_file.cleaned_data.get("option")
+            folder = str(request.user.id) + '/' + str(pk) + '/' + str(type)
+            file = request.FILES['myfile']
+
+            fs = FileSystemStorage()
+            filename = fs.save("./temp/" + file.name, file)
+            url = fs.url(filename)
+            name = '/' + folder + '/' + str(file.name)
+            gds.save(name, open("./"+url, 'rb'), "./"+url)
+
+
+            file_path = "temp/" + str(file)
+            curr = pathlib.Path().absolute()
+            new_path = os.path.join(curr, file_path)
+            os.remove(new_path)
+
+            return redirect('/course/' + str(pk))
+    else:
+        new_file = NewFileForm()
+
+    return render(request, "new_file.html", {"new_file": new_file, "pk": pk})
+
+@login_required(login_url='/login')
+def delete_file_view(request, pk, folder, file):
+    gds = GoogleDriveStorage()
+    file_path = folder+ "/" +file
+    print(file_path)
+    gds.delete(file_path)
+    return redirect('/course/files/show/' + str(pk))
+
+@login_required(login_url='/login')
+def download_file_view(request, pk, folder, file):
+    path = ''
+    gds = GoogleDriveStorage()
+    if os.name == 'nt':
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        path = location
+        path += '/' + folder + '/' + file
+    else:
+        path = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
+        path += '/' + file
+
+    google_url = str(request.user.id) + "/" + str(pk) + "/" + folder + "/" + file
+    gds.open(google_url, path)
+
+    wrapper = FileWrapper(open(path, 'rb'))
+    response = HttpResponse(wrapper, content_type='application/force-download')
+    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(path)
+    return response
+
+
+@login_required(login_url='/login')
+def edit_files_view(request, pk, folder, file):
+    return render(request, "edit_file.html", {'folder': folder, 'pk': pk, 'file': file}, content_type="text/html")
+
+
+@login_required(login_url='/login')
+def show_files_view(request, pk):
+
+    OPTIONS = [
+        ('listy', 'listy'),
+        ('notatki', 'notatki'),
+        ('brudnopis', 'brudnopis'),
+        ('inne', 'inne'),
+    ]
+
+    context = {}
+    gds = GoogleDriveStorage()
+    dir = str(request.user.id) + '/' + str(pk) + '/'
+    for type in OPTIONS:
+        (directories, files) = gds.listdir(dir + type[1])
+        for i in range(len(files)):
+            splited = gds.split_path(files[i])
+            files[i] = splited[-1]
+            print(files[i])
+        context.update({type[1]: files})
+    return render(request, "files.html", {'d': context, 'pk': pk}, content_type="text/html")
+
+
+
+@login_required(login_url='/login')
+def add_dile_view(request, pk):
 
     gds = GoogleDriveStorage()
     f = 'inne'  # uzytkownik wybiera do jakiego fodleru dodac plik (listy/notatki/brudnopis/inne)
@@ -165,6 +264,10 @@ def add_file_view(request, pk):
     # print(gds.open(u'/test4/apps.py', only_name[-1]))
     # print(gds.open(u'/test4/apps.py', '/home/paula/PycharmProjects/student-helper2/my_calendar/a.py')) doda pod ta 2 sciezka
     return redirect('/course/' + str(pk), {"message": True})
+
+
+
+
 
 
 @login_required(login_url='/login')

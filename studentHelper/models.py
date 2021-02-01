@@ -166,15 +166,14 @@ class Goals(models.Model):
 
 class Files(models.Model):
     # pk generated automaticly
-
     # foreign keys
     course_id = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
     )
     # TODO: sposob zapisywania?
-    file_path = models.CharField(max_length=100)
-    description = models.CharField(max_length=64, blank=True)
+    folder = models.CharField(max_length=64)
+    file_path = models.FileField()
     objects = FilesManager()
 
 
@@ -183,11 +182,20 @@ class Prediction(models.Model):
     # pk generated automaticly
 
     # foreign keys
+    TYPES = [
+    ("ACTIV", "aktywność"),
+    ("EXAM", "egzamin"),
+    ("QUIZ", "kartkówka"),
+    ("TEST", "kolokwium"),
+    ("LIST", "lista zadań"),
+    ]
+
     course_id = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
     )
 
+    type = models.CharField(choices=TYPES, max_length=7)
     start_date = models.DateField(default=timezone.now)
     pred_time = models.IntegerField()
     actual_time = models.IntegerField(blank=True)
@@ -239,6 +247,15 @@ class CourseEvents(models.Model):
         # ("EVEN", "Even"),
         # ("ODD", "Odd")
     ]
+    FORMS = [
+    ("ACTIV", "aktywność"),
+    ("EXAM", "egzamin"),
+    ("QUIZ", "kartkówka"),
+    ("TEST", "kolokwium"),
+    ("LIST", "lista zadań"),
+    ]
+
+
     # pk generated automaticly
 
     # foreign keys
@@ -250,7 +267,7 @@ class CourseEvents(models.Model):
     end_date = models.DateTimeField()
     period_type = models.CharField(choices=TYPES, max_length=7)
     whole_day = models.BooleanField(default=False)
-    description = models.CharField(max_length=128)
+    description = models.CharField(choices=FORMS, max_length=20)
     objects = CourseEventsManager()
 
 

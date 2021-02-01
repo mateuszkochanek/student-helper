@@ -23,13 +23,13 @@
                         <a href="{% url 'new_course_goal' course.id %}" class="nav-link">Dodaj cel</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'file_add' course.id%}" class="nav-link">Dodaj Plik</a>
+                        <a href="{% url 'file_add' course.id%}" class="nav-link">Dodaj plik</a>
                     </li>
                     <li class="nav-item">
                         <a href="{% url 'configure_webpage' course.id  %}" class="nav-link">Dodaj stronę</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'course_event' course.id  %}" class="nav-link">Dodaj wydarzenie</a>
+                        <a href="{% url 'course_e_description' course.id  %}" class="nav-link">Zaplanuj naukę</a>
                     </li>
                     <li class="nav-item">
                         <a href="{% url 'configure_webpage' course.id  %}" class="nav-link">Dodaj stronę</a>
@@ -100,7 +100,9 @@
                         </tr>
                         <tr>
                             <td>
-                                Przeglądaj pliki
+                                <form action="{% url 'show_files' course.id %}">
+                                    <input type="submit" value="Zarządaj plikami" />
+                                </form>
                             </td>
                         </tr>
                     </table>

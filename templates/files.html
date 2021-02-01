@@ -1,0 +1,57 @@
+{% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class="titlebar">
+        <div class=title>
+            Zarządzaj plikami
+        </div>
+    </div>
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <table id="myTable">
+            <tr>
+                <th>Listy</th>
+                <td>
+                    {% for file in d.listy %}
+                        <div class=""></div>
+                        <a href="{% url 'edit_file' pk 'listy' file %}">{{ file }} </a>
+                        <br></br>
+                    {% endfor %}
+                </td>
+                <th>Notatki</th>
+                <td>
+                    {% for file in d.notatki %}
+                        <div class=""></div>
+                        <a href="{% url 'edit_file' pk 'notatki' file %}">{{ file }} </a>
+                        <br></br>
+                    {% endfor %}
+                </td>
+                <th>Brudnopis</th>
+                <td>
+                    {% for file in d.brudnopis %}
+                        <div class=""></div>
+                        <a href="{% url 'edit_file' pk 'brudnopis' file %}">{{ file }} </a>
+                        <br></br>
+                    {% endfor %}
+                </td>
+                <th>Inne</th>
+                <td>
+                    {% for file in d.inne %}
+                        <div class=""></div>
+                        <a href="{% url 'edit_file' pk 'inne' file %}">{{ file }} </a>
+                        <br></br>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <a href="{% url 'course' pk %}" class="button">Wróć</a>
+</div>
+{% endblock %}

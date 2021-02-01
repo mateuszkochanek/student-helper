@@ -35,10 +35,16 @@ class UploadCalendarEvent():
 
 
     def get_event(self, event, extra):
-
+        TYPES = {
+        "ACTIV": "aktywność",
+        "EXAM": "nauka na egzamin",
+        "QUIZ": "nauka na kartkówkę",
+        "TEST": "nauka na kolokwium",
+        "LIST": "lista zadań",
+        }
         if type(event) == CourseEvents:
             description = event.course_id.course_name + ': '
-            description += str(event.description)
+            description += str(TYPES[event.description])
             id = 'c' + str(event.id)
         else:
             description = extra.description
@@ -61,7 +67,6 @@ class UploadCalendarEvent():
 
     def execute(self, choose=False, shift="main"):
          # get events from db
-         # Gap between times in calendar
 
          data = {}
          today = date.today()

@@ -8,23 +8,19 @@
 <div class="grid">
     <div class="titlebar">
         <div class=title>
-            Zakończone wydarzenie
+            Dodaj plik
         </div>
-    </div>
-    <div class="subtitlebar">
-        {{ event.course_id.course_name }}
-        <br>
-        {{ event.get_description_display }}
     </div>
     <div class=line>
         <hr style="color:CornflowerBlue">
     </div>
     <div class="formbar">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ pred_form|crispy }}
+            {{ new_file|crispy }}
+            <input type="file" name="myfile">
             <button type="submit" class=button>Zatwierdź</button>
-            <a href="/" class="button">Wróć</a>
+            <a href="{% url 'course' pk%}" class="button">Wróć</a>
         </form>
     </div>
 </div>
