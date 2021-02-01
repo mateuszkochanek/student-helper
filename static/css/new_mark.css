@@ -9,7 +9,6 @@ body {
     grid-gap: 20px;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows:repeat(30, 1fr);
-
 }
 
 .titlebar {

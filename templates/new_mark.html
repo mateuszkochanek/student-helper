@@ -1,6 +1,6 @@
-{% extends "base/base-template.html" %}
 {% load crispy_forms_tags %}
 {% block extension-styles %}
+    <meta charset="UTF-8">
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/new_mark.css' %}">
 {% endblock %}
@@ -23,8 +23,16 @@
         <form method="post">
             {% csrf_token %}
             {{ mark_form|crispy }}
-            <button type="submit" class=button>Zatwierdź</button>
-            <a href="{% url 'course' pk %}" class="button">Wróć</a>
+            <br>
+            {% if edit %}
+                <button type="submit" class=button>Zatwierdź</button>
+                <a href="{% url 'delete_mark_view' mark_id %}" class="button">Usuń</a>
+                <a href="{% url 'course' pk %}" class="button">Wróć</a>
+            {% else %}
+                <button type="submit" class=button>Zatwierdź</button>
+                <a href="{% url 'course' pk %}" class="button">Wróć</a>
+            {% endif %}
+
         </form>
     </div>
 </div>

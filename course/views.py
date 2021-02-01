@@ -139,7 +139,7 @@ def add_file_view(request, pk):
 @login_required(login_url='/login')
 def delete_file_view(request, pk, folder, file):
     gds = GoogleDriveStorage()
-    file_path = folder+ "/" +file
+    file_path = str(request.user.id) + "/" + str(pk) + "/" + folder + "/" +file
     print(file_path)
     gds.delete(file_path)
     return redirect('/course/files/show/' + str(pk))
@@ -237,8 +237,14 @@ def edit_mark_view(request, pk):
         # TODO info?
         mark = MarkForm(instance=my_mark, course_id=course_id)
 
-    return render(request, "new_mark.html", {"mark_form": mark, "pk": course_id, "edit": True})
+    return render(request, "new_mark.html", {"mark_form": mark, "pk": course_id, "mark_id": my_mark.id, "edit": True})
 
+@login_required(login_url='/login/')
+def delete_mark_view(request, pk):
+    my_mark = Marks.objects.get_record_by_id(pk)
+    course_id = my_mark.course_id.id
+    Marks.objects.delete_event_by_id(pk)
+    return redirect('/course/' + str(course_id))
 
 @login_required(login_url='/login')
 def edit_course_view(request, pk):

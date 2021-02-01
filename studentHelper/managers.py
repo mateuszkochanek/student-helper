@@ -443,3 +443,7 @@ class MarksManager(models.Manager):
 
     def getMarks(self, course):
         return self.filter(course_id=course).values('id', 'mark', 'mark_type', 'mark_form', 'weight')
+
+    def delete_event_by_id(self, id):
+        # TODO triggers?
+        self.filter(id=id).delete()
