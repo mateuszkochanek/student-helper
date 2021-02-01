@@ -23,6 +23,7 @@ class Teacher(models.Model):
 
 
 class Course(models.Model):
+
     TYPES = [
         ("W", "wykład"),
         ("C", "ćwiczenia"),
@@ -178,6 +179,7 @@ class Files(models.Model):
 
 
 class Prediction(models.Model):
+
     # pk generated automaticly
 
     # foreign keys

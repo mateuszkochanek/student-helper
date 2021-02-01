@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .helpers import *
 
 
 @login_required(login_url='/login/')
@@ -8,6 +9,8 @@ def goals(request):
     goals_not_achieved = []
     goals_achieved = []
     goals_expired = []
+
+    update_goals(request.user)
 
     for course in Course.objects.get_records_by_client_id(request.user.id):
         for goal in Goals.objects.get_records_by_course_id(course.pk):
@@ -33,7 +36,12 @@ def new_goal_view(request):
         course = CourseForm(request.POST, client=request.user)
         goal = GoalsForm(request.POST)
 
+        if not if_pass_rules_exist(course):
+            return redirect('/goals/')
+
         if course.is_valid() and goal.is_valid():
+            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(course):
+                return redirect('/goals/')
             g = goal.save(commit=False)
             c = course.cleaned_data['course']
             g.course_id = Course.objects.get_course_by_name_and_type(c[:-2], c[-1], request.user)
@@ -54,7 +62,13 @@ def edit_goal_view(request, pk):
     if request.method == 'POST':
         goal = GoalsForm(request.POST, instance=old_version)
         course = CourseForm(request.POST, client=request.user)
+
+        if not if_pass_rules_exist(course):
+            return redirect('/goals/')
+
         if course.is_valid() and goal.is_valid():
+            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(course):
+                return redirect('/goals/')
             g = goal.save(commit=False)
             c = course.cleaned_data['course']
             g.course_id = Course.objects.get_course_by_name_and_type(c[:-2], c[-1], request.user)
@@ -69,9 +83,15 @@ def edit_goal_view(request, pk):
 
 @login_required(login_url='/login/')
 def new_course_goal_view(request, pk):
+    course = Course.objects.get_record_by_id(pk)
+    if not if_pass_rules_exist(course):
+        return redirect('/course/' + str(pk))
+
     if request.method == 'POST':
         goal = GoalsForm(request.POST)
         if goal.is_valid():
+            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(course):
+                return redirect('/course/' + str(pk))
             g = goal.save(commit=False)
             g.course_id = Course.objects.get_record_by_id(pk)
             g.achieved = 'N'
@@ -85,9 +105,15 @@ def new_course_goal_view(request, pk):
 @login_required(login_url='/login/')
 def edit_course_goal_view(request, pk, cid):
     old_version = Goals.objects.get_record_by_id(pk)
+    course = Course.objects.get_record_by_id(cid)
+    if not if_pass_rules_exist(course):
+        return redirect('/course/' + str(pk))
+
     if request.method == 'POST':
         goal = GoalsForm(request.POST, instance=old_version)
         if goal.is_valid():
+            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(course):
+                return redirect('/course/' + str(pk))
             g = goal.save(commit=False)
             g.course_id = Course.objects.get_record_by_id(cid)
             g.achieved = 'N'
