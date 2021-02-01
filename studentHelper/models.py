@@ -172,7 +172,7 @@ class Files(models.Model):
         on_delete=models.CASCADE,
     )
     # TODO: sposob zapisywania?
-    folder = models.CharField(max_length=64)
+    description = models.CharField(max_length=64)
     file_path = models.FileField()
     objects = FilesManager()
 
