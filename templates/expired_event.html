@@ -1,6 +1,7 @@
 {% load crispy_forms_tags %}
 {% block extension-styles %}
     {% load static %}
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
 {% endblock %}
 
@@ -20,11 +21,18 @@
         <hr style="color:CornflowerBlue">
     </div>
     <div class="formbar">
+        <div class="">
+            Zaplanowany wcześniej czas:
+            <br>
+            {{ time }} min.
+            <br>
+            <br>
+        </div>
         <form method="post">
             {% csrf_token %}
             {{ pred_form|crispy }}
-            <button type="submit" class=button>Zatwierdź</button>
-            <a href="/" class="button">Wróć</a>
+            <button type="submit" class=button">Zatwierdź</button>
+            <a href="/" class="button" onclick="window.close()">Wróć</a>
         </form>
     </div>
 </div>

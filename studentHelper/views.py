@@ -10,7 +10,7 @@ from django.views.generic import ListView, CreateView
 import threading
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from .tasks import check_if_expired
+from .tasks import ExpiredTasks
 from webpush import send_user_notification
 # Create your views here.
 
@@ -18,12 +18,15 @@ from webpush import send_user_notification
 @login_required(login_url='/login/')
 def main_view(request):
     # without celery
-    id = check_if_expired(request.user.id)
+    thread = ExpiredTasks(request.user)
+    id = thread.send_notification()
+
+    # with celery
     #id = check_if_expired.delay(request.user.id).get()
-    if id != -1:
-        payload = {"head": "Wydarzenia", "body": "Istnieją zakończone wydzrzenia! \n Kliknij aby uzupełnić",
-                "icon": "", "url": "expired_event/" + str(id)}
-        send_user_notification(user=request.user, payload=payload, ttl=1000)
+    # if id != -1:
+    #     payload = {"head": "Wydarzenia", "body": "Istnieją zakończone wydzrzenia! \n Kliknij aby uzupełnić",
+    #             "icon": "", "url": "expired_event/" + str(id)}
+    #     send_user_notification(user=request.user, payload=payload, ttl=10000)
 
     events_today = Events.objects.filter(
         client_id=request.user.id,

@@ -48,11 +48,11 @@ def new_course_event_view(request, pk, desc, time):
             e.description = desc
             Prediction.objects.add_record(e.description, e.course_id, e.start_date, delta.total_seconds(), -1)
             e.save()
-            return redirect('/calendar/main')
+            return redirect('/course/'+str(pk))
     else:
         event = CourseEventForm(desc=desc)
 
-    return render(request, "new_event_2.html", {"event_form": event, "time":time})
+    return render(request, "new_event_2.html", {"event_form": event, "time":time, "pk":pk})
 
 
 
@@ -67,7 +67,7 @@ def new_course_event_description_view(request, pk):
     else:
         description = PredTimeForm()
 
-    return render(request, "new_event.html", {"event_form": description})
+    return render(request, "new_course_event.html", {"event_form": description, "pk":pk})
 
 
 @login_required(login_url='/login/')
@@ -180,10 +180,10 @@ def edit_event_view(request, pk):
 @login_required(login_url='/login/')
 def expired_event_view(request, pk):
     event = CourseEvents.objects.get_record_by_id(pk)
+    delta = event.end_date - event.start_date
     if request.method == 'POST':
         pred = PredictionForm(request.POST)
         if pred.is_valid():
-            delta = event.end_date - event.start_date
             prediction = Prediction.objects.get_record_by_event(event.course_id, event.start_date, delta.total_seconds())
             pred.save(prediction)
             CourseEvents.objects.delete_event_by_id(pk)
@@ -191,4 +191,4 @@ def expired_event_view(request, pk):
     else:
         pred = PredictionForm()
 
-    return render(request, "expired_event.html", {"pred_form": pred, "event": event})
+    return render(request, "expired_event.html", {"pred_form": pred, "event": event, "time": delta.total_seconds() / 60})
