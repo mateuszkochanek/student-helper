@@ -36,16 +36,18 @@ def new_goal_view(request):
         course = CourseForm(request.POST, client=request.user)
         goal = GoalsForm(request.POST)
 
-        if not if_pass_rules_exist(course):
-            return redirect('/goals/', {'error': 'Nie wprowadzono zasad zaliczenia danego kursu'})
-
         if course.is_valid() and goal.is_valid():
-            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(course):
+            c = course.cleaned_data['course']
+            cid = Course.objects.get_course_by_name_and_type(c[:-2], c[-1], request.user)
+
+            if not if_pass_rules_exist(cid):
+                return redirect('/goals/', {'error': 'Nie wprowadzono zasad zaliczenia danego kursu'})
+
+            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(cid):
                 return redirect('/goals/', {'error': 'Wprowadzone zasady zaliczenia nie przewidują\
                                                         aktywności na danym kursie'})
             g = goal.save(commit=False)
-            c = course.cleaned_data['course']
-            g.course_id = Course.objects.get_course_by_name_and_type(c[:-2], c[-1], request.user)
+            g.course_id = cid
             g.achieved = 'N'
             g.save()
             return redirect('/goals/')
@@ -64,16 +66,18 @@ def edit_goal_view(request, pk):
         goal = GoalsForm(request.POST, instance=old_version)
         course = CourseForm(request.POST, client=request.user)
 
-        if not if_pass_rules_exist(course):
-            return redirect('/goals/', {'error': 'Nie wprowadzono zasad zaliczenia danego kursu'})
-
         if course.is_valid() and goal.is_valid():
-            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(course):
+            co = course.cleaned_data['course']
+            cid = Course.objects.get_course_by_name_and_type(co[:-2], co[-1], request.user)
+
+            if not if_pass_rules_exist(cid):
+                return redirect('/goals/', {'error': 'Nie wprowadzono zasad zaliczenia danego kursu'})
+
+            if goal.cleaned_data['type'] == 'aktywność' and not if_activ_in_pass_rules(cid):
                 return redirect('/goals/', {'error': 'Wprowadzone zasady zaliczenia nie przewidują\
                                                                         aktywności na danym kursie'})
             g = goal.save(commit=False)
-            c = course.cleaned_data['course']
-            g.course_id = Course.objects.get_course_by_name_and_type(c[:-2], c[-1], request.user)
+            g.course_id = cid
             g.achieved = 'N'
             g.save()
             return redirect('/goals/')
