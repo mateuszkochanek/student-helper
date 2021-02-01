@@ -4,5 +4,50 @@ from .helpers import *
 
 
 @login_required(login_url='/login/')
-def statistics(request):
-    return render(request, 'statistics.html')
+def statisticsDays(request):
+    daysToEndOfSemester = get_days_to_end_of_semester(request.user.id)
+    daysInSemester = get_number_of_days_in_semester(request.user.id)
+    print('statisticsDays')
+
+    context = {
+        'daysToEndOfSemester': daysToEndOfSemester,
+        'daysInSemester': daysInSemester,
+    }
+
+    return render(request, 'statistics.html', context)
+
+
+@login_required(login_url='/login/')
+def statisticsTimeSpentOnCourses(request):
+    courseNames, timeSpendOnCourses = get_times_by_courses(request.user.id)
+
+    context = {
+        'courseNames': courseNames,
+        'timeSpendOnCourses': timeSpendOnCourses
+    }
+
+    return render(request, 'statistics.html', context)
+
+
+@login_required(login_url='/login/')
+def statisticsRatios(request):
+    courseNames, ratios = get_ratios_by_courses(request.user.id)
+
+    context = {
+        'courseNames': courseNames,
+        'ratios': ratios
+    }
+
+    return render(request, 'statistics.html', context)
+
+
+@login_required(login_url='/login/')
+def statisticsByForm(request):
+    forms, times = get_times_by_course_and_form(request.user.id)
+
+    context = {
+        'forms': forms,
+        'times': times
+    }
+
+    return render(request, 'statistics.html', context)
