@@ -29,6 +29,12 @@ function createSpendTimeChart(courseNames, timeSpendOnCourses) {
             labels: courseNames
         },
         options: {
+            legend: {
+                display: false
+             },
+             tooltips: {
+                enabled: false
+             },
             scales: {
                 yAxes: [{
                     ticks: {
@@ -53,6 +59,12 @@ function createRatiosChart(courseNames, ratios) {
             labels: courseNames
         },
         options: {
+            legend: {
+                display: false
+             },
+             tooltips: {
+                enabled: false
+             },
             scales: {
                 yAxes: [{
                     ticks: {
@@ -77,6 +89,12 @@ function createFormsChart(forms, times) {
             labels: times
         },
         options: {
+            legend: {
+                display: false
+             },
+             tooltips: {
+                enabled: false
+             },
             scales: {
                 yAxes: [{
                     ticks: {
