@@ -5,7 +5,7 @@ from .calendarImport import CalendarImport
 from .tasks import calculate_time
 from django.contrib.auth.decorators import login_required
 from studentHelper.models import Events, Description, Course, CourseEvents, Prediction
-import math import ceil
+from math import ceil
 
 
 
