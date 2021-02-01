@@ -4,6 +4,10 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/statistics.css' %}">
 
+    <script type="text/javascript" src="{% static 'scripts/statistics.js' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -14,8 +18,37 @@
             </div>
         </div>
 
+        <div class="buttonbar">
+            <a href="{% url 'statisticsDays' %}" class=button>Koniec semestru</a>
+            <a href="{% url 'statisticsTimeSpentOnCourses' %}" class=button>Czas poświęcony na przedmiot</a>
+            <a href="" class=button>Czas poświęcony na grupę kursów</a>
+            <a href="" class=button>Przewidywany czas na naukę</a>
+        </div>
+
         <div class=line>
             <hr style="color:CornflowerBlue">
+        </div>
+
+        <div class="chart_panels">
+           {% if daysInSemester %}
+                <div class="chart_panel daysChart" id="daysChartDiv">
+                    <canvas id="daysChart"></canvas>
+                </div>
+               <script>
+                    window.onload = function () {
+                        createDaysChart({{ daysInSemester }}, {{ daysToEndOfSemester }});
+                    }
+                </script>
+            {% elif timeSpendOnCourses %}
+                <div class="chart_panel spendTimeChart" id="spendTimeChartDiv">
+                    <canvas id="spendTimeChart"></canvas>
+                </div>
+               <script>
+                    window.onload = function () {
+                        createSpendTimeChart({{ courseNames| safe }}, {{ timeSpendOnCourses | safe }});
+                    }
+                </script>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 from studentHelper.models import Prediction, Course, Events, Components
-from django.db.models import Max
+from django.db.models import Max, Min
+from datetime import date
 
 
 def get_times_by_courses(client_id):
@@ -17,9 +18,17 @@ def get_times_by_courses(client_id):
     return course_names, times
 
 
-def get_end_of_semester(client_id):
+def get_days_to_end_of_semester(client_id):
     classes = Events.objects.get_classes_by_client_id(client_id)
-    return classes.aggregate(Max('end_date'))['end_date__max']
+    lastDay = classes.aggregate(Max('end_date'))['end_date__max'].date()
+    return (lastDay - date.today()).days
+
+
+def get_number_of_days_in_semester(client_id):
+    classes = Events.objects.get_classes_by_client_id(client_id)
+    firstDay = classes.aggregate(Min('end_date'))['end_date__min'].date()
+    lastDay = classes.aggregate(Max('end_date'))['end_date__max'].date()
+    return (lastDay - firstDay).days
 
 
 def get_ratios_by_courses(client_id):
