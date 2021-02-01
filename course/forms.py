@@ -1,8 +1,8 @@
 from studentHelper.models import Marks, Teacher
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
-from django.forms import Form, CheckboxSelectMultiple, MultipleChoiceField, FloatField, ChoiceField, IntegerField
-from studentHelper.models import Components, Thresholds, CourseGroup, Modyfication, Course
+from django.forms import Form, CheckboxSelectMultiple, MultipleChoiceField, FloatField, ChoiceField, IntegerField, FileField
+from studentHelper.models import Components, Thresholds, CourseGroup, Modyfication, Course, Files
 import validators
 
 
@@ -440,3 +440,18 @@ class CourseGroupForm(Form):
         else:
             self.fields['minimum'] = ChoiceField(choices=YN, initial="Nie")
         self.fields['minimum'].label = '6. Czy oceny z wszystkich kursów wchodzących w grupę muszą być większe niż 2?'
+
+
+class NewFileForm(Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        OPTIONS = [
+            ('listy', 'listy'),
+            ('notatki', 'notatki'),
+            ('brudnopis', 'brudnopis'),
+            ('inne', 'inne'),
+        ]
+        self.fields['option'] = ChoiceField(choices=OPTIONS)
+        self.fields['option'].label = 'Wybierz folder do którego zostanie dodany plik'
+        for key in self.fields:
+            self.fields[key].error_messages['required'] = "To pole jest wymagane."

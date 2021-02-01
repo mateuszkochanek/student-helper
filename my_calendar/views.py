@@ -38,6 +38,7 @@ def new_event_view(request):
 
 @login_required(login_url='/login/')
 def new_course_event_view(request, pk, desc, time):
+    print(time)
     if request.method == 'POST':
         event = CourseEventForm(request.POST, desc=desc)
         if event.is_valid():

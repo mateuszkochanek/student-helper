@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.shortcuts import reverse
 
-
 from studentHelper.managers import *
 
 
@@ -170,17 +169,15 @@ class Goals(models.Model):
 
 
 class Files(models.Model):
-
     # pk generated automaticly
-
     # foreign keys
     course_id = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
     )
     # TODO: sposob zapisywania?
-    file_path = models.CharField(max_length=30)
-    description = models.CharField(max_length=64, blank=True)
+    folder = models.CharField(max_length=64)
+    file_path = models.FileField()
     objects = FilesManager()
 
 class Prediction(models.Model):

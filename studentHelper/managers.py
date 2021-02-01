@@ -370,12 +370,12 @@ class FilesManager(models.Manager):
         Usage: Import model and then use Files.objects.[below_options]
     """
 
-    def add_record(self, course, file_path, description):
+    def add_record(self, course, description, file_path):
         """ course: object of Course """
 
-        file = self.create(course_id=course, file_path=file_path,
-                           description=description)
+        file = self.create(course_id=course, folder=description, file_path=file_path)
         file.save()
+
 
     def get_record_by_id(self, id):
         return self.get(pk=id)

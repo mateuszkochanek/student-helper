@@ -1,0 +1,27 @@
+{% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_event.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class="titlebar">
+        <div class=title>
+            Dodaj plik
+        </div>
+    </div>
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ new_file|crispy }}
+            <input type="file" name="myfile">
+            <button type="submit" class=button>Zatwierdź</button>
+            <a href="{% url 'course' pk%}" class="button">Wróć</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

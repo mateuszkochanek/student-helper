@@ -1,0 +1,24 @@
+{% load crispy_forms_tags %}
+{% block extension-styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_mark.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class="titlebar">
+        <div class=title>
+            Opcje związane z plikiem:
+        </div>
+    </div>
+    <div class=line>
+        <hr style="color:CornflowerBlue">
+    </div>
+    <div class="formbar">
+        <a href="{% url 'delete_file' pk folder file %}" class="button">Usuń</a>
+        <a href="{% url 'download_file' pk folder file %}" class="button">Pobierz i wyświetl</a>
+        <a href="{% url 'show_files' pk%}" class="button">Wróć</a>
+
+    </div>
+</div>
+{% endblock %}
