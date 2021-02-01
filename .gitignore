@@ -318,3 +318,4 @@ fabric.properties
 
 # not commit migrations
 studentHelper/migrations
+/Team_Programming/student-helper-514fc7c2bd02.json

@@ -17,17 +17,17 @@ def calc_final(course):
     if not thresholds:
         return 0
     thresholds = thresholds[0]
-    if final > thresholds.p_5_5:
+    if final >= thresholds.p_5_5:
         final = 5.5
-    elif final > thresholds.p_5_0:
+    elif final >= thresholds.p_5_0:
         final = 5.0
-    elif final > thresholds.p_4_5:
+    elif final >= thresholds.p_4_5:
         final = 4.5
-    elif final > thresholds.p_4_0:
+    elif final >= thresholds.p_4_0:
         final = 4.0
-    elif final > thresholds.p_3_5:
+    elif final >= thresholds.p_3_5:
         final = 3.5
-    elif final > thresholds.p_3_0:
+    elif final >= thresholds.p_3_0:
         final = 3.0
     else:
         final = 2.0

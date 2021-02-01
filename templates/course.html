@@ -147,7 +147,7 @@
                         <tr>
                             <td>
                                 {% for goal in goals %}
-                                    {{ goal.description }}
+                                    <a href="{% url 'edit_goal' goal.id %}">{{ goal.description }}</a>
                                     <br>
                                 {% endfor %}
                             </td>
