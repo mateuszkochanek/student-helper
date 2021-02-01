@@ -20,11 +20,34 @@ def statisticsDays(request):
 @login_required(login_url='/login/')
 def statisticsTimeSpentOnCourses(request):
     courseNames, timeSpendOnCourses = get_times_by_courses(request.user.id)
-    print('statisticsTimeSpentOnCourses')
 
     context = {
         'courseNames': courseNames,
         'timeSpendOnCourses': timeSpendOnCourses
+    }
+
+    return render(request, 'statistics.html', context)
+
+
+@login_required(login_url='/login/')
+def statisticsRatios(request):
+    courseNames, ratios = get_ratios_by_courses(request.user.id)
+
+    context = {
+        'courseNames': courseNames,
+        'ratios': ratios
+    }
+
+    return render(request, 'statistics.html', context)
+
+
+@login_required(login_url='/login/')
+def statisticsByForm(request):
+    forms, times = get_times_by_course_and_form(request.user.id)
+
+    context = {
+        'forms': forms,
+        'times': times
     }
 
     return render(request, 'statistics.html', context)

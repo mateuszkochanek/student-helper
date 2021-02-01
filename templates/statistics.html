@@ -21,8 +21,8 @@
         <div class="buttonbar">
             <a href="{% url 'statisticsDays' %}" class=button>Koniec semestru</a>
             <a href="{% url 'statisticsTimeSpentOnCourses' %}" class=button>Czas poświęcony na przedmiot</a>
-            <a href="" class=button>Czas poświęcony na grupę kursów</a>
-            <a href="" class=button>Przewidywany czas na naukę</a>
+            <a href="{% url 'statisticsRatios' %}" class=button>Czas poświęcony na grupę kursów</a>
+            <a href="{% url 'statisticsByForm' %}" class=button>Przewidywany czas na naukę</a>
         </div>
 
         <div class=line>
@@ -30,25 +30,36 @@
         </div>
 
         <div class="chart_panels">
-           {% if daysInSemester %}
-                <div class="chart_panel daysChart" id="daysChartDiv">
-                    <canvas id="daysChart"></canvas>
-                </div>
-               <script>
-                    window.onload = function () {
-                        createDaysChart({{ daysInSemester }}, {{ daysToEndOfSemester }});
-                    }
-                </script>
-            {% elif timeSpendOnCourses %}
-                <div class="chart_panel spendTimeChart" id="spendTimeChartDiv">
-                    <canvas id="spendTimeChart"></canvas>
-                </div>
-               <script>
-                    window.onload = function () {
-                        createSpendTimeChart({{ courseNames| safe }}, {{ timeSpendOnCourses | safe }});
-                    }
-                </script>
-            {% endif %}
+            <div class="chart_panel chart" id="chartDiv">
+                <canvas id="chart"></canvas>
+            </div>
         </div>
     </div>
+
+    {% if daysInSemester %}
+       <script>
+            window.onload = function () {
+                createDaysChart({{ daysInSemester }}, {{ daysToEndOfSemester }});
+            }
+        </script>
+    {% elif timeSpendOnCourses %}
+       <script>
+            window.onload = function () {
+                createSpendTimeChart({{ courseNames| safe }}, {{ timeSpendOnCourses | safe }});
+            }
+        </script>
+   {% elif ratios %}
+       <script>
+            window.onload = function () {
+                createRatiosChart({{ courseNames| safe }}, {{ ratios | safe }});
+            }
+        </script>
+    {% elif forms %}
+       <script>
+            window.onload = function () {
+                createFormsChart({{ forms| safe }}, {{ times | safe }});
+            }
+        </script>
+    {% endif %}
+
 {% endblock %}

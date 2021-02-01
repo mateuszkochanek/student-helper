@@ -1,6 +1,6 @@
 function createDaysChart(daysInSemester, daysToEndOfSemester) {
-    let ctx = document.getElementById('daysChart').getContext('2d');
-    let daysChart = new Chart(ctx, {
+    let ctx = document.getElementById('chart').getContext('2d');
+    let chart = new Chart(ctx, {
         type: 'pie',
         data: {
             datasets: [{
@@ -17,8 +17,8 @@ function createDaysChart(daysInSemester, daysToEndOfSemester) {
 
 function createSpendTimeChart(courseNames, timeSpendOnCourses) {
     console.log(courseNames)
-    let ctx = document.getElementById('spendTimeChart').getContext('2d');
-    let spendTime = new Chart(ctx, {
+    let ctx = document.getElementById('chart').getContext('2d');
+    let chart = new Chart(ctx, {
         type: 'bar',
         data: {
             datasets: [{
@@ -27,6 +27,54 @@ function createSpendTimeChart(courseNames, timeSpendOnCourses) {
                 borderColor: ['#5b80b2']
             }],
             labels: courseNames
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function createRatiosChart(courseNames, ratios) {
+    let ctx = document.getElementById('chart').getContext('2d');
+    let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                data: ratios,
+                borderWidth: 1,
+                borderColor: ['#5b80b2']
+            }],
+            labels: courseNames
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function createFormsChart(forms, times) {
+    let ctx = document.getElementById('chart').getContext('2d');
+    let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                data: ratios,
+                borderWidth: 1,
+                borderColor: ['#5b80b2']
+            }],
+            labels: times
         },
         options: {
             scales: {
