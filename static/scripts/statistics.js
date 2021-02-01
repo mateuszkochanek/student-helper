@@ -24,7 +24,7 @@ function createSpendTimeChart(courseNames, timeSpendOnCourses) {
             datasets: [{
                 data: timeSpendOnCourses,
                 borderWidth: 1,
-                borderColor: ['#5b80b2']
+                backgroundColor: ['#5b80b2']
             }],
             labels: courseNames
         },
@@ -48,7 +48,7 @@ function createRatiosChart(courseNames, ratios) {
             datasets: [{
                 data: ratios,
                 borderWidth: 1,
-                borderColor: ['#5b80b2']
+                backgroundColor: ['#5b80b2']
             }],
             labels: courseNames
         },
@@ -72,7 +72,7 @@ function createFormsChart(forms, times) {
             datasets: [{
                 data: ratios,
                 borderWidth: 1,
-                borderColor: ['#5b80b2']
+                backgroundColor: ['#5b80b2']
             }],
             labels: times
         },
